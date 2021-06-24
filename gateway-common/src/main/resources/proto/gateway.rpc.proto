@@ -1,0 +1,67 @@
+syntax = "proto3";
+option java_package = "com.xl.traffic.gateway.common.msg.protobuf";
+
+ //                      Protocol
+ //  __ __ __ __ __ __ __ __ __ __ __ ____ __ __ _____ __ __ ____ __ __ __ __ __ __ __ __ 
+ // |           |           |           |           |           |                         |
+ //       4            1          1           1           4             Uncertainty
+ // |__ __ __ __|__ __ __ __|__ __ __ __|__ __ __ __|__ __ __ __|_ __ __ __ __ __ __ __ __|
+ // |           |           |           |           |           |                         |
+ //     Length        Cmd      SubType     DiyType     DataId           BodyContent
+ // |__ __ __ __|__ __ __ __|__ __ __ __|__ __ __ __|__ __ __ __|__ __ __ ____ __ __ __ __|
+ //
+ // 协议头11个字节定长
+ //     Length     //int：包长，
+ //     Cmd        //byte:同消息type类型
+ //     SubType    //byte:同消息subType类型
+ //     DiyType    //byte:直播间自定义消息类型对应数字，如:App:@TXT=1
+ //     DataId     //int:单聊/群聊传cMsgId，直播间为roomId的HashCode
+ //     Body 	   //byte[]:协议内容
+option java_outer_classname = "RpcBuf";
+
+	//报文消息类型Type
+	enum RpcTypeEnum {
+		ZERO       	= 0;      //0
+		SYNC_ROOM   = 100;    //同步im ip
+		PULL_MSG    = 101;    //拉取直播间消息
+	}
+	
+	//消息二级分类SubType
+	enum RpcSubTypeEnum {
+		ZERO1       	         = 0;      //0
+		SYNC_ROOM_ADD            = 100;    //添加
+		SYNC_ROOM_DEL            = 101;    //删除
+		SYNC_ROOM_GET            = 102;    //获取rooms
+		SYNC_ROOM_BATCH_ADD      = 103;    //批量插入
+
+		GAG_ADD      			 = 110;    //禁言
+		GAG_DEL      			 = 111;    //解除禁言
+
+		BLACK_ALL                = 120;    //主播黑名单全量同步
+		BLACK_ADD                = 121;    //添加黑名单
+		BLACK_DEL                = 122;    //删除黑名单
+		
+		PULL_MSG_SNYC            = 123;    //直播间消息同步
+		PULL_MSG_DEL             = 124;    //删除ROOM缓存中直播间历史消息
+	}
+
+	//RPC连接登录
+	message Rpc {                         
+		string rpcServer  = 1;     //rpc服务
+		int32 rpcPort  	  = 2;     //rpc端口
+		string channelId  = 3;     //连接ID
+		int32 index  	  = 4;     //序号
+		string time       = 5;     //时间
+	}
+	
+	//同步直播所在IM IP
+	message SyncRoom {                         
+		string roomId  = 1;     //直播间id
+		string imip    = 2;     //所在imip
+		string roomip  = 3;     //room server
+	}
+	
+	message SyncRooms {
+		repeated SyncRoom syncRoom  = 1;
+	}
+	

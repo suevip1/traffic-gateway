@@ -1,0 +1,18 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: gateway-service-demo
+
+gateway:
+  config:
+    appName: gateway-service-demo
+    group: gateway-service-demo-group
+    ip: 127.0.0.1
+    tcpPort: 20003
+    weight: 25
+    qps: 100000
+    cmdQps: 20000
+    signalType: tcp
+    rpcPoolSize: 3
+    zip:
