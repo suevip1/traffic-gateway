@@ -4,6 +4,7 @@ import com.xl.traffic.gateway.hystrix.enums.DowngradeActionType;
 import com.xl.traffic.gateway.hystrix.model.CheckData;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import com.xl.traffic.gateway.hystrix.strategy.AbstractStrategyExecutor;
+import org.springframework.core.annotation.Order;
 
 /**
  * 并发降级策略
@@ -11,6 +12,7 @@ import com.xl.traffic.gateway.hystrix.strategy.AbstractStrategyExecutor;
  * @author: xl
  * @date: 2021/6/24
  **/
+@Order(3)
 public class ConcurrentStrategyExecutor extends AbstractStrategyExecutor {
 
     public ConcurrentStrategyExecutor(AbstractStrategyExecutor next) {
@@ -21,6 +23,7 @@ public class ConcurrentStrategyExecutor extends AbstractStrategyExecutor {
     protected boolean strategyCheck(CheckData checkData, Strategy strategy) {
 
         if (checkData.getConcurrentAcquire() == null) {
+            /**表示未配置此降级策略，故 不走该策略*/
             return true;
         }
 

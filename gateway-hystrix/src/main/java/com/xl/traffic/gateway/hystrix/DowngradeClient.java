@@ -6,7 +6,7 @@ package com.xl.traffic.gateway.hystrix;
  * @author: xl
  * @date: 2021/6/24
  **/
-public interface GatewayDowngradeClient {
+public interface DowngradeClient {
 
 
     /**

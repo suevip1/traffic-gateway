@@ -211,6 +211,29 @@ public class AddressUtils {
     }
 
 
+    public static String getHostName() {
+        String hostname = "";
+        try {
+
+            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (allNetInterfaces.hasMoreElements()) {
+                NetworkInterface netInterface = allNetInterfaces.nextElement();
+                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+                while (addresses != null && addresses.hasMoreElements()) {
+                    InetAddress inetAddress = addresses.nextElement();
+                    if (inetAddress instanceof Inet4Address && !inetAddress.isLoopbackAddress() && inetAddress.
+                            getHostAddress() != null && inetAddress.getHostAddress().indexOf(":") == -1) {
+
+                        hostname = inetAddress.getHostName();
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+        }
+        return hostname;
+    }
+
     /**
      * 测试方法
      * 获取本机的内网ip，外网ip和指定ip的地址

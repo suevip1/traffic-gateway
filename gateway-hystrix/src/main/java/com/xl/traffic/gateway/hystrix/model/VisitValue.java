@@ -23,5 +23,8 @@ public class VisitValue {
      */
     private long slidingCycleValue;
 
-
+    public VisitValue(long bucketValue, long slidingCycleValue) {
+        this.bucketValue = bucketValue;
+        this.slidingCycleValue = slidingCycleValue;
+    }
 }

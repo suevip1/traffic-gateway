@@ -1,6 +1,5 @@
 package com.xl.traffic.gateway.core.utils;
 
-import com.xl.traffic.gateway.core.rpc.manager.RpcClientManager;
 
 /**
  * Twitter_Snowflake<br>

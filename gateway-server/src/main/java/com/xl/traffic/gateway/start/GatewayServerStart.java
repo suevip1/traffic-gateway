@@ -54,6 +54,10 @@ public class GatewayServerStart {
         NodePoolManager.getInstance().initNodePool(GatewayConstants.ROUTER_ZK_ROOT_PATH);
         /**监听router集群*/
         ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROUTER_ZK_ROOT_PATH);
+        /**连接admin集群*/
+        NodePoolManager.getInstance().initNodePool(GatewayConstants.ADMIN_ZK_ROOT_PATH);
+        /**监听admin集群*/
+        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ADMIN_ZK_ROOT_PATH);
         /**连接大业务集群*/
         NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
         /**监听大业务集群*/

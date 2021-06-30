@@ -14,7 +14,9 @@ public class GatewayConstants {
     public static String GATEWAY = "gateway";
     public static String GATEWAY_GROUP = "gateway_group";
     public static String ROUTER = "router";
+    public static String ADMIN = "admin";
     public static String ROUTER_GROUP = "router_group";
+    public static String ADMIN_GROUP = "admin_group";
 
     /**服务注册路径层级定义，共3层，第一层为 server 第二层为具体业务名称*/
     /**
@@ -29,6 +31,12 @@ public class GatewayConstants {
      * router 服务 zk 路径
      */
     public static String ROUTER_ZK_ROOT_PATH = ROOT_RPC_SERVER_PATH_PREFIX + ROUTER;
+
+    /**
+     * admin 服务 zk 路径
+     */
+    public static String ADMIN_ZK_ROOT_PATH = ROOT_RPC_SERVER_PATH_PREFIX + ADMIN;
+
 
     /**
      * gateway配置

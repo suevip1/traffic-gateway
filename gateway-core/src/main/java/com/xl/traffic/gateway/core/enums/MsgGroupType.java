@@ -1,24 +1,28 @@
 package com.xl.traffic.gateway.core.enums;
 
-public enum MsgType {
+import com.xl.traffic.gateway.core.utils.GatewayConstants;
+
+public enum MsgGroupType {
 
 
-    HEAT_CMD(1,"心跳检测"),;
+    GATEWAY((byte) 1, GatewayConstants.GATEWAY),
 
-    private int type;
+    ;
+
+    private byte type;
     private String name;
 
-    MsgType(int type, String name) {
+    MsgGroupType(byte type, String name) {
         this.type = type;
         this.name = name;
     }
 
 
-    public int getType() {
+    public byte getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(byte type) {
         this.type = type;
     }
 

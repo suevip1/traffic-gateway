@@ -22,5 +22,11 @@ public class GatewayPortConstants {
     public static int TCP_ROUTER_PORT = 20002;
 
 
+    /**
+     * admin 服务 tcp 端口号
+     */
+    public static int TCP_ADMIN_PORT = 20003;
+
+
 
 }

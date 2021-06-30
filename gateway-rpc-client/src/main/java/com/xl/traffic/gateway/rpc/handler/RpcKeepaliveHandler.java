@@ -1,7 +1,7 @@
 package com.xl.traffic.gateway.rpc.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
-import com.xl.traffic.gateway.core.enums.MsgType;
+import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,7 +20,7 @@ public class RpcKeepaliveHandler extends ChannelDuplexHandler {
     public RpcKeepaliveHandler() {
         heartCmd = new RpcMsg();
         heartCmd.setReqId(SnowflakeIdWorker.getInstance().nextId().intValue());
-        heartCmd.setCmd((byte) MsgType.HEAT_CMD.getType());
+        heartCmd.setCmd((byte) MsgCMDType.HEAT_CMD.getType());
     }
 
     /**

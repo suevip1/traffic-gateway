@@ -2,7 +2,7 @@ package com.xl.traffic.gateway.rpc.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
-import com.xl.traffic.gateway.core.enums.MsgType;
+import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.mq.MQProvider;
 import com.xl.traffic.gateway.core.utils.AttributeKeys;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
@@ -35,7 +35,7 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcMsg> {
     public RpcClientHandler() {
         heartCmd = new RpcMsg();
         heartCmd.setReqId(SnowflakeIdWorker.getInstance().nextId().intValue());
-        heartCmd.setCmd((byte) MsgType.HEAT_CMD.getType());
+        heartCmd.setCmd((byte) MsgCMDType.HEAT_CMD.getType());
     }
 
     @Override

@@ -92,5 +92,10 @@ public class Strategy {
      */
     private int pressureTestDowngrade = 0;
 
+    /**
+     * 是否开启熔断策略，-1 未开启 1 开启，开启后，不执行其它降级策略，直接拒绝请求
+     */
+    private int fuse_switch = -1;
+
 
 }

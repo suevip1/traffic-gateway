@@ -32,6 +32,17 @@ public class RpcMsg implements Serializable {
 
     private byte zip; //是否支持压缩
 
+    public RpcMsg(byte cmd, byte group, long reqId, byte[] body, byte zip) {
+        this.cmd = cmd;
+        this.group = group;
+        this.reqId = reqId;
+        this.body = body;
+        this.zip = zip;
+    }
+
+
+    public RpcMsg() {
+    }
 
     @Override
     public String toString() {

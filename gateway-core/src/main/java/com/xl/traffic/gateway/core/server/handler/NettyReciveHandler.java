@@ -2,7 +2,7 @@ package com.xl.traffic.gateway.core.server.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.context.NettyContext;
-import com.xl.traffic.gateway.core.enums.MsgType;
+import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.enums.NettyType;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,7 +16,7 @@ public class NettyReciveHandler extends SimpleChannelInboundHandler<RpcMsg> {
     protected void channelRead0(ChannelHandlerContext ctx, RpcMsg cmd) throws Exception {
         //心态数据包直接响应
         if (cmd.getCmd() ==
-                (byte) MsgType.HEAT_CMD.getType()) {
+                (byte) MsgCMDType.HEAT_CMD.getType()) {
             if (NettyContext.currentType().equals(NettyType.client)) {
                 //设置值
                 ctx.writeAndFlush(cmd);

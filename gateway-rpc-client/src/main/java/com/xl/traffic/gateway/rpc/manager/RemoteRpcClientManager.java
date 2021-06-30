@@ -57,8 +57,8 @@ public class RemoteRpcClientManager {
      * @throws InterruptedException
      * @throws RPCException
      */
-    public byte[] sendSync(String action, byte[] content) throws RPCException, InterruptedException {
-        return sendAsync(action, content, RpcTimeout)
+    public byte[] sendSync(String group, byte[] content) throws RPCException, InterruptedException {
+        return sendAsync(group, content, RpcTimeout)
                 .get(RpcTimeout, TimeUnit.MILLISECONDS);
     }
 
@@ -66,9 +66,9 @@ public class RemoteRpcClientManager {
     /**
      * 异步Future
      */
-    public CallFuture<byte[]> sendAsync(String action, byte[] content, int timeout) {
+    public CallFuture<byte[]> sendAsync(String group, byte[] content, int timeout) {
         CallFuture<byte[]> callFuture = CallFuture.newInstance();
-        sendAsync(action, content, callFuture, timeout);
+        sendAsync(group, content, callFuture, timeout);
         return callFuture;
     }
 
@@ -76,29 +76,54 @@ public class RemoteRpcClientManager {
     /**
      * 异步回调,nio
      */
-    public boolean sendAsync(String action, byte[] content, Callback<byte[]> callback) {
-        return sendAsync(action, content, callback, RpcTimeout);
+    public boolean sendAsync(String group, byte[] content, Callback<byte[]> callback) {
+        return sendAsync(group, content, callback, RpcTimeout);
     }
 
+
+    /**
+     * 异步,nio ，不带回调的
+     */
+
+    public boolean sendAsync(String group, byte[] content) {
+
+        try {
+            //选择rpcClient
+            RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(group);
+            if (rpcClient != null) {
+                RpcMsg request = new RpcMsg();
+                request.setReqId(SnowflakeIdWorker.getInstance().nextId());
+                request.setBody(content);
+                rpcClient.sendAsync(request);
+                return true;
+            } else {
+                logger.error("can no choose pool:" + group);
+                return false;
+            }
+        } catch (Exception ex) {
+            logger.error("sendAsync group:{} error: {} ", group, ex);
+        }
+        return false;
+    }
 
     /**
      * 异步回调,nio
      */
 
-    public boolean sendAsync(String action, byte[] content, Callback<byte[]> callback, int rpcTimeOut) {
+    public boolean sendAsync(String group, byte[] content, Callback<byte[]> callback, int rpcTimeOut) {
 
         try {
             //选择rpcClient
-            RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(action);
+            RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(group);
             if (rpcClient != null) {
                 RpcMsg request = new RpcMsg();
                 request.setReqId(SnowflakeIdWorker.getInstance().nextId());
                 request.setBody(content);
-                rpcClient.sendAsync(request, new AsyncCallback(callback, rpcClient.getIpPort(), request, action), rpcTimeOut);
+                rpcClient.sendAsync(request, new AsyncCallback(callback, rpcClient.getIpPort(), request, group), rpcTimeOut);
                 return true;
             } else {
-                logger.error("can no choose pool:" + action);
-                callback.handleError(new RPCException("can no choose pool:" + action));
+                logger.error("can no choose pool:" + group);
+                callback.handleError(new RPCException("can no choose pool:" + group));
                 return false;
             }
         } catch (Exception ex) {

@@ -3,7 +3,7 @@ package com.xl.traffic.gateway.hystrix;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class AbstractGatewayDowngradeClient implements GatewayDowngradeClient {
+public abstract class AbstractDowngradeClient implements DowngradeClient {
 
 
     /**
@@ -20,7 +20,7 @@ public abstract class AbstractGatewayDowngradeClient implements GatewayDowngrade
     @Setter
     protected String appName;
 
-    public AbstractGatewayDowngradeClient(String appGroupName, String appName) {
+    public AbstractDowngradeClient(String appGroupName, String appName) {
         this.appGroupName = appGroupName;
         this.appName = appName;
     }

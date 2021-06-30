@@ -14,5 +14,21 @@ public class DowngradeConstant {
      * 并且：每个桶的时间固定，为1秒钟
      */
     public static final int CYCLE_BUCKET_NUM = 10;
+    /**
+     * 桶的步长，时间宽度
+     **/
+    public static final int BUCKET_TIME = 1;
+
+
+    /**
+     * 应用组名称
+     */
+    public static final String APP_GROUP_NAME = "sds.app.group.name";
+
+    /**
+     * 应用名称
+     */
+    public static final String APP_NAME = "sds.app.name";
+
 
 }

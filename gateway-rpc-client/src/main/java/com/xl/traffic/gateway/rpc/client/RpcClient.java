@@ -66,7 +66,7 @@ public class RpcClient {
                         channel.attr(AttributeKeys.RPC_PORT).get(),
                         channel.attr(AttributeKeys.RPC_POOL_KEY).get(),
                         channel.attr(AttributeKeys.RPC_GROUP).get()
-                        );
+                );
             }
         });
         return isConnect();
@@ -77,7 +77,7 @@ public class RpcClient {
     }
 
     /**
-     * 异步发送,nio
+     * 异步发送,nio ，带回调的
      *
      * @param request  请求参数
      * @param callback 异步回调
@@ -100,6 +100,20 @@ public class RpcClient {
                     + "-can no connect:" + getInfo()));
         }
     }
+
+    /**
+     * 异步发送,nio，不带回调的
+     *
+     * @param request  请求参数
+     */
+    public void sendAsync(RpcMsg request) {
+        /**校验是否已连接*/
+        if (isConnect()) {
+            channel.writeAndFlush(request);
+        }
+    }
+
+
     /**
      * 同步,返回响应信息 路由不建议用,访问延迟大将会导致线程挂起太久,CPU无法跑满,而解决方法只有新建更多线程,性能不好
      */
@@ -117,6 +131,7 @@ public class RpcClient {
             throw new RPCException(getClass().getName() + ".sendSync() can no connect:" + getInfo());
         }
     }
+
     public String getInfo() {
         if (channel != null)
             return channel.toString();

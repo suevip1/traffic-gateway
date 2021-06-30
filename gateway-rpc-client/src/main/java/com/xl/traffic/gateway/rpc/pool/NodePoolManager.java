@@ -5,6 +5,7 @@ import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.core.enums.LoadBalanceType;
 import com.xl.traffic.gateway.core.exception.RPCException;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
+import com.xl.traffic.gateway.core.loadbalance.RpcLoadBalance;
 import com.xl.traffic.gateway.core.loadbalance.strategy.RpcLoadBalanceStrategy;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
@@ -21,6 +22,8 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import static com.xl.traffic.gateway.rpc.connect.WeightNodelCache.loadBalance;
 
 /**
  * @author xuliang
@@ -131,10 +134,11 @@ public class NodePoolManager {
     /**
      * 根据选择服务器,支持权重
      */
-    public RpcClient chooseRpcClient(String action) {
+    public RpcClient chooseRpcClient(String group) {
         try {
             lock.readLock().lock();
-            String channelKey = RpcLoadBalanceStrategy.getInstance().getRpcLoadBalance(LoadBalanceType.WEIGHT).loadBalance();
+            RpcLoadBalance rpcLoadBalance =WeightNodelCache.loadBalance(group);
+            String channelKey = rpcLoadBalance.loadBalance();
             if (StringUtils.isEmpty(channelKey)) {
                 logger.info(">>>>>>> channel 不存在，请检查服务是否发生异常！！！");
                 throw new RPCException(" channel 不存在，请检查调用服务是否发生异常！！！");
@@ -147,5 +151,6 @@ public class NodePoolManager {
         }
 
     }
+
 
 }
