@@ -4,6 +4,7 @@ import com.xl.traffic.gateway.hystrix.counter.AbstractCycleData;
 import com.xl.traffic.gateway.hystrix.counter.ConcurrentData;
 import com.xl.traffic.gateway.hystrix.counter.SlidingWindowData;
 import com.xl.traffic.gateway.hystrix.counter.TokenBucketData;
+import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -156,7 +157,7 @@ public class CycleDataService {
                     /**
                      * 执行上传周期统计数据 2 adminServer
                      */
-                    PullAndPushService.getInstance().pushDowngrateData2Admin();
+                    DowngrateDispatcher.getInstance().dispatcherGroupPushDowngrateData();
                 }
 
 
@@ -185,10 +186,8 @@ public class CycleDataService {
             if (!pullPointStrategySwitch) {
                 return;
             }
-
-
             /**执行拉取降级点策略的任务*/
-            PullAndPushService.getInstance().updatePointStrategyFromAdminServer();
+            DowngrateDispatcher.getInstance().dispatcherGroupUpdatePointStrategy();
         }
     }
 

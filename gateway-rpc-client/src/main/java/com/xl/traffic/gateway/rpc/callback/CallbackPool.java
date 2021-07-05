@@ -1,4 +1,4 @@
-package com.xl.traffic.gateway.core.callback;
+package com.xl.traffic.gateway.rpc.callback;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.exception.RPCException;

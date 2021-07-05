@@ -11,12 +11,9 @@ import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
 import com.xl.traffic.gateway.hystrix.service.*;
 import com.xl.traffic.gateway.hystrix.strategy.AbstractStrategyExecutor;
 import com.xl.traffic.gateway.hystrix.strategy.DefaultStrategyExecutorBuilder;
-import com.xl.traffic.gateway.hystrix.strategy.StrategyExecutorBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.ServiceLoader;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -36,19 +33,22 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
      */
     private ThreadLocal<Long> downgrateStartTime = new ThreadLocal<>();
 
+
     /**
      * 调用链
      */
     private volatile AbstractStrategyExecutor strategyExecutor;
 
 
+    /**
+     * 客户端的推送
+     */
     public CommondDowngradeClient(String appGroupName, String appName) {
         super(appGroupName, appName);
         /**初始化策略链*/
         initStrategyChain();
-
         /**初始化配置策略信息*/
-        PullAndPushService.createOnlyOne(appGroupName, appName);
+        PullAndPushService.getInstance().updatePointStrategyFromAdminServer(appGroupName, appName);
     }
 
 
@@ -62,20 +62,20 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
      **/
     private void initStrategyChain() {
         String strategyExecutorName = "";
-
         try {
-            ServiceLoader<StrategyExecutorBuilder> strategyExecutorBuilders = ServiceLoader.load(StrategyExecutorBuilder.class);
-            Iterator<StrategyExecutorBuilder> strategyExecutorBuilderIterable = strategyExecutorBuilders.iterator();
-            /**注意这里是if ，只能取到一个*/
-            if (strategyExecutorBuilderIterable.hasNext()) {
-                StrategyExecutorBuilder strategyExecutorBuilder = strategyExecutorBuilderIterable.next();
-                strategyExecutor = strategyExecutorBuilder.build();
-                strategyExecutorName = strategyExecutorBuilder.getClass().getName();
-            }
-            if (strategyExecutor == null) {
-                /**构建默认的策略链*/
-                strategyExecutor = new DefaultStrategyExecutorBuilder().build();
-            }
+//            ServiceLoader<StrategyExecutorBuilder> strategyExecutorBuilders = ServiceLoader.load(StrategyExecutorBuilder.class);
+//            Iterator<StrategyExecutorBuilder> strategyExecutorBuilderIterable = strategyExecutorBuilders.iterator();
+//            /**注意这里是if ，只能取到一个*/
+//            if (strategyExecutorBuilderIterable.hasNext()) {
+//                StrategyExecutorBuilder strategyExecutorBuilder = strategyExecutorBuilderIterable.next();
+//                strategyExecutor = strategyExecutorBuilder.build();
+//                strategyExecutorName = strategyExecutorBuilder.getClass().getName();
+//            }
+//            if (strategyExecutor == null) {
+//                /**构建默认的策略链*/
+//                strategyExecutor = new DefaultStrategyExecutorBuilder().build();
+//            }
+            strategyExecutor = DefaultStrategyExecutorBuilder.getInstance().getAbstractStrategyExecutor();
             log.info("CommondDowngradeClient use strategy executor chain:{}", strategyExecutorName);
         } catch (Exception exception) {
             log.info("CommondDowngradeClient initStrategyChain error:{}", exception);
@@ -110,19 +110,19 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             setDowngradeStartTime(now);
 
             /**秒访问量+1*/
-            VisitValue visitValue = powerfulCounterService.visitAddAndGet(point, now);
+            VisitValue visitValue = powerfulCounterService.visitAddAndGet(appGroupName, appName, point, now);
             /**获取上一秒的访问量*/
-            long lastSecondVisitCount = powerfulCounterService.getLastSecondVisitBucketValue(point, now);
+            long lastSecondVisitCount = powerfulCounterService.getLastSecondVisitBucketValue(appGroupName, appName, point, now);
             /**并发访问量+1 true 成功，false 失败*/
-            boolean concurrentAcquire = powerfulCounterService.concurrentAcquire(point, now);
+            boolean concurrentAcquire = powerfulCounterService.concurrentAcquire(appGroupName, appName, point, now);
             /**当前滑动周期的异常次数*/
-            long exceptionCount = powerfulCounterService.getExceptionValue(point, now);
+            long exceptionCount = powerfulCounterService.getExceptionValue(appGroupName, appName, point, now);
             /**当前周期的异常调用次数*/
-            long timeoutCount = powerfulCounterService.getTimeoutValue(point, now);
+            long timeoutCount = powerfulCounterService.getTimeoutValue(appGroupName, appName, point, now);
             /**尝试消耗一个当前秒的令牌，并获取当前桶已消耗的令牌数*/
-            long takeTokenBucketNum = powerfulCounterService.tokenBucketAddAndGet(point, now);
+            long takeTokenBucketNum = powerfulCounterService.tokenBucketAddAndGet(appGroupName, appName, point, now);
             /**获取当前周期的降级次数*/
-            long downgrateCount = powerfulCounterService.getCurCycleDowngrateValue(point, now);
+            long downgrateCount = powerfulCounterService.getCurCycleDowngrateValue(appGroupName, appName, point, now);
             /**降级判断，是否需要降级处理*/
             return checkDowngrate(point, visitValue.getSlidingCycleValue(), visitValue.getBucketValue(), lastSecondVisitCount
                     , concurrentAcquire, exceptionCount, timeoutCount, takeTokenBucketNum
@@ -152,13 +152,13 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
         try {
 
             long startTime = getDowngradeStartTime();
-            if (throwable != null && DowngrateExceptionService.getInstance().isDowngradeException(point, throwable)) {
+            if (throwable != null && DowngrateExceptionService.getInstance().isDowngradeException(appGroupName, appName, point, throwable)) {
 
                 /**出现异常，继续降级延迟*/
-                DowngrateDelayService.getInstance().continueDowngrateDelay(point, startTime);
+                DowngrateDelayService.getInstance().continueDowngrateDelay(appGroupName, appName, point, startTime);
 
                 /**异常计数器+1*/
-                powerfulCounterService.exceptionAddAndGet(point, startTime);
+                powerfulCounterService.exceptionAddAndGet(appGroupName, appName, point, startTime);
             }
         } catch (Exception ex) {
             log.error("CommondDowngradeClient exceptionSign point:{} error:{}", point, ex);
@@ -180,9 +180,9 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             /**step1: 获取业务的耗时时间*/
             long consumerTime = TimeStatisticsUtil.getrConsumerTime();
             /**step2: 并发数-1*/
-            powerfulCounterService.concurrentRelease(point);
+            powerfulCounterService.concurrentRelease(appGroupName, appName, point);
             /**step3：获取策略配置*/
-            Strategy strategy = StrategyService.getInstance().getStrategy(point);
+            Strategy strategy = StrategyService.getInstance().getStrategy(appGroupName, appName, point);
             if (strategy == null || strategy.getTimeoutThreshold() <= 0) {
                 return;
             }
@@ -191,7 +191,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             if (timeoutThreshold < consumerTime) {
                 Long startTime = getDowngradeStartTime();
                 /**step5:已超时，超时计数器+1*/
-                powerfulCounterService.timeoutAddAndGet(point, startTime);
+                powerfulCounterService.timeoutAddAndGet(appGroupName, appName, point, startTime);
             }
         } catch (Exception ex) {
             log.error("CommondDowngradeClient downgradeFinally point : {} error:{}", point, ex);
@@ -243,7 +243,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
                                    long downgrateCount, long time) {
 
         /**step1：获取降级点的策略*/
-        Strategy strategy = StrategyService.getInstance().getStrategy(point);
+        Strategy strategy = StrategyService.getInstance().getStrategy(appGroupName, appName, point);
 
         /**没配置策略，或者降级比例小于等于0，表示不需要降级*/
         if (strategy == null || strategy.getDowngradeRate() <= 0) {
@@ -252,7 +252,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
 
         DowngradeActionType downgradeActionType = null;
         /**step2: 校验当前降级点在当前时间内 是否需要降级延迟*/
-        if (!DowngrateDelayService.getInstance().isDowngrateDelay(point, time)) {
+        if (!DowngrateDelayService.getInstance().isDowngrateDelay(appGroupName, appName, point, time)) {
             /**构建执行策略检查的参数*/
             CheckData checkData = CheckData.builder()
                     .point(point)
@@ -275,10 +275,10 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             }
 
             /**step4:如果访问量超过阈值时，需重置降级延迟时间，降级延迟开始*/
-            DowngrateDelayService.getInstance().resetExpireTime(point, time);
+            DowngrateDelayService.getInstance().resetExpireTime(appGroupName, appName, point, time);
         } else {
             /**step3: 如果需要降级延迟，判断 此次请求是否时降级延迟的重试请求，是的话 返回，否的话 继续执行*/
-            if (DowngrateDelayService.getInstance().retryChoice(point, time)) {
+            if (DowngrateDelayService.getInstance().retryChoice(appGroupName, appName, point, time)) {
                 log.info("CommondDowngradeClient 本次请求是降级延迟的重试请求:" + point);
                 return false;
             }
@@ -303,11 +303,19 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
     public void addDowngrateCount(String point, long time, DowngradeActionType downgradeActionType) {
 
         /**降级次数+1*/
-        powerfulCounterService.downgrateAddAndGet(point, time);
+        powerfulCounterService.downgrateAddAndGet(appGroupName, appName, point, time);
 
         /**触发降级通知*/
         DowngrateActionNotify.notify(point, downgradeActionType, new Date());
     }
 
+    @Override
+    public void updatePointStrategyFromAdminServer() {
+        super.abstractUpdatePointStrategyFromAdminServer();
+    }
 
+    @Override
+    public void pushDowngrateData2Admin() {
+        super.abstractPushDowngrateData2Admin();
+    }
 }

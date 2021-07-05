@@ -2,6 +2,7 @@ package com.xl.traffic.gateway.hystrix.service;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
+import com.xl.traffic.gateway.core.enums.MsgAppNameType;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.enums.MsgGroupType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
@@ -16,6 +17,7 @@ import com.xl.traffic.gateway.hystrix.model.PushCycleData;
 import com.xl.traffic.gateway.hystrix.model.PushRequest;
 import com.xl.traffic.gateway.hystrix.model.PushResponse;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
+import com.xl.traffic.gateway.hystrix.utils.BaseValidator;
 import com.xl.traffic.gateway.rpc.manager.RemoteRpcClientManager;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import lombok.extern.slf4j.Slf4j;
@@ -40,55 +42,20 @@ import static sun.security.pkcs11.Secmod.getInstance;
 @Slf4j
 public class PullAndPushService {
 
-    /**
-     * 应用组名称，同一个应用组下appName不能重复
-     */
-    private String appGroupName;
-
-    /**
-     * 应用名称，如bh-order
-     */
-    private String appName;
 
     ISerialize iSerialize = new Protostuff();
 
-
-    /**
-     * 单例
-     */
-    private static volatile PullAndPushService instance = null;
-
-    /**
-     * 创建一个appGroup，appName的服务通讯类
-     *
-     * @param appGroupName
-     * @param appName
-     * @return: void
-     * @author: xl
-     * @date: 2021/6/28
-     **/
-    public static void createOnlyOne(String appGroupName, String appName) {
-        if (instance == null) {
-            synchronized (PullAndPushService.class) {
-                if (instance == null) {
-                    instance = new PullAndPushService(appGroupName, appName);
-
-                    instance.updatePointStrategyFromAdminServer();
-                }
-            }
-        }
+    private static class InstanceHolder {
+        public static final PullAndPushService instance = new PullAndPushService();
     }
-
 
     public static PullAndPushService getInstance() {
-        return instance;
+        return InstanceHolder.instance;
     }
 
-    public PullAndPushService(String appGroupName, String appName) {
-        AssertUtil.notBlack(appGroupName, "appGroupName 不能为空！");
-        AssertUtil.notBlack(appName, "appName 不能为空！");
-        this.appGroupName = appGroupName;
-        this.appName = appName;
+
+    public PullAndPushService() {
+
     }
 
     /**
@@ -99,8 +66,9 @@ public class PullAndPushService {
      * @author: xl
      * @date: 2021/6/28
      **/
-    public void pushDowngrateData2Admin() {
+    public void pushDowngrateData2Admin(String appGroupName, String appName) {
         try {
+            BaseValidator.baseParamValidator(appGroupName, appName);
             Date date = new Date();
             Map<String, PushCycleData> pushCycleDataMap = buildPointCycleInfo(date.getTime());
             PushRequest pushRequest = PushRequest.builder()
@@ -114,7 +82,7 @@ public class PullAndPushService {
                             date.getTime())))
                     .build();
             /**构建rpc消息*/
-            RpcMsg rpcMsg = new RpcMsg(MsgCMDType.UPLOAD_DOWNGRATE_DATA_CMD.getType(), MsgGroupType.GATEWAY.getType(), SnowflakeIdWorker.getInstance().nextId(),
+            RpcMsg rpcMsg = new RpcMsg(MsgCMDType.UPLOAD_DOWNGRATE_DATA_CMD.getType(), MsgGroupType.GATEWAY.getType(), MsgAppNameType.GATEWAY.getType(), SnowflakeIdWorker.getInstance().nextId(),
                     iSerialize.serialize(pushRequest), (byte) 0);
             /**通过rpc 发送给admin端*/
             RemoteRpcClientManager.getInstance().sendAsync(GatewayConstants.GATEWAY_GROUP,
@@ -133,8 +101,8 @@ public class PullAndPushService {
      * @author: xl
      * @date: 2021/6/28
      **/
-    public void updatePointStrategyFromAdminServer() {
-
+    public void updatePointStrategyFromAdminServer(String appGroupName, String appName) {
+        BaseValidator.baseParamValidator(appGroupName, appName);
         try {
             /**获取所有的降级点*/
             List<String> points = PowerfulCounterService.getInstance().getPointCounterMap().keySet().stream().collect(Collectors.toList());
@@ -179,18 +147,18 @@ public class PullAndPushService {
             }
 
             /**更新降级点信息*/
-            updatePointInfo(strategies);
+            updatePointInfo(appGroupName,appName,strategies);
 
         } catch (Exception exception) {
             log.error("PullAndPushService updatePointStrategyFromAdminServer is error:{}", exception);
         }
     }
 
-    private void updatePointInfo(ConcurrentHashMap<String, Strategy> strategyMap) {
+    private void updatePointInfo(String appGroupName, String appName, ConcurrentHashMap<String, Strategy> strategyMap) {
 
 
         /**重设降级点策略*/
-        StrategyService.getInstance().updateAllStrategy(strategyMap);
+        StrategyService.getInstance().updateAllStrategy(appGroupName, appName, strategyMap);
 
         /**
          * 重设降级点返回值
@@ -222,19 +190,6 @@ public class PullAndPushService {
             map.put(point, pushCycleData);
         }
         return map;
-    }
-
-
-    /**
-     * 初始化策略配置信息
-     *
-     * @param
-     * @return: void
-     * @author: xl
-     * @date: 2021/6/28
-     **/
-    public void initStrategyConfigInfo() {
-        updatePointStrategyFromAdminServer();
     }
 
 

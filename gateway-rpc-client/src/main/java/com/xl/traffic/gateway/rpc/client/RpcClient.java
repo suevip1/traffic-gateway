@@ -2,9 +2,9 @@ package com.xl.traffic.gateway.rpc.client;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
-import com.xl.traffic.gateway.core.callback.CallFuture;
-import com.xl.traffic.gateway.core.callback.Callback;
-import com.xl.traffic.gateway.core.callback.CallbackPool;
+import com.xl.traffic.gateway.rpc.callback.CallFuture;
+import com.xl.traffic.gateway.rpc.callback.Callback;
+import com.xl.traffic.gateway.rpc.callback.CallbackPool;
 import com.xl.traffic.gateway.core.exception.RPCException;
 import com.xl.traffic.gateway.core.utils.AttributeKeys;
 import com.xl.traffic.gateway.rpc.starter.RpcClientStarter;

@@ -1,5 +1,7 @@
 package com.xl.traffic.gateway.hystrix;
 
+import com.xl.traffic.gateway.hystrix.service.PullAndPushService;
+
 /**
  * 服务降级的客户端api
  *
@@ -43,6 +45,27 @@ public interface DowngradeClient {
      * @date: 2021/6/24
      **/
     void downgradeFinally(String point);
+
+
+    /**
+     * 每5秒从admin服务端拉取最新的降级点配置信息
+     *
+     * @param
+     * @return: void
+     * @author: xl
+     * @date: 2021/7/5
+     **/
+    void updatePointStrategyFromAdminServer();
+
+    /**
+     * 汇报本地的降级数据给admin
+     *
+     * @param
+     * @return: void
+     * @author: xl
+     * @date: 2021/7/5
+     **/
+    void pushDowngrateData2Admin();
 
 
 }

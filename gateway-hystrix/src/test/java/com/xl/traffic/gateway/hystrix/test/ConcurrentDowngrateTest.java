@@ -1,6 +1,8 @@
 package com.xl.traffic.gateway.hystrix.test;
 
+import com.xl.traffic.gateway.hystrix.DowngradeClient;
 import com.xl.traffic.gateway.hystrix.counter.PowerfulCycleTimeCounter;
+import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import com.xl.traffic.gateway.hystrix.service.PowerfulCounterService;
 import com.xl.traffic.gateway.hystrix.service.StrategyService;
@@ -63,12 +65,27 @@ public class ConcurrentDowngrateTest extends AbstractDowngradeTest {
         /**
          * 重设策略
          */
-        StrategyService.getInstance().updateStrategyByPoint(getPoint(), strategy);
+        StrategyService.getInstance().updateStrategyByPoint(getAppGroupName(), getApp(), getPoint(), strategy);
     }
 
     @Override
     protected String getPoint() {
         return "concurrentPoint";
+    }
+
+    @Override
+    protected DowngradeClient getDowngradeClient() {
+        return DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(getAppGroupName(), getApp());
+    }
+
+    @Override
+    protected String getAppGroupName() {
+        return "concurrent_group";
+    }
+
+    @Override
+    protected String getApp() {
+        return "concurrent";
     }
 
     @Override

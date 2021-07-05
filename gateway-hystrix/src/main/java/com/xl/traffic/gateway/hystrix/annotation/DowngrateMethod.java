@@ -13,6 +13,15 @@ import java.lang.annotation.*;
 @Documented
 public @interface DowngrateMethod {
 
+    /**
+     * app应用组
+     */
+    String appGroupName();
+
+    /**
+     * app应用
+     */
+    String appName();
 
     /**
      * 降级点

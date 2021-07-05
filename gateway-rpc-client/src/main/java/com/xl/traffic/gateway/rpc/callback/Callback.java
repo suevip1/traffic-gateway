@@ -1,4 +1,4 @@
-package com.xl.traffic.gateway.core.callback;
+package com.xl.traffic.gateway.rpc.callback;
 
 /**
  * 客户端回调接口

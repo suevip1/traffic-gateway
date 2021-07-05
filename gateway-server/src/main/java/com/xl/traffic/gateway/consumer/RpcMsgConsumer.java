@@ -1,4 +1,4 @@
-package com.xl.traffic.gateway.core.rpc;
+package com.xl.traffic.gateway.consumer;
 
 import com.xl.traffic.gateway.core.mq.MQProvider;
 import com.xl.traffic.gateway.core.mq.MessageQueue;

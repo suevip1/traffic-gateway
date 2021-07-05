@@ -2,17 +2,17 @@ package com.xl.traffic.gateway.core.enums;
 
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 
-public enum MsgGroupType {
+public enum MsgAppNameType {
 
 
-    GATEWAY((byte) 1, GatewayConstants.GATEWAY_GROUP),
+    GATEWAY((byte) 1, GatewayConstants.GATEWAY),
 
     ;
 
     private byte type;
     private String name;
 
-    MsgGroupType(byte type, String name) {
+    MsgAppNameType(byte type, String name) {
         this.type = type;
         this.name = name;
     }

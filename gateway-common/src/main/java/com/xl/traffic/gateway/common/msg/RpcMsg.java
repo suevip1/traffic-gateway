@@ -26,15 +26,18 @@ public class RpcMsg implements Serializable {
 
     private byte group;//请求组
 
+    private byte appName;//请求app应用名称
+
     private long reqId;//请求ID
 
     private byte[] body;//传输内容
 
     private byte zip; //是否支持压缩
 
-    public RpcMsg(byte cmd, byte group, long reqId, byte[] body, byte zip) {
+    public RpcMsg(byte cmd, byte group,byte appName, long reqId, byte[] body, byte zip) {
         this.cmd = cmd;
         this.group = group;
+        this.appName = appName;
         this.reqId = reqId;
         this.body = body;
         this.zip = zip;

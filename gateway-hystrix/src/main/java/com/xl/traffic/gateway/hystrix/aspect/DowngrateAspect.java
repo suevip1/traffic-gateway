@@ -4,6 +4,7 @@ import com.xl.traffic.gateway.core.exception.DowngrateException;
 import com.xl.traffic.gateway.hystrix.DowngradeClient;
 import com.xl.traffic.gateway.hystrix.XLDowngrateClientFactory;
 import com.xl.traffic.gateway.hystrix.annotation.DowngrateMethod;
+import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -51,7 +52,7 @@ public class DowngrateAspect {
             throw new IllegalStateException("这不应该发生，请联系管理员！！");
         }
 
-        DowngradeClient client = XLDowngrateClientFactory.getDowngrateClient();
+        DowngradeClient client = DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(downgrateMethodAnnotation.appGroupName(),downgrateMethodAnnotation.appName());
         if (client == null) {
             return pjp.proceed();
         }

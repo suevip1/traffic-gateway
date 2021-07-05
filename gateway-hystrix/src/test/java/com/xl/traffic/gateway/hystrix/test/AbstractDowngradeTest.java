@@ -2,6 +2,7 @@ package com.xl.traffic.gateway.hystrix.test;
 
 import com.xl.traffic.gateway.hystrix.DowngradeClient;
 import com.xl.traffic.gateway.hystrix.XLDowngrateClientFactory;
+import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
 import com.xl.traffic.gateway.hystrix.service.CycleDataService;
 import org.junit.Before;
 
@@ -17,8 +18,6 @@ import java.util.concurrent.TimeUnit;
  * @date: 2021/6/29
  **/
 public abstract class AbstractDowngradeTest {
-
-    protected static DowngradeClient downgradeClient = XLDowngrateClientFactory.getDowngrateClient();
 
 
     //业务方法是否需要抛出异常
@@ -80,6 +79,38 @@ public abstract class AbstractDowngradeTest {
     protected abstract void initStrategy();
 
     /**
+     * 初始化策略
+     *
+     * @param
+     * @return: void
+     * @author: xl
+     * @date: 2021/6/29
+     **/
+    protected abstract DowngradeClient getDowngradeClient();
+
+
+    /**
+     * 应用组名称
+     *
+     * @param
+     * @return: java.lang.String
+     * @author: xl
+     * @date: 2021/6/29
+     **/
+    protected abstract String getAppGroupName();
+
+    /**
+     * 应用名称
+     *
+     * @param
+     * @return: java.lang.String
+     * @author: xl
+     * @date: 2021/6/29
+     **/
+    protected abstract String getApp();
+
+
+    /**
      * 降级点名称
      *
      * @param
@@ -88,6 +119,7 @@ public abstract class AbstractDowngradeTest {
      * @date: 2021/6/29
      **/
     protected abstract String getPoint();
+
 
     /**
      * 获取执行的线程池数
@@ -160,7 +192,7 @@ public abstract class AbstractDowngradeTest {
     private void businessMethod() {
         try {
             /**step1:降级入口判断*/
-            if (downgradeClient.shouldDowngrade(getPoint())) {
+            if (getDowngradeClient().shouldDowngrade(getPoint())) {
                 return;
             }
             /**模拟正常业务执行*/
@@ -172,11 +204,11 @@ public abstract class AbstractDowngradeTest {
             }
         } catch (Throwable throwable) {
             /**step2：降级统计异常量*/
-            downgradeClient.exceptionSign(getPoint(), throwable);
+            getDowngradeClient().exceptionSign(getPoint(), throwable);
             throw throwable;
         } finally {
             /**step3:降级资源释放*/
-            downgradeClient.downgradeFinally(getPoint());
+            getDowngradeClient().downgradeFinally(getPoint());
         }
     }
 

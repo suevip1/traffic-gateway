@@ -1,8 +1,8 @@
 package com.xl.traffic.gateway.rpc.manager;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
-import com.xl.traffic.gateway.core.callback.CallFuture;
-import com.xl.traffic.gateway.core.callback.Callback;
+import com.xl.traffic.gateway.rpc.callback.CallFuture;
+import com.xl.traffic.gateway.rpc.callback.Callback;
 import com.xl.traffic.gateway.core.exception.RPCException;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.core.utils.ThreadPoolUtils;

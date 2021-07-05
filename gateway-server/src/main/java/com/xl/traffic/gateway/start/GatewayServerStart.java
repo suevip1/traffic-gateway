@@ -1,7 +1,6 @@
 package com.xl.traffic.gateway.start;
 
 
-import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.server.Server;
@@ -9,12 +8,15 @@ import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.GatewayPortConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
 import com.xl.traffic.gateway.core.zk.ZkHelp;
+import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
 import com.xl.traffic.gateway.rpc.cluster.ClusterCenter;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import com.xl.traffic.gateway.server.http.HttpServer;
 import com.xl.traffic.gateway.server.rpc.GatewayRpcServer;
 import com.xl.traffic.gateway.server.tcp.TcpServer;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GatewayServerStart {
 
     private static class InstanceHolder {
@@ -48,6 +50,8 @@ public class GatewayServerStart {
         tcpServer.start();
         httpServer.start();
         gatewayRpcServer.start();
+        /**添加降级监听器*/
+        addDowngrateEventListener();
         /**注册gateway信息*/
         registerServer();
         /**连接router集群*/
@@ -62,6 +66,21 @@ public class GatewayServerStart {
         NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
         /**监听大业务集群*/
         ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+    }
+
+
+    /**
+     * 添加降级监听器
+     *
+     * @param
+     * @return: void
+     * @author: xl
+     * @date: 2021/6/30
+     **/
+    public void addDowngrateEventListener() {
+        DowngrateActionNotify.addDowngradeActionListener((point, downgradeActionType, time) -> {
+            log.info("point:{} is downgraded at {} type:{}", point, time, downgradeActionType);
+        });
     }
 
 

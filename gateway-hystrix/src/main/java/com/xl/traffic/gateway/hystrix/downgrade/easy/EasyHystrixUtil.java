@@ -1,7 +1,7 @@
 package com.xl.traffic.gateway.hystrix.downgrade.easy;
 
 import com.xl.traffic.gateway.hystrix.DowngradeClient;
-import com.xl.traffic.gateway.hystrix.XLDowngrateClientFactory;
+import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
 import org.springframework.util.StringUtils;
 
 /**
@@ -19,11 +19,13 @@ public class EasyHystrixUtil {
      * @param point          降级点
      * @param downgrateValue 降级后返回的默认值
      * @param bizFunction    业务方法
+     * @param appGroupName   应用组
+     * @param appName        应用
      * @return: T
      * @author: xl
      * @date: 2021/6/29
      **/
-    public static <T> T invokeMethod(String point, T downgrateValue, BizFunction<T> bizFunction) {
+    public static <T> T invokeMethod(String appGroupName, String appName, String point, T downgrateValue, BizFunction<T> bizFunction) {
         if (bizFunction == null) {
             return downgrateValue;
         }
@@ -35,7 +37,7 @@ public class EasyHystrixUtil {
             return bizFunction.invokeBizMethod();
         }
 
-        DowngradeClient downgradeClient = XLDowngrateClientFactory.getDowngrateClient();
+        DowngradeClient downgradeClient = DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(appGroupName, appName);
 
         if (downgradeClient == null) {
             return bizFunction.invokeBizMethod();
@@ -64,12 +66,14 @@ public class EasyHystrixUtil {
     /**
      * 执行有降级逻辑的业务方法,适用于无返回值的场景
      *
-     * @param point       降级点
-     * @param bizFunction 业务方法
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点
+     * @param bizFunction  业务方法
      * @author: xl
      * @date: 2021/6/29
      **/
-    public static void invokeMethodWithoutReturn(String point, BizFunction bizFunction) {
+    public static void invokeMethodWithoutReturn(String appGroupName, String appName, String point, BizFunctionWithoutReturn bizFunction) {
         if (bizFunction == null) {
             return;
         }
@@ -82,7 +86,7 @@ public class EasyHystrixUtil {
             return;
         }
 
-        DowngradeClient downgradeClient = XLDowngrateClientFactory.getDowngrateClient();
+        DowngradeClient downgradeClient = DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(appGroupName, appName);
 
         if (downgradeClient == null) {
             bizFunction.invokeBizMethod();
@@ -120,6 +124,8 @@ public class EasyHystrixUtil {
     /**
      * 执行有降级逻辑的业务方法，降级后将执行指定的降级方法，类似于fallback
      *
+     * @param appGroupName      应用组
+     * @param appName           应用
      * @param point             降级点
      * @param downgrateFunction 降级后执行的方法
      * @param bizFunction       业务方法
@@ -127,7 +133,7 @@ public class EasyHystrixUtil {
      * @author: xl
      * @date: 2021/6/29
      **/
-    public static <T> T invokeDowngrateMethod(String point,
+    public static <T> T invokeDowngrateMethod(String appGroupName, String appName, String point,
                                               DowngrateFunction<T> downgrateFunction, BizFunction<T> bizFunction) {
         if (bizFunction == null) {
             if (downgrateFunction == null) {
@@ -144,7 +150,7 @@ public class EasyHystrixUtil {
             return bizFunction.invokeBizMethod();
         }
 
-        DowngradeClient downgradeClient = XLDowngrateClientFactory.getDowngrateClient();
+        DowngradeClient downgradeClient = DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(appGroupName, appName);
 
         if (downgradeClient == null) {
             return bizFunction.invokeBizMethod();
@@ -174,14 +180,15 @@ public class EasyHystrixUtil {
     /**
      * 执行有降级逻辑的业务方法，降级后将执行指定的降级方法，类似于fallback
      *
+     * @param appGroupName      应用组
+     * @param appName           应用
      * @param point             降级点
      * @param downgrateFunction 降级后执行的方法
      * @param bizFunction       业务方法
      * @author: xl
      * @date: 2021/6/29
      **/
-    public static void invokeDowngrateMethodWithoutReturn(String point,
-                                                          DowngrateFunctionWithoutReturn downgrateFunction, BizFunction bizFunction) {
+    public static void invokeDowngrateMethodWithoutReturn(String appGroupName, String appName, String point, DowngrateFunctionWithoutReturn downgrateFunction, BizFunctionWithoutReturn bizFunction) {
         if (bizFunction == null) {
             if (downgrateFunction == null) {
                 throw new IllegalArgumentException("EasyHystrixUtil#invokeDowngrateMethod downgradeFunction " +
@@ -199,7 +206,7 @@ public class EasyHystrixUtil {
             return;
         }
 
-        DowngradeClient downgradeClient = XLDowngrateClientFactory.getDowngrateClient();
+        DowngradeClient downgradeClient = DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(appGroupName, appName);
 
         if (downgradeClient == null) {
             bizFunction.invokeBizMethod();
@@ -232,19 +239,20 @@ public class EasyHystrixUtil {
      * 一键熔断开关
      * 有时候需要做熔断功能，不需要其它限流方式，类似于一键开关，那么就可以直接使用该方法
      *
-     * @param point 降级点名称
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点名称
      * @return: boolean true-熔断打开，不应该执行业务逻辑，业务方直接走降级逻辑;false-熔断关闭，应该执行业务逻辑
      * @author: xl
      * @date: 2021/6/29
      **/
-    public static boolean oneButtonFusingSwitch(String point) {
+    public static boolean oneButtonFusingSwitch(String appGroupName, String appName, String point) {
 
         if (StringUtils.isEmpty(point)) {
             return false;
         }
 
-
-        DowngradeClient downgradeClient = XLDowngrateClientFactory.getDowngrateClient();
+        DowngradeClient downgradeClient = DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(appGroupName, appName);
 
         if (downgradeClient == null) {
             return false;

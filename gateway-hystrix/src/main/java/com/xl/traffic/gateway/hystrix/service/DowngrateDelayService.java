@@ -5,6 +5,7 @@ import com.xl.traffic.gateway.core.utils.AssertUtil;
 import com.xl.traffic.gateway.core.utils.DateUtils;
 import com.xl.traffic.gateway.hystrix.constant.DowngradeConstant;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
+import com.xl.traffic.gateway.hystrix.utils.CacheKeyUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +38,7 @@ public class DowngrateDelayService {
 
     /**
      * key-降级点，value-延迟时间器
+     * //todo 改变一下存储结构，key=appGroupName+appName+point
      */
     private ConcurrentHashMap<String, DelayTimer> pointDelayMap = new ConcurrentHashMap<>();
 
@@ -52,30 +54,34 @@ public class DowngrateDelayService {
     /**
      * 新增一个降级点延迟
      *
-     * @param point
-     * @param delayTime
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点
+     * @param delayTime    降级延迟时间
      * @return: void
      * @author: xl
-     * @date: 2021/6/25
+     * @date: 2021/7/5
      **/
-    public void addPointDelay(String point, long delayTime) {
-        addPointDelay(point, delayTime, -1);
+    public void addPointDelay(String appGroupName, String appName, String point, long delayTime) {
+        addPointDelay(appGroupName, appName, point, delayTime, -1);
     }
 
 
     /**
      * 新增一个降级点延迟
      *
-     * @param point
-     * @param delayTime
-     * @param retryInterval
+     * @param appGroupName  应用组
+     * @param appName       应用
+     * @param point         降级点
+     * @param delayTime     降级延迟时间
+     * @param retryInterval 降级重试间隔
      * @return: void
      * @author: xl
-     * @date: 2021/6/25
+     * @date: 2021/7/5
      **/
-    public void addPointDelay(String point, long delayTime, long retryInterval) {
+    public void addPointDelay(String appGroupName, String appName, String point, long delayTime, long retryInterval) {
         DelayTimer delayTimer = new DelayTimer(delayTime, retryInterval);
-        delayTimer = pointDelayMap.putIfAbsent(point, delayTimer);
+        delayTimer = pointDelayMap.putIfAbsent(CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName, appName, point), delayTimer);
         if (delayTimer == null) {
             log.info("DowngrateDelayService 新增一个降级点延迟：" + point + "-" + delayTimer);
         } else {
@@ -92,23 +98,24 @@ public class DowngrateDelayService {
      * @author: xl
      * @date: 2021/6/25
      **/
-    public void addOrUpdatePointDelay(ConcurrentHashMap<String, Strategy> strategyMap) {
+    public void addOrUpdatePointDelay(String appGroupName, String appName,ConcurrentHashMap<String, Strategy> strategyMap) {
         for (Map.Entry<String, Strategy> entry : strategyMap.entrySet()) {
             Strategy strategy = entry.getValue();
             String point = entry.getKey();
+            String key=CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName,appName,point);
             /**校验降级延迟时间是否大于0，如果小于0表示降级策略中没有这个特性*/
             if (strategy.getDelayTime() <= 0) {
                 continue;
             }
-            DelayTimer oldDelayTimer = pointDelayMap.get(point);
+            DelayTimer oldDelayTimer = pointDelayMap.get(key);
             if (null == oldDelayTimer) {
                 //新增一个降级延迟点
                 DelayTimer delayTimer = new DelayTimer(strategy.getDelayTime(), strategy.getRetryInterval());
-                pointDelayMap.put(point, delayTimer);
+                pointDelayMap.put(key, delayTimer);
             } else {
                 //如果之前有延迟策略配置，那么久直接做更新
                 oldDelayTimer.update(strategy.getDelayTime(), strategy.getRetryInterval());
-                pointDelayMap.put(point, oldDelayTimer);
+                pointDelayMap.put(key, oldDelayTimer);
             }
         }
     }
@@ -116,27 +123,30 @@ public class DowngrateDelayService {
     /**
      * 根据最新的策略来添加/更新单个的降级延迟信息
      *
-     * @param point    降级点名称
-     * @param strategy 策略信息
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点
+     * @param strategy     策略
      * @return: void
      * @author: xl
-     * @date: 2021/6/25
+     * @date: 2021/7/5
      **/
-    public void addOrUpdatePointDelayByPoint(String point, Strategy strategy) {
+    public void addOrUpdatePointDelayByPoint(String appGroupName, String appName, String point, Strategy strategy) {
 
+        String key = CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName, appName, point);
         /**校验降级延迟时间是否大于0，如果小于0表示降级策略中没有这个特性*/
         if (strategy.getDelayTime() <= 0) {
             return;
         }
-        DelayTimer oldDelayTimer = pointDelayMap.get(point);
+        DelayTimer oldDelayTimer = pointDelayMap.get(key);
         if (null == oldDelayTimer) {
             //新增一个降级延迟点
             DelayTimer delayTimer = new DelayTimer(strategy.getDelayTime(), strategy.getRetryInterval());
-            pointDelayMap.put(point, delayTimer);
+            pointDelayMap.put(key, delayTimer);
         } else {
             //如果之前有延迟策略配置，那么久直接做更新
             oldDelayTimer.update(strategy.getDelayTime(), strategy.getRetryInterval());
-            pointDelayMap.put(point, oldDelayTimer);
+            pointDelayMap.put(key, oldDelayTimer);
         }
     }
 
@@ -144,14 +154,16 @@ public class DowngrateDelayService {
     /**
      * 该降级点在该段时间是否应该延迟降级
      *
-     * @param point 降级点名称
-     * @param time  当前时间
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点
+     * @param time         降级时间
      * @return: boolean
      * @author: xl
-     * @date: 2021/6/25
+     * @date: 2021/7/5
      **/
-    public boolean isDowngrateDelay(String point, long time) {
-        DelayTimer delayTimer = pointDelayMap.get(point);
+    public boolean isDowngrateDelay(String appGroupName, String appName, String point, long time) {
+        DelayTimer delayTimer = pointDelayMap.get(CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName, appName, point));
         if (delayTimer == null) {
             return false;
         }
@@ -161,33 +173,35 @@ public class DowngrateDelayService {
     /**
      * 降级延迟中的重试请求判断
      *
-     * @param point 降级点名称
-     * @param now   当前时间
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点
+     * @param now          当前时间
      * @return: boolean
      * @author: xl
-     * @date: 2021/6/28
+     * @date: 2021/7/5
      **/
-    public boolean retryChoice(String point, long now) {
-        DelayTimer delayTimer = pointDelayMap.get(point);
+    public boolean retryChoice(String appGroupName, String appName, String point, long now) {
+        DelayTimer delayTimer = pointDelayMap.get(CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName, appName, point));
         if (delayTimer == null) {
             return false;
         }
-
-        //todo 记得做
-        return delayTimer.canRetry(point, now);
+        return delayTimer.canRetry(appGroupName, appName, point, now);
     }
 
     /**
      * 重设降级延迟时间
      *
-     * @param point   降级点名称
-     * @param curDate 当前时间
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点
+     * @param curDate      当前时间
      * @return: void
      * @author: xl
-     * @date: 2021/6/28
+     * @date: 2021/7/5
      **/
-    public void resetExpireTime(String point, long curDate) {
-        DelayTimer delayTimer = pointDelayMap.get(point);
+    public void resetExpireTime(String appGroupName, String appName, String point, long curDate) {
+        DelayTimer delayTimer = pointDelayMap.get(CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName, appName, point));
         if (null != delayTimer) {
             delayTimer.resetDelayTime(curDate);
             delayTimer.resetRetryTime(curDate);
@@ -198,27 +212,31 @@ public class DowngrateDelayService {
     /**
      * 重试失败，继续降级延迟
      *
-     * @param point 降级点
-     * @param time  当前时间
+     * @param appGroupName 应用组
+     * @param appName      应用
+     * @param point        降级点
+     * @param time         当前时间
      * @return: void
      * @author: xl
-     * @date: 2021/6/28
+     * @date: 2021/7/5
      **/
-    public void continueDowngrateDelay(String point, long time) {
-        Boolean isRetry = pointRetry.get().get(point);
+
+    public void continueDowngrateDelay(String appGroupName, String appName, String point, long time) {
+        String key = CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName, appName, point);
+        Boolean isRetry = pointRetry.get().get(key);
         if (null == isRetry) {
-            pointRetry.get().put(point, false);
+            pointRetry.get().put(key, false);
             return;
         }
         /**step1：校验重试是否进行过*/
         if (isRetry) {
-            DelayTimer delayTimer = pointDelayMap.get(point);
+            DelayTimer delayTimer = pointDelayMap.get(key);
             if (null != delayTimer) {
                 /**step2:重设重试时间，重试次数*/
                 delayTimer.resetRetryTime(time);
                 delayTimer.resetRetryTimes();
             }
-            pointRetry.get().put(point, false);
+            pointRetry.get().put(key, false);
         }
     }
 
@@ -322,7 +340,7 @@ public class DowngrateDelayService {
          * @author: xl
          * @date: 2021/6/25
          **/
-        public boolean canRetry(String point, long curDate) {
+        public boolean canRetry(String appGroupName, String appName, String point, long curDate) {
             /**step1：是否有重试时间*/
             if (!hasRetryTime()) {
                 return false;
@@ -336,7 +354,7 @@ public class DowngrateDelayService {
                     /**step3：重试次数-1*/
                     if (currRetryTimes.compareAndSet(retryCount, retryCount - 1)) {
                         //标记重试正在进行
-                        pointRetry.get().put(point, true);
+                        pointRetry.get().put(CacheKeyUtil.getAppGroupWithAppNameWithPoint(appGroupName, appName, point), true);
                         return true;
                     }
                 }

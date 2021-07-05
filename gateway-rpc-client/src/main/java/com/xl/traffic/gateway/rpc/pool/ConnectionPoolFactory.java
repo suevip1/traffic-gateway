@@ -35,11 +35,11 @@ public class ConnectionPoolFactory {
      *
      * @param
      */
-    public void zkSyncRpcServer(String zkPath,ServerNodeInfo nodeInfo) {
+    public void zkSyncRpcServer(String zkPath, ServerNodeInfo nodeInfo) {
 
         /**配置的连接池队列 一定要比缓存的连接池队列数量要大，只支持高峰时期的扩容，不支持缩容*/
         int rpcPoolSize = nodeInfo.getRpcPoolSize();
-        int cacheRpcpoolSize = ConnectionCache.rpcPoolSize();
+        int cacheRpcpoolSize = (int) ConnectionCache.rpcPoolSize();
         int initIndex = 0;
         if (cacheRpcpoolSize > 0) {
             initIndex = cacheRpcpoolSize;
