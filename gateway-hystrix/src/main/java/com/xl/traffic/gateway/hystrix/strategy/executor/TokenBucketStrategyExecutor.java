@@ -8,7 +8,7 @@ import com.xl.traffic.gateway.hystrix.strategy.AbstractStrategyExecutor;
 import org.springframework.core.annotation.Order;
 
 /**
- * 超时次数降级策略
+ * 令牌桶降级策略
  *
  * @author: xl
  * @date: 2021/6/24
