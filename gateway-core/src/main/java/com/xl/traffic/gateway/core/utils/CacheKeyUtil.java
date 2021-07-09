@@ -1,6 +1,4 @@
-package com.xl.traffic.gateway.hystrix.utils;
-
-import com.xl.traffic.gateway.core.utils.AssertUtil;
+package com.xl.traffic.gateway.core.utils;
 
 /**
  * 缓存key 工具类
@@ -42,6 +40,18 @@ public class CacheKeyUtil {
         AssertUtil.notBlack(appName, "应用不能为空！");
         AssertUtil.notBlack(point, "降级点不能为空！");
         return appGroupName + appName + point;
+    }
+
+    /**
+     * 获取用户登录的Redis key
+     *
+     * @param userId
+     * @return: java.lang.String
+     * @author: xl
+     * @date: 2021/7/6
+     **/
+    public static String getUserLoginRedisCacheKey(String userId) {
+        return GatewayConstants.CONN_PREFIX + userId;
     }
 
 

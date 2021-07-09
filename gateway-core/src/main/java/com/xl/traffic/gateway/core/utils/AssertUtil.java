@@ -38,4 +38,11 @@ public final class AssertUtil {
         }
     }
 
+    public static void isTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+
 }

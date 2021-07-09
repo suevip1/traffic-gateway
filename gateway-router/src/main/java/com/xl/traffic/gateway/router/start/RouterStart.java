@@ -1,6 +1,5 @@
 package com.xl.traffic.gateway.router.start;
 
-import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.server.Server;
@@ -70,7 +69,7 @@ public class RouterStart {
                 GSONUtil.toJson(NodelUtil.getInstance().buildServerNodeInfo(
                         GatewayConstants.ROUTER, GatewayConstants.ROUTER_GROUP, AddressUtils.getInnetIp(),
                         GatewayPortConstants.TCP_ROUTER_PORT, GatewayConstants.WEIGHT, -1,
-                        -1, GatewayConstants.RPC_POOL_SIZE, "tcp", "")
+                        -1, GatewayConstants.RPC_POOL_SIZE, GatewayConstants.TCP, "")
                 ));
     }
 

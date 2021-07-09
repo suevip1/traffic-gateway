@@ -9,7 +9,7 @@ import com.xl.traffic.gateway.core.loadbalance.RpcLoadBalance;
 import com.xl.traffic.gateway.core.loadbalance.strategy.RpcLoadBalanceStrategy;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
-import com.xl.traffic.gateway.core.zk.ZkHelp;
+import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 import com.xl.traffic.gateway.rpc.client.RpcClient;
 import com.xl.traffic.gateway.rpc.cluster.ClusterCenter;
 import com.xl.traffic.gateway.rpc.connect.ConnectionCache;

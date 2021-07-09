@@ -2,12 +2,10 @@ package com.xl.traffic.gateway.hystrix.service;
 
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
-import com.xl.traffic.gateway.hystrix.utils.CacheKeyUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

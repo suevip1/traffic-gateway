@@ -27,6 +27,11 @@ public class GatewayPortConstants {
      */
     public static int TCP_ADMIN_PORT = 20003;
 
+    /**
+     * monitor 服务 tcp 端口号
+     */
+    public static int TCP_MONITOR_PORT = 20004;
+
 
 
 }

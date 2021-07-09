@@ -1,6 +1,7 @@
 package com.xl.traffic.gateway.server.tcp.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import com.xl.traffic.gateway.core.model.AuthModel;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class AuthHandler implements GatewayServerHandlerService {
     @Override
     public void execute(RpcMsg rpcMsg, Channel channel) {
 
-        //todo 执行业务
+
         ThreadPoolExecutorUtil.getCommonIOPool().submit(() -> {
 
 

@@ -37,4 +37,31 @@ public class ThreadPoolExecutorUtil {
                 }
             }
     );
+
+
+    /**
+     * 密集型计算线程池
+     */
+    @Getter
+    private final static ExecutorService commonCPUPool = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
+            Runtime.getRuntime().availableProcessors() * 2,
+            1L,
+            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(1000000),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r, "common-CPU-executor");
+                    thread.setDaemon(true);
+                    return thread;
+                }
+            },
+            new RejectedExecutionHandler() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                    log.warn("common-cpu-executor 丢弃。");
+                }
+            }
+    );
+
+
 }

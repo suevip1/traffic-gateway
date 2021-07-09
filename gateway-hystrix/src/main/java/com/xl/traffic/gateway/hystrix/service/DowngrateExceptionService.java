@@ -2,7 +2,7 @@ package com.xl.traffic.gateway.hystrix.service;
 
 import com.xl.traffic.gateway.core.exception.DowngrateException;
 import com.xl.traffic.gateway.core.utils.AssertUtil;
-import com.xl.traffic.gateway.hystrix.utils.CacheKeyUtil;
+import com.xl.traffic.gateway.core.utils.CacheKeyUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;

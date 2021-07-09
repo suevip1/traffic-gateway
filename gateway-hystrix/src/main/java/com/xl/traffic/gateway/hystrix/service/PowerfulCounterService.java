@@ -3,7 +3,6 @@ package com.xl.traffic.gateway.hystrix.service;
 import com.xl.traffic.gateway.hystrix.counter.PowerfulCycleTimeCounter;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import com.xl.traffic.gateway.hystrix.model.VisitValue;
-import com.xl.traffic.gateway.hystrix.utils.CacheKeyUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

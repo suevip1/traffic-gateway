@@ -5,6 +5,7 @@ public enum MsgCMDType {
 
     HEAT_CMD((byte) 1, "心跳检测"),
     UPLOAD_DOWNGRATE_DATA_CMD((byte) 2, "上传降级统计信息"),
+    UPLOAD_MONITOR_DATA_CMD((byte) 3, "上报monitor指标统计信息"),
 
     ;
 

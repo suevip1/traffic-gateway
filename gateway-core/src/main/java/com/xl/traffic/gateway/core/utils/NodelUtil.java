@@ -3,7 +3,7 @@ package com.xl.traffic.gateway.core.utils;
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
-import com.xl.traffic.gateway.core.zk.ZkHelp;
+import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 
 public class NodelUtil {
 

@@ -14,9 +14,11 @@ public class GatewayConstants {
     public static String GATEWAY = "gateway";
     public static String GATEWAY_GROUP = "gateway_group";
     public static String ROUTER = "router";
-    public static String ADMIN = "admin";
     public static String ROUTER_GROUP = "router_group";
+    public static String ADMIN = "admin";
     public static String ADMIN_GROUP = "admin_group";
+    public static String MONITOR = "monitor";
+    public static String MONITOR_GROUP = "monitor_group";
 
     /**服务注册路径层级定义，共3层，第一层为 server 第二层为具体业务名称*/
     /**
@@ -36,6 +38,11 @@ public class GatewayConstants {
      * admin 服务 zk 路径
      */
     public static String ADMIN_ZK_ROOT_PATH = ROOT_RPC_SERVER_PATH_PREFIX + ADMIN;
+
+    /**
+     * monitor 服务 zk 路径
+     */
+    public static String MONITOR_ZK_ROOT_PATH = ROOT_RPC_SERVER_PATH_PREFIX + MONITOR;
 
 
     /**
@@ -85,5 +92,24 @@ public class GatewayConstants {
      */
     public static final long MILLISECOND_IN_SECOND = 1000;
 
+    /**
+     * tcp协议
+     */
+    public static final String TCP = "tcp";
+    /**
+     * http协议
+     */
+    public static final String HTTP = "http";
+
+    /**
+     * 连接用户前缀
+     */
+    public static String CONN_PREFIX = "conn:";                   //在线用户(hash)
+
+
+    /**
+     * 定时多长时间上报一次gateway 服务健康数据信息，单位s
+     */
+    public static int REPORT_GATEWAY_HEALTH_DATA_TIME = 60;
 
 }

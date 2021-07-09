@@ -6,6 +6,7 @@ public enum MsgGroupType {
 
 
     GATEWAY((byte) 1, GatewayConstants.GATEWAY_GROUP),
+    MONITOR((byte) 2, GatewayConstants.MONITOR_GROUP),
 
     ;
 

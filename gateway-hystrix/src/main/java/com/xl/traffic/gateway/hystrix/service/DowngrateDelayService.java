@@ -5,11 +5,9 @@ import com.xl.traffic.gateway.core.utils.AssertUtil;
 import com.xl.traffic.gateway.core.utils.DateUtils;
 import com.xl.traffic.gateway.hystrix.constant.DowngradeConstant;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
-import com.xl.traffic.gateway.hystrix.utils.CacheKeyUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.security.DenyAll;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

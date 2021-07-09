@@ -7,8 +7,9 @@ import com.xl.traffic.gateway.core.server.Server;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.GatewayPortConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
-import com.xl.traffic.gateway.core.zk.ZkHelp;
 import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
+import com.xl.traffic.gateway.monitor.MonitorReport;
+import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 import com.xl.traffic.gateway.rpc.cluster.ClusterCenter;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import com.xl.traffic.gateway.server.http.HttpServer;
@@ -50,6 +51,8 @@ public class GatewayServerStart {
         tcpServer.start();
         httpServer.start();
         gatewayRpcServer.start();
+        /**启动数据上报*/
+        MonitorReport.statisticsReportMonitorData();
         /**添加降级监听器*/
         addDowngrateEventListener();
         /**注册gateway信息*/
@@ -98,7 +101,7 @@ public class GatewayServerStart {
                 GSONUtil.toJson(
                         NodelUtil.getInstance().buildServerNodeInfo(
                                 GatewayConstants.GATEWAY, GatewayConstants.GATEWAY_GROUP, AddressUtils.getInnetIp(),
-                                GatewayPortConstants.TCP_PORT_INNER, GatewayConstants.WEIGHT, -1, -1, GatewayConstants.RPC_POOL_SIZE, "tcp", "")
+                                GatewayPortConstants.TCP_PORT_INNER, GatewayConstants.WEIGHT, -1, -1, GatewayConstants.RPC_POOL_SIZE, GatewayConstants.TCP, "")
                 ));
     }
 

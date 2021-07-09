@@ -1,4 +1,4 @@
-package com.xl.traffic.gateway.core.zk.bean;
+package com.xl.traffic.gateway.register.env;
 
 /**
  * 环境定义

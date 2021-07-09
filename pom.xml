@@ -21,6 +21,7 @@
         <module>gateway-rpc-client</module>
         <module>gateway-service-demo</module>
         <module>gateway-demo-client1</module>
+        <module>gateway-register</module>
     </modules>
 
 

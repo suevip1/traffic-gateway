@@ -1,10 +1,10 @@
-package com.xl.traffic.gateway.core.zk;
+package com.xl.traffic.gateway.register.zookeeper;
 
 import com.github.zkclient.IZkChildListener;
 import com.github.zkclient.IZkDataListener;
 import com.github.zkclient.ZkClient;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
-import com.xl.traffic.gateway.core.zk.bean.Env;
+import com.xl.traffic.gateway.register.env.Env;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,6 +3,7 @@ package com.xl.traffic.gateway.router;
 
 import com.xl.traffic.gateway.callback.BussinessCallback;
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import com.xl.traffic.gateway.consumer.RpcMsgConsumer;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.Protostuff;
 import com.xl.traffic.gateway.rpc.callback.Callback;
@@ -14,6 +15,14 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RpcMsgRouter {
+
+    private static class InstanceHolder {
+        public static final RpcMsgRouter instance = new RpcMsgRouter();
+    }
+
+    public static RpcMsgRouter getInstance() {
+        return RpcMsgRouter.InstanceHolder.instance;
+    }
 
 
     private ISerialize iSerialize = new Protostuff();

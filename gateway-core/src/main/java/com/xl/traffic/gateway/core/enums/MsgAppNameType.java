@@ -6,6 +6,7 @@ public enum MsgAppNameType {
 
 
     GATEWAY((byte) 1, GatewayConstants.GATEWAY),
+    MONITOR((byte) 2, GatewayConstants.MONITOR),
 
     ;
 

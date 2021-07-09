@@ -7,7 +7,7 @@ import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
-import com.xl.traffic.gateway.core.zk.ZkHelp;
+import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -63,7 +63,7 @@ public class AdminClientStart {
                         NodelUtil.getInstance().buildServerNodeInfo(
                                 GatewayConstants.ADMIN, GatewayConstants.ADMIN_GROUP, AddressUtils.getInnetIp(),
                                 GatewayPortConstants.TCP_ADMIN_PORT,
-                                GatewayConstants.WEIGHT, -1, -1, GatewayConstants.RPC_POOL_SIZE, "tcp", "")
+                                GatewayConstants.WEIGHT, -1, -1, GatewayConstants.RPC_POOL_SIZE, GatewayConstants.TCP, "")
                 ));
     }
 
