@@ -53,7 +53,7 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
 
     @Override
     public void addTcpHandlers(ConnectionFacade connectionFacade) {
-        //todo ssl认证/tcp消息监控
+        /**tcp消息监控*/
         if (GatewayConfigHelper.getInstance().getGateWayConfig().getSslConfig().isUseSsl()) {
             connectionFacade.addHandler(new SslHandler(sslEngineFactory.newSslEngine(GatewayConfigHelper.getInstance().getGateWayConfig()
                     .getSslConfig().getSslEngineConfig())));
@@ -65,7 +65,7 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
 
     @Override
     public void addProtocolHandlers(ConnectionFacade connectionFacade) {
-        //todo 添加具体的协议 消息编解码
+        /**添加具体的协议 消息编解码*/
         connectionFacade.addHandler(new MessageDecoder());
         connectionFacade.addHandler(new MessageEncoder());
     }

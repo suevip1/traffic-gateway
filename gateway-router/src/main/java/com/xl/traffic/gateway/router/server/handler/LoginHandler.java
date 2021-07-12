@@ -2,8 +2,10 @@ package com.xl.traffic.gateway.router.server.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.dto.RouterDTO;
+import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.Protostuff;
+import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import com.xl.traffic.gateway.router.service.RouterService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,7 @@ import java.nio.channels.Channel;
 @Slf4j
 public class LoginHandler implements RouterServerHandlerService {
 
-    private ISerialize iSerialize = new Protostuff();
+    ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 
     @Override
     public void execute(RpcMsg rpcMsg, Channel channel) {

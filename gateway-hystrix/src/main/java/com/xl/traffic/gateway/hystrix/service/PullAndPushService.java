@@ -5,9 +5,11 @@ import com.xl.traffic.gateway.common.utils.AddressUtils;
 import com.xl.traffic.gateway.core.enums.MsgAppNameType;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.enums.MsgGroupType;
+import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.Protostuff;
+import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import com.xl.traffic.gateway.core.utils.AssertUtil;
 import com.xl.traffic.gateway.core.utils.DateUtils;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
@@ -43,7 +45,7 @@ import static sun.security.pkcs11.Secmod.getInstance;
 public class PullAndPushService {
 
 
-    ISerialize iSerialize = new Protostuff();
+    ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 
     private static class InstanceHolder {
         public static final PullAndPushService instance = new PullAndPushService();

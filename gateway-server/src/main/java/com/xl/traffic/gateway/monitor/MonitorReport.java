@@ -7,10 +7,12 @@ import com.xl.traffic.gateway.core.dto.MonitorDTO;
 import com.xl.traffic.gateway.core.enums.MsgAppNameType;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.enums.MsgGroupType;
+import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.metrics.MetricsMonitor;
 import com.xl.traffic.gateway.core.model.SystemInfoModel;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.Protostuff;
+import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.rpc.client.RpcClient;
@@ -29,7 +31,8 @@ import java.util.concurrent.TimeUnit;
  **/
 public class MonitorReport {
 
-    private static ISerialize iSerialize = new Protostuff();
+    static ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
+
 
     private static ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
 

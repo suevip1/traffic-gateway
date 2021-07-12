@@ -3,9 +3,11 @@ package com.xl.traffic.gateway.monitor.server.handler;
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.dto.MonitorDTO;
 import com.xl.traffic.gateway.core.dto.RouterDTO;
+import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.Protostuff;
+import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import com.xl.traffic.gateway.monitor.service.MonitorMetricsService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +26,7 @@ import java.nio.channels.Channel;
 @Slf4j
 public class MonitorReportDataHandler implements MonitorServerHandlerService {
 
-    private ISerialize iSerialize = new Protostuff();
+    ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
     @Autowired
     MonitorMetricsService monitorMetricsService;
 

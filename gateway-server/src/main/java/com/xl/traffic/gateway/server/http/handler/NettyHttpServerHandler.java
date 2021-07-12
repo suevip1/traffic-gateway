@@ -4,11 +4,12 @@ import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.enums.MsgAppNameType;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.enums.MsgGroupType;
+import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.log.LogHelper;
 import com.xl.traffic.gateway.core.parser.NettyHttpRequestParser;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
-import com.xl.traffic.gateway.core.serialize.Protostuff;
+import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import com.xl.traffic.gateway.router.RpcMsgRouter;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -32,7 +33,7 @@ public class NettyHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
 
     private static Logger logger = LoggerFactory.getLogger(NettyHttpServerHandler.class);
 
-    private ISerialize iSerialize = new Protostuff();
+    ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
