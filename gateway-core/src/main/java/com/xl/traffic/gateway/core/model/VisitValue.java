@@ -1,4 +1,4 @@
-package com.xl.traffic.gateway.hystrix.model;
+package com.xl.traffic.gateway.core.model;
 
 import lombok.Data;
 

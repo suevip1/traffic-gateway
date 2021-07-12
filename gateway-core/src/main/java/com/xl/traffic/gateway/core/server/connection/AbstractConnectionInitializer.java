@@ -25,7 +25,7 @@ public abstract class AbstractConnectionInitializer implements ConnectionInitial
      * @Description: 添加DDOS防攻击(
      * 思路 ：
      *      1 ， 识别来源ip
-     *      2 ， 在一段时间内 ， 超出频次限制拉进黑名单
+     *      2 ， 在一段时间窗口内 ， 超出频次限制拉进黑名单
      *      3 ， 强制断开该来源ip的连接
      *      4 ， 黑名单智能安全校验
      *      5 ， 一段时间内不活跃的连接 进行主动关闭)

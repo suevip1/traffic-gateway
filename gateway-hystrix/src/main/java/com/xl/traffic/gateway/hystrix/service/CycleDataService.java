@@ -1,8 +1,8 @@
 package com.xl.traffic.gateway.hystrix.service;
 
-import com.xl.traffic.gateway.hystrix.counter.AbstractCycleData;
+import com.xl.traffic.gateway.core.counter.AbstractCycleData;
+import com.xl.traffic.gateway.core.counter.SlidingWindowData;
 import com.xl.traffic.gateway.hystrix.counter.ConcurrentData;
-import com.xl.traffic.gateway.hystrix.counter.SlidingWindowData;
 import com.xl.traffic.gateway.hystrix.counter.TokenBucketData;
 import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
 import lombok.Getter;

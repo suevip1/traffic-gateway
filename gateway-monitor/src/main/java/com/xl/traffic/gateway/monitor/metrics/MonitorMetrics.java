@@ -1,19 +1,11 @@
 package com.xl.traffic.gateway.monitor.metrics;
 
 
-import com.xl.traffic.gateway.core.utils.GatewayConstants;
+import com.xl.traffic.gateway.core.counter.AbstractCycleData;
+import com.xl.traffic.gateway.core.counter.SlidingWindowData;
 import com.xl.traffic.gateway.hystrix.constant.DowngradeConstant;
-import com.xl.traffic.gateway.hystrix.counter.AbstractCycleData;
-import com.xl.traffic.gateway.hystrix.counter.SlidingWindowData;
-import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
-import com.xl.traffic.gateway.hystrix.service.CycleDataService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 
 /**

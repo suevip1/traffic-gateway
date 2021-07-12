@@ -1,7 +1,9 @@
 package com.xl.traffic.gateway.hystrix.counter;
 
+import com.xl.traffic.gateway.core.counter.AbstractCycleData;
+import com.xl.traffic.gateway.core.counter.SlidingWindowData;
+import com.xl.traffic.gateway.core.model.VisitValue;
 import com.xl.traffic.gateway.hystrix.constant.DowngradeConstant;
-import com.xl.traffic.gateway.hystrix.model.VisitValue;
 import lombok.Getter;
 
 /**

@@ -1,6 +1,7 @@
-package com.xl.traffic.gateway.hystrix.counter;
+package com.xl.traffic.gateway.core.counter;
 
-import com.xl.traffic.gateway.hystrix.model.VisitValue;
+
+import com.xl.traffic.gateway.core.model.VisitValue;
 
 /**
  * 抽象周期数据类

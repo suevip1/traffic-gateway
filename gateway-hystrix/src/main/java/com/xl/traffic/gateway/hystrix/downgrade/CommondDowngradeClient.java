@@ -6,7 +6,6 @@ import com.xl.traffic.gateway.hystrix.AbstractDowngradeClient;
 import com.xl.traffic.gateway.hystrix.enums.DowngradeActionType;
 import com.xl.traffic.gateway.hystrix.model.CheckData;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
-import com.xl.traffic.gateway.hystrix.model.VisitValue;
 import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
 import com.xl.traffic.gateway.hystrix.service.*;
 import com.xl.traffic.gateway.hystrix.strategy.AbstractStrategyExecutor;

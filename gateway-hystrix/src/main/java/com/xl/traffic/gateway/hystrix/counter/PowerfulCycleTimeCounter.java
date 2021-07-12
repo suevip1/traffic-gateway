@@ -1,6 +1,7 @@
 package com.xl.traffic.gateway.hystrix.counter;
 
-import com.xl.traffic.gateway.hystrix.model.VisitValue;
+import com.xl.traffic.gateway.core.counter.AbstractCycleData;
+import com.xl.traffic.gateway.core.model.VisitValue;
 import com.xl.traffic.gateway.hystrix.service.CycleDataService;
 
 /**

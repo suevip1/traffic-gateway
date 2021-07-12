@@ -1,8 +1,8 @@
-package com.xl.traffic.gateway.hystrix.counter;
+package com.xl.traffic.gateway.core.counter;
 
+import com.xl.traffic.gateway.core.model.VisitValue;
 import com.xl.traffic.gateway.core.utils.DateUtils;
-import com.xl.traffic.gateway.hystrix.constant.DowngradeConstant;
-import com.xl.traffic.gateway.hystrix.model.VisitValue;
+import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.atomic.AtomicLongArray;
@@ -41,7 +41,7 @@ public class SlidingWindowData extends AbstractCycleData {
     protected int bucketSize;
 
     /**
-     * 用来存储{@link com.xl.traffic.gateway.hystrix.constant.DowngradeConstant#CYCLE_NUM}个完整周期的数据
+     * 用来存储{@link GatewayConstants#CYCLE_NUM}个完整周期的数据
      */
     protected AtomicLongArray bucketArray;
 
@@ -59,7 +59,7 @@ public class SlidingWindowData extends AbstractCycleData {
      * 默认滑动窗口周期数：3，滑动窗口桶的数量是10，桶的时间宽度是 1s
      */
     public SlidingWindowData() {
-        this(DowngradeConstant.CYCLE_NUM, DowngradeConstant.CYCLE_BUCKET_NUM, DowngradeConstant.BUCKET_TIME);
+        this(GatewayConstants.CYCLE_NUM, GatewayConstants.CYCLE_BUCKET_NUM, GatewayConstants.BUCKET_TIME);
     }
 
     /**
