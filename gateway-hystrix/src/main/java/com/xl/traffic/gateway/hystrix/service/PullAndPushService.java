@@ -8,9 +8,7 @@ import com.xl.traffic.gateway.core.enums.MsgGroupType;
 import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
-import com.xl.traffic.gateway.core.serialize.Protostuff;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
-import com.xl.traffic.gateway.core.utils.AssertUtil;
 import com.xl.traffic.gateway.core.utils.DateUtils;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
@@ -21,7 +19,6 @@ import com.xl.traffic.gateway.hystrix.model.PushResponse;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import com.xl.traffic.gateway.hystrix.utils.BaseValidator;
 import com.xl.traffic.gateway.rpc.manager.RemoteRpcClientManager;
-import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -32,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static com.xl.traffic.gateway.hystrix.constant.DowngradeConstant.BUCKET_TIME;
 import static com.xl.traffic.gateway.hystrix.constant.DowngradeConstant.CYCLE_BUCKET_NUM;
-import static sun.security.pkcs11.Secmod.getInstance;
 
 /**
  * 服务端拉取页面配置
@@ -85,7 +81,7 @@ public class PullAndPushService {
                     .build();
             /**构建rpc消息*/
             RpcMsg rpcMsg = new RpcMsg(MsgCMDType.UPLOAD_DOWNGRATE_DATA_CMD.getType(), MsgGroupType.GATEWAY.getType(), MsgAppNameType.GATEWAY.getType(), SnowflakeIdWorker.getInstance().nextId(),
-                    iSerialize.serialize(pushRequest), (byte) 0);
+                    iSerialize.serialize(pushRequest));
             /**通过rpc 发送给admin端*/
             RemoteRpcClientManager.getInstance().sendAsync(GatewayConstants.GATEWAY_GROUP,
                     iSerialize.serialize(rpcMsg));

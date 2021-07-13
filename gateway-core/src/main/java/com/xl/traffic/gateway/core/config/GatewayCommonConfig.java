@@ -11,6 +11,15 @@ public class GatewayCommonConfig {
      */
     private int ip_limit_counts;
 
+    /**
+     * 是否启用安全加密解密
+     */
+    private boolean isSecurity;
+    /**
+     * token 安全秘钥
+     */
+    private String tokenSecurityKeyt;
+
 
 }
 

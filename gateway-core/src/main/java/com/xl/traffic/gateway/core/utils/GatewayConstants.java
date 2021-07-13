@@ -127,4 +127,10 @@ public class GatewayConstants {
      **/
     public static final int BUCKET_TIME = 1;
 
+    /**
+     * token 默认过期时间为20分钟
+     */
+    public static final long TOKEN_TIMEOUT = 20 * 60 * 1000l;
+
+
 }

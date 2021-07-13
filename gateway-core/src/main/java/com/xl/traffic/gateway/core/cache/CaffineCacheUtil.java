@@ -5,9 +5,9 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.xl.traffic.gateway.core.metrics.DDOSMetrics;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
+import io.netty.channel.Channel;
 import lombok.Getter;
 
-import java.util.Map;
 
 /**
  * 高速本地缓存
@@ -30,6 +30,16 @@ public class CaffineCacheUtil {
      */
     @Getter
     static Cache<String, String> blackIpCacheMap = Caffeine.newBuilder()
+            .maximumSize(GatewayConstants.CONNECT_CACHE_MAX_SIZE)
+            .build();
+
+
+    /**
+     * 用户连接缓存
+     * key：deviceId, value：channel
+     */
+    @Getter
+    static Cache<String, Channel> channelCache = Caffeine.newBuilder()
             .maximumSize(GatewayConstants.CONNECT_CACHE_MAX_SIZE)
             .build();
 

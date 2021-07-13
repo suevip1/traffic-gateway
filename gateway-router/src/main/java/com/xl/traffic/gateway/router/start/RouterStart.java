@@ -6,7 +6,7 @@ import com.xl.traffic.gateway.core.server.Server;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.GatewayPortConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
-import com.xl.traffic.gateway.core.zk.ZkHelp;
+import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 import com.xl.traffic.gateway.router.server.RouterServer;
 import com.xl.traffic.gateway.rpc.cluster.ClusterCenter;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;

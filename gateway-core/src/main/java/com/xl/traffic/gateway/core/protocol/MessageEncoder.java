@@ -1,6 +1,9 @@
 package com.xl.traffic.gateway.core.protocol;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import com.xl.traffic.gateway.core.helper.ZKConfigHelper;
+import com.xl.traffic.gateway.core.utils.AttributeKeys;
+import com.xl.traffic.gateway.core.utils.DESCipher;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.zip.IZip;
 import com.xl.traffic.gateway.core.zip.Zip;
@@ -30,6 +33,11 @@ public class MessageEncoder extends MessageToByteEncoder<RpcMsg> {
 
         byte[] content = in.getBody();
         if (content != null) {
+            //校验是否需要加密
+            if (ZKConfigHelper.getInstance().getGatewayCommonConfig().isSecurity()) {
+                String sessionKey = ctx.channel().attr(AttributeKeys.SESSION_KEY).get();
+                content = DESCipher.encrypt(content, sessionKey);
+            }
             //判断是否需要压缩
             IZip iZip = Zip.get(in.getZip());
             if (iZip != null) content = iZip.compress(content);

@@ -42,4 +42,33 @@ public interface AttributeKeys {
      */
     AttributeKey<String> RPC_GROUP = AttributeKey.valueOf("RpcGroup");
 
+
+    /**
+     * 用户登录设备DeviceId + ChannelId
+     */
+    AttributeKey<String> DEVICE_ID = AttributeKey.valueOf("deviceChannelId");
+
+
+    /**
+     * 用户登录原设备DeviceId
+     */
+    AttributeKey<String> SOURCE_DEVICE_ID = AttributeKey.valueOf("sourceDeviceId");
+
+    /**
+     * 用户名称
+     */
+    AttributeKey<String> USER_ID = AttributeKey.valueOf("userId");
+
+
+    /**
+     * SessionKey
+     */
+    AttributeKey<String> SESSION_KEY = AttributeKey.valueOf("sessionKey");
+    /**
+     * token
+     */
+    AttributeKey<String> TOKEN = AttributeKey.valueOf("token");
+
+
+
 }

@@ -27,7 +27,10 @@ public class ServerHandlerInitializer {
     private ConcurrentMap<Integer, GatewayServerHandlerService> handlerMap = new ConcurrentHashMap<Integer, GatewayServerHandlerService>();
 
     @Autowired
-    AuthHandler authHandler;
+    LoginHandler loginHandler;
+
+    @Autowired
+    LoginOutHandler loginOutHandler;
 
     /**
      * 获取Handler

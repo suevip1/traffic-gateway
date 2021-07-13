@@ -25,6 +25,7 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
     private final MonitorQpsHandler monitorQpsHandler;
     private final MonitorBytesHandler monitorBytesHandler;
     private final NettyDDOSHandler nettyDDOSHandler;
+    private final NettyTokenHandler nettyTokenHandler;
 
 
     public TcpConnectionInitializer(SslEngineFactory sslEngineFactory) {
@@ -35,6 +36,7 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
         this.monitorQpsHandler = new MonitorQpsHandler();
         this.monitorBytesHandler = new MonitorBytesHandler();
         this.nettyDDOSHandler = new NettyDDOSHandler();
+        this.nettyTokenHandler = new NettyTokenHandler();
     }
 
     @Override
@@ -61,6 +63,7 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
         // 添加tcp流控handler 例如 限流等
         connectionFacade.addHandler(monitorQpsHandler);
         connectionFacade.addHandler(monitorBytesHandler);
+        connectionFacade.addHandler(nettyTokenHandler);
     }
 
     @Override

@@ -30,13 +30,30 @@ public class RpcMsg implements Serializable {
 
     private long reqId;//请求ID
 
-    private long token;//请求token
+    private byte[] token;//请求token
 
     private byte[] body;//传输内容
 
     private byte zip; //是否支持压缩
 
-    public RpcMsg(byte cmd, byte group,byte appName, long reqId, byte[] body, byte zip) {
+    public RpcMsg(byte cmd, byte group, byte appName, long reqId, byte[] body) {
+        this.cmd = cmd;
+        this.group = group;
+        this.appName = appName;
+        this.reqId = reqId;
+        this.body = body;
+    }
+
+    public RpcMsg(byte cmd, byte group, byte appName, long reqId, byte[] token, byte[] body) {
+        this.cmd = cmd;
+        this.group = group;
+        this.appName = appName;
+        this.reqId = reqId;
+        this.token = token;
+        this.body = body;
+    }
+
+    public RpcMsg(byte cmd, byte group, byte appName, long reqId, byte[] body, byte zip) {
         this.cmd = cmd;
         this.group = group;
         this.appName = appName;
@@ -46,7 +63,7 @@ public class RpcMsg implements Serializable {
     }
 
 
-    public RpcMsg(byte cmd, byte group, byte appName, long reqId, long token, byte[] body, byte zip) {
+    public RpcMsg(byte cmd, byte group, byte appName, long reqId, byte[] token, byte[] body, byte zip) {
         this.cmd = cmd;
         this.group = group;
         this.appName = appName;

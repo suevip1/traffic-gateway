@@ -13,6 +13,11 @@ import java.io.Serializable;
 @Data
 public class RouterDTO implements Serializable {
 
+    public RouterDTO(String uid, String gatewayIp, String deviceId) {
+        this.uid = uid;
+        this.gatewayIp = gatewayIp;
+        this.deviceId = deviceId;
+    }
 
     /**
      * 用户id

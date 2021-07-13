@@ -57,7 +57,7 @@ public class MonitorReport {
             RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(GatewayConstants.MONITOR_GROUP);
             RpcMsg rpcMsg = new RpcMsg(MsgCMDType.UPLOAD_MONITOR_DATA_CMD.getType(), MsgGroupType.MONITOR.getType(),
                     MsgAppNameType.MONITOR.getType(), SnowflakeIdWorker.getInstance().nextId(),
-                    iSerialize.serialize(monitorDTO), (byte) 0);
+                    iSerialize.serialize(monitorDTO));
             rpcClient.sendAsync(rpcMsg);
         }, 0, GatewayConstants.REPORT_GATEWAY_HEALTH_DATA_TIME * 1000, TimeUnit.MILLISECONDS);
 

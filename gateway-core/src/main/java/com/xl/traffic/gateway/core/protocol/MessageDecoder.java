@@ -1,12 +1,17 @@
 package com.xl.traffic.gateway.core.protocol;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import com.xl.traffic.gateway.core.enums.MsgCMDType;
+import com.xl.traffic.gateway.core.helper.ZKConfigHelper;
+import com.xl.traffic.gateway.core.utils.AttributeKeys;
+import com.xl.traffic.gateway.core.utils.DESCipher;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.zip.IZip;
 import com.xl.traffic.gateway.core.zip.Zip;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +75,14 @@ public class MessageDecoder extends ByteToMessageDecoder {
         // 是否压缩解码
         IZip iZip = Zip.get(message.getZip());
         if (iZip != null) content = iZip.uncompress(content);
+        //校验是否需要解密
+        if (ZKConfigHelper.getInstance().getGatewayCommonConfig().isSecurity()) {
+            String sessionKey = ctx.channel().attr(AttributeKeys.SESSION_KEY).get();
+            if (message.getCmd() != MsgCMDType.LOGIN_CMD.getType()) {
+                /**第一次登录 不会带有sessionKey*/
+                content = DESCipher.decrypt(content, sessionKey);
+            }
+        }
         message.setBody(content);
         if (in.readByte() != '\r' || in.readByte() != '\n') {
             logger.error("decode-end_err(" + ctx + ")");
