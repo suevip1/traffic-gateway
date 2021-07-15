@@ -10,7 +10,7 @@ import lombok.Setter;
  * @date: 2021/6/24
  **/
 
-public enum DowngradeActionType {
+public enum DowngradeStrategyType {
 
 
     VISIT(1,"访问量降级策略"),
@@ -30,7 +30,7 @@ public enum DowngradeActionType {
     @Setter
     private String desc;
 
-    DowngradeActionType(int type, String desc) {
+    DowngradeStrategyType(int type, String desc) {
         this.type = type;
         this.desc = desc;
     }

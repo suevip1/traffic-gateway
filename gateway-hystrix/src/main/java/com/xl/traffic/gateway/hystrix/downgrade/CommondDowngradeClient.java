@@ -1,9 +1,10 @@
 package com.xl.traffic.gateway.hystrix.downgrade;
 
+import com.xl.traffic.gateway.core.model.VisitValue;
 import com.xl.traffic.gateway.core.utils.AssertUtil;
 import com.xl.traffic.gateway.core.utils.TimeStatisticsUtil;
 import com.xl.traffic.gateway.hystrix.AbstractDowngradeClient;
-import com.xl.traffic.gateway.hystrix.enums.DowngradeActionType;
+import com.xl.traffic.gateway.hystrix.enums.DowngradeStrategyType;
 import com.xl.traffic.gateway.hystrix.model.CheckData;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
@@ -249,7 +250,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             return false;
         }
 
-        DowngradeActionType downgradeActionType = null;
+        DowngradeStrategyType downgradeStrategyType = null;
         /**step2: 校验当前降级点在当前时间内 是否需要降级延迟*/
         if (!DowngrateDelayService.getInstance().isDowngrateDelay(appGroupName, appName, point, time)) {
             /**构建执行策略检查的参数*/
@@ -265,11 +266,11 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
                     .takeTokenBucketNum(takeTokenBucketNum)
                     .downgradeCount(downgrateCount).build();
             /**step3:执行策略链，如果通过啦策略链中的所有规则，则不需要降级*/
-            if ((downgradeActionType = strategyExecutor.execute(checkData, strategy)) == null) {
+            if ((downgradeStrategyType = strategyExecutor.execute(checkData, strategy)) == null) {
                 return false;
             }
             /**校验是否开启啦熔断，开启熔断，则拒绝请求，进行熔断*/
-            if (downgradeActionType == DowngradeActionType.FUSE) {
+            if (downgradeStrategyType == DowngradeStrategyType.FUSE) {
                 return true;
             }
 
@@ -294,18 +295,18 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
         }
         if (needDowngrate) {
             /**降级计数器+1*/
-            addDowngrateCount(point, time, downgradeActionType);
+            addDowngrateCount(point, time, downgradeStrategyType);
         }
         return needDowngrate;
     }
 
-    public void addDowngrateCount(String point, long time, DowngradeActionType downgradeActionType) {
+    public void addDowngrateCount(String point, long time, DowngradeStrategyType downgradeStrategyType) {
 
         /**降级次数+1*/
         powerfulCounterService.downgrateAddAndGet(appGroupName, appName, point, time);
 
         /**触发降级通知*/
-        DowngrateActionNotify.notify(point, downgradeActionType, new Date());
+        DowngrateActionNotify.notify(point, downgradeStrategyType, new Date());
     }
 
     @Override

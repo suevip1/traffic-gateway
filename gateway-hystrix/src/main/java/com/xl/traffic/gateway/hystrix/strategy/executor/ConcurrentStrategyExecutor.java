@@ -1,6 +1,6 @@
 package com.xl.traffic.gateway.hystrix.strategy.executor;
 
-import com.xl.traffic.gateway.hystrix.enums.DowngradeActionType;
+import com.xl.traffic.gateway.hystrix.enums.DowngradeStrategyType;
 import com.xl.traffic.gateway.hystrix.model.CheckData;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import com.xl.traffic.gateway.hystrix.strategy.AbstractStrategyExecutor;
@@ -32,7 +32,7 @@ public class ConcurrentStrategyExecutor extends AbstractStrategyExecutor {
     }
 
     @Override
-    protected DowngradeActionType getStrategyType() {
-        return DowngradeActionType.CONCURRENT;
+    protected DowngradeStrategyType getStrategyType() {
+        return DowngradeStrategyType.CONCURRENT;
     }
 }

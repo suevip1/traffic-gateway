@@ -117,7 +117,10 @@ public class MonitorMetricsCache {
                         nodeInfo.setWeight(weight);
                     } else {
                         /**流量降级恢复*/
-                        nodeInfo.setWeight(ipWeightCache.getIfPresent(ip));
+                        Integer oldWeight = ipWeightCache.getIfPresent(ip);
+                        if (oldWeight != null) {
+                            nodeInfo.setWeight(ipWeightCache.getIfPresent(ip));
+                        }
                     }
                     ZkHelp.getInstance().setPathData(GatewayConstants.GATEWAY_ZK_ROOT_PATH + ip, GSONUtil.toJson(nodeInfo));
                 }

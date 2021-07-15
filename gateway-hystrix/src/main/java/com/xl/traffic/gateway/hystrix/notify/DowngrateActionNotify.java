@@ -1,6 +1,6 @@
 package com.xl.traffic.gateway.hystrix.notify;
 
-import com.xl.traffic.gateway.hystrix.enums.DowngradeActionType;
+import com.xl.traffic.gateway.hystrix.enums.DowngradeStrategyType;
 import com.xl.traffic.gateway.hystrix.notify.listener.DowngrateActionListener;
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,16 +72,16 @@ public class DowngrateActionNotify {
      * 降级通知
      *
      * @param point               降级点名称
-     * @param downgradeActionType 降级触发类型
+     * @param downgradeStrategyType 降级触发类型
      * @param now                 当前时间
      * @return: void
      * @author: xl
      * @date: 2021/6/28
      **/
-    public static void notify(final String point, final DowngradeActionType downgradeActionType, final Date now) {
+    public static void notify(final String point, final DowngradeStrategyType downgradeStrategyType, final Date now) {
         notifyPool.execute(() -> {
             for (DowngrateActionListener listener : listeners) {
-                listener.downgrateAction(point, downgradeActionType, now);
+                listener.downgrateAction(point, downgradeStrategyType, now);
             }
         });
     }

@@ -64,7 +64,7 @@ public class NettyHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
             RpcMsg rpcMsg = new RpcMsg(MsgCMDType.valueOf(cmd).getType(),
                     MsgGroupType.valueOf(group).getType(),
                     MsgAppNameType.valueOf(appName).getType(),
-                    Long.valueOf(reqId), Long.valueOf(token), iSerialize.serialize(body));
+                    Long.valueOf(reqId), token.getBytes(), iSerialize.serialize(body));
             RpcMsg rpcResultMsg = RpcMsgRouter.getInstance().sendSync(rpcMsg);
             String result = GSONUtil.toJson(new String(rpcResultMsg.getBody()));
             sendResponse(ctx, HttpResponseStatus.OK, result);

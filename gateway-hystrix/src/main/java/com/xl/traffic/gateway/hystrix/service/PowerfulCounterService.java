@@ -1,5 +1,6 @@
 package com.xl.traffic.gateway.hystrix.service;
 
+import com.xl.traffic.gateway.core.model.VisitValue;
 import com.xl.traffic.gateway.core.utils.CacheKeyUtil;
 import com.xl.traffic.gateway.hystrix.counter.PowerfulCycleTimeCounter;
 import com.xl.traffic.gateway.hystrix.model.Strategy;

@@ -1,6 +1,6 @@
 package com.xl.traffic.gateway.hystrix.strategy;
 
-import com.xl.traffic.gateway.hystrix.enums.DowngradeActionType;
+import com.xl.traffic.gateway.hystrix.enums.DowngradeStrategyType;
 import com.xl.traffic.gateway.hystrix.model.CheckData;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import lombok.Getter;
@@ -46,7 +46,7 @@ public abstract class AbstractStrategyExecutor {
      * @author: xl
      * @date: 2021/6/24
      **/
-    protected abstract DowngradeActionType getStrategyType();
+    protected abstract DowngradeStrategyType getStrategyType();
 
 
     /**
@@ -58,7 +58,7 @@ public abstract class AbstractStrategyExecutor {
      * @author: xl
      * @date: 2021/6/24
      **/
-    public DowngradeActionType execute(CheckData checkData, Strategy strategy) {
+    public DowngradeStrategyType execute(CheckData checkData, Strategy strategy) {
         boolean checkSuccess = strategyCheck(checkData, strategy);
         if (checkSuccess && next != null) {
             return next.execute(checkData, strategy);
