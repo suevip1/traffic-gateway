@@ -1,6 +1,7 @@
 package com.xl.traffic.gateway.hystrix.service;
 
 import com.xl.traffic.gateway.core.gson.GSONUtil;
+import com.xl.traffic.gateway.core.utils.CacheKeyUtil;
 import com.xl.traffic.gateway.hystrix.model.Strategy;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
