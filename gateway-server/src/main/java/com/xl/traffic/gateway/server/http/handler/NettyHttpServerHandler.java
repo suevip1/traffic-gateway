@@ -33,7 +33,7 @@ public class NettyHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
 
     private static Logger logger = LoggerFactory.getLogger(NettyHttpServerHandler.class);
 
-    ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
+    static ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
@@ -53,20 +53,7 @@ public class NettyHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
         }
         logger.debug("NettyHttpServerHandler channelRead0 new request: {}", request);
         if (request.uri().startsWith("/gateway/route/")) {
-            Map<String, String> paramMap = NettyHttpRequestParser.Parse(request);
-            //TODO 目前只走同步的，后续性能有问题时，区分同步请求还是异步请求
-            String cmd = paramMap.get("cmd");
-            String group = paramMap.get("group");
-            String appName = paramMap.get("appName");
-            String reqId = paramMap.get("reqId");
-            String token = paramMap.get("token");
-            String body = paramMap.get("body");
-            RpcMsg rpcMsg = new RpcMsg(MsgCMDType.valueOf(cmd).getType(),
-                    MsgGroupType.valueOf(group).getType(),
-                    MsgAppNameType.valueOf(appName).getType(),
-                    Long.valueOf(reqId), token.getBytes(), iSerialize.serialize(body));
-            RpcMsg rpcResultMsg = RpcMsgRouter.getInstance().sendSync(rpcMsg);
-            String result = GSONUtil.toJson(new String(rpcResultMsg.getBody()));
+            String result = sendMsgByRouter(request);
             sendResponse(ctx, HttpResponseStatus.OK, result);
         } else if (request.uri().startsWith("/gateway/control/enableDebugLog?")) {
             Map<String, String> paramMap = NettyHttpRequestParser.Parse(request);
@@ -80,6 +67,33 @@ public class NettyHttpServerHandler extends SimpleChannelInboundHandler<FullHttp
             ctx.close();
         }
     }
+
+    /**
+     * 发送消息到业务集群
+     *
+     * @param
+     * @return: void
+     * @author: xl
+     * @date: 2021/7/20
+     **/
+    private static String sendMsgByRouter(FullHttpRequest request) {
+        Map<String, String> paramMap = NettyHttpRequestParser.Parse(request);
+        //TODO 目前只走同步的，后续性能有问题时，区分同步请求还是异步请求
+        String cmd = paramMap.get("cmd");
+        String group = paramMap.get("group");
+        String appName = paramMap.get("appName");
+        String reqId = paramMap.get("reqId");
+        String token = paramMap.get("token");
+        String body = paramMap.get("body");
+        RpcMsg rpcMsg = new RpcMsg(MsgCMDType.valueOf(cmd).getType(),
+                MsgGroupType.valueOf(group).getType(),
+                MsgAppNameType.valueOf(appName).getType(),
+                Long.valueOf(reqId), token.getBytes(), iSerialize.serialize(body));
+        RpcMsg rpcResultMsg = RpcMsgRouter.getInstance().sendSync(rpcMsg);
+        String result = GSONUtil.toJson(new String(rpcResultMsg.getBody()));
+        return result;
+    }
+
 
     private static void sendResponse(ChannelHandlerContext ctx, HttpResponseStatus status, String body) {
         FullHttpResponse response = new DefaultFullHttpResponse(

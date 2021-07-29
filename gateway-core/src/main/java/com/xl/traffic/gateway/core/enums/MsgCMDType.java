@@ -9,6 +9,7 @@ public enum MsgCMDType {
     LOGIN_CMD((byte) 4, "登录"),
     LOGIN_OUT_CMD((byte) 5, "退出登录"),
     DISCONNECT((byte) 6, "断开连接"),
+    BLACK_IP_CMD((byte) 7, "黑名单"),
 
     ;
 

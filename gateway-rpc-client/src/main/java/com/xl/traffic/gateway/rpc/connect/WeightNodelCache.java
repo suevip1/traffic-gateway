@@ -40,6 +40,7 @@ public class WeightNodelCache {
                 return;
             }
             rpcLoadBalance.addNode(serverNodeInfo);
+            rpcLoadBalance.group(group);
         }
     }
 
@@ -57,6 +58,7 @@ public class WeightNodelCache {
         if (loadBalance(group) != null) {
             return;
         }
+        rpcLoadBalance.group(group);
         groupNodeServers.put(group, rpcLoadBalance);
     }
 

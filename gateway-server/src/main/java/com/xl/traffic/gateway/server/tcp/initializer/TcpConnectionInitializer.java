@@ -17,14 +17,31 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
 
     private final NettyTcpServerHandler serverHandler;
 
+
+    /**心跳检测*/
     private final NettyOnIdleHandler nettyOnIdleHandler;
 
     private final SslEngineFactory sslEngineFactory;
+    /**
+     * 接受者
+     */
     private final NettyReciveHandler reciveHandler;
 
+    /**
+     * qps 监控
+     */
     private final MonitorQpsHandler monitorQpsHandler;
+    /**
+     * 流量 监控
+     */
     private final MonitorBytesHandler monitorBytesHandler;
+    /**
+     * ddos 防攻击
+     */
     private final NettyDDOSHandler nettyDDOSHandler;
+    /**
+     * token 安全校验
+     */
     private final NettyTokenHandler nettyTokenHandler;
 
 

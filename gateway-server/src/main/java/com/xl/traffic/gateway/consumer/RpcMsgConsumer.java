@@ -3,6 +3,7 @@ package com.xl.traffic.gateway.consumer;
 import com.xl.traffic.gateway.core.mq.MQProvider;
 import com.xl.traffic.gateway.core.mq.MessageQueue;
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import com.xl.traffic.gateway.router.RpcMsgRouter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,10 +57,10 @@ public class RpcMsgConsumer {
             while (true) {
                 try {
                     RpcMsg msg = toRPCMsgQueue.pop(timeout);
-
                     if (logger.isDebugEnabled()) {
                         logger.debug("RpcMsgSender RpcMsgSender pop msg: {}", msg);
                     }
+                    RpcMsgRouter.getInstance().sendAsync(msg);
 
                     //todo 路由转发 获取对应服务的通信类型 支持 grpc，http协议
 //                    switch (msg.getType()) {

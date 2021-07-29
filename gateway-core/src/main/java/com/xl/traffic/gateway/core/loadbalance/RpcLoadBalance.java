@@ -13,6 +13,10 @@ public interface RpcLoadBalance {
     LoadBalanceType getType();
 
 
+    default void group(String group) {
+    }
+
+
     /**
      * @Description: 添加服务节点
      * @Param: [nodeInfo]

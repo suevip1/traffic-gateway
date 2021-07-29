@@ -1,7 +1,7 @@
 package com.xl.traffic.gateway.core.server.manager;
 
 import com.xl.traffic.gateway.core.cache.CaffineCacheUtil;
-import io.netty.channel.Channel;
+import com.xl.traffic.gateway.core.server.connection.Connection;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,50 +22,50 @@ import lombok.extern.slf4j.Slf4j;
  * @version 2021年7月13日
  */
 @Slf4j
-public class ChannelManager {
+public class ConnectionManager {
     private static class InstanceHolder {
-        private static ChannelManager instance = new ChannelManager();
+        private static ConnectionManager instance = new ConnectionManager();
     }
 
-    public static ChannelManager getInstance() {
+    public static ConnectionManager getInstance() {
         return InstanceHolder.instance;
     }
 
     /**
-     * 保存channel
+     * 保存连接
      *
-     * @param deviceId 设备id
-     * @param channel  通道channel
+     * @param channelId  channelId
+     * @param connection 连接
      * @return: void
      * @author: xl
      * @date: 2021/7/13
      **/
-    public void addChannel(String deviceId, Channel channel) {
-        CaffineCacheUtil.getChannelCache().put(deviceId, channel);
+    public void addConnection(String channelId, Connection connection) {
+        CaffineCacheUtil.getConnectionCache().put(channelId, connection);
     }
 
     /**
-     * 根据设备id获取channel
+     * 根据设备id获取Connection
      *
-     * @param deviceId
+     * @param channelId
      * @return: io.netty.channel.Channel
      * @author: xl
      * @date: 2021/7/13
      **/
-    public Channel getChannel(String deviceId) {
-        return CaffineCacheUtil.getChannelCache().getIfPresent(deviceId);
+    public Connection getConnection(String channelId) {
+        return CaffineCacheUtil.getConnectionCache().getIfPresent(channelId);
     }
 
 
     /**
-     * 根据deviceID删除 channel
+     * 根据channelId删除 Connection
      *
-     * @param deviceId
+     * @param channelId
      * @return: void
      * @author: xl
      * @date: 2021/7/13
      **/
-    public void delChannel(String deviceId) {
-        CaffineCacheUtil.getChannelCache().invalidate(deviceId);
+    public void delConnection(String channelId) {
+        CaffineCacheUtil.getConnectionCache().invalidate(channelId);
     }
 }

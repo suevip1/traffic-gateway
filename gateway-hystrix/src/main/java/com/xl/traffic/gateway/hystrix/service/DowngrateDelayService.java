@@ -2,6 +2,7 @@ package com.xl.traffic.gateway.hystrix.service;
 
 
 import com.xl.traffic.gateway.core.utils.AssertUtil;
+import com.xl.traffic.gateway.core.utils.CacheKeyUtil;
 import com.xl.traffic.gateway.core.utils.DateUtils;
 import com.xl.traffic.gateway.hystrix.constant.DowngradeConstant;
 import com.xl.traffic.gateway.hystrix.model.Strategy;

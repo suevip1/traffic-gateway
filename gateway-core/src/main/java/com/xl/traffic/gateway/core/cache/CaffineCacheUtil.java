@@ -4,6 +4,7 @@ package com.xl.traffic.gateway.core.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.xl.traffic.gateway.core.metrics.DDOSMetrics;
+import com.xl.traffic.gateway.core.server.connection.Connection;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import io.netty.channel.Channel;
 import lombok.Getter;
@@ -39,7 +40,7 @@ public class CaffineCacheUtil {
      * key：deviceId, value：channel
      */
     @Getter
-    static Cache<String, Channel> channelCache = Caffeine.newBuilder()
+    static Cache<String, Connection> connectionCache = Caffeine.newBuilder()
             .maximumSize(GatewayConstants.CONNECT_CACHE_MAX_SIZE)
             .build();
 

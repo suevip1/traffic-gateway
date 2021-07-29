@@ -18,13 +18,14 @@ import org.springframework.stereotype.Component;
  * @date: 2021/7/5
  **/
 @Component
-public class BlackIpHandler implements GatewayServerHandlerService {
+public class BlackIpHandler implements GatewayRpcServerHandlerService {
 
     ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 
     @Override
-    public void execute(RpcMsg rpcMsg, Channel channel) {
+    public void execute(RpcMsg rpcMsg, java.nio.channels.Channel channel) {
         String blackIp = new String(rpcMsg.getBody());
         CaffineCacheUtil.getBlackIpCacheMap().put(blackIp, blackIp);
     }
+
 }

@@ -2,6 +2,8 @@ package com.xl.traffic.gateway.core.server.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
+import com.xl.traffic.gateway.core.server.connection.Connection;
+import com.xl.traffic.gateway.core.server.manager.ConnectionManager;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -23,6 +25,26 @@ public class NettyOnIdleHandler extends ChannelDuplexHandler {
         heartCmd.setCmd((byte) MsgCMDType.HEAT_CMD.getType());
     }
 
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        String channelId = ctx.channel().id().asLongText();
+        Connection connection = new Connection(ctx.channel());
+        ConnectionManager.getInstance().addConnection(channelId, connection);
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        closeChannel(ctx);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        super.exceptionCaught(ctx, cause);
+        closeChannel(ctx);
+    }
+
     /**
      * 心跳检测
      *
@@ -42,8 +64,23 @@ public class NettyOnIdleHandler extends ChannelDuplexHandler {
             } else if (event.state() == IdleState.READER_IDLE) {
                 ctx.writeAndFlush(heartCmd);
             } else if (event.state() == IdleState.ALL_IDLE) {
-                ctx.close();
+                closeChannel(ctx);
             }
         }
     }
+
+    /**
+     * 关闭channel
+     *
+     * @param ctx
+     * @return: void
+     * @author: xl
+     * @date: 2021/7/29
+     **/
+    public void closeChannel(ChannelHandlerContext ctx) throws InterruptedException {
+        String channelId = ctx.channel().id().asLongText();
+        ConnectionManager.getInstance().delConnection(channelId);
+        ctx.close().sync();
+    }
+
 }

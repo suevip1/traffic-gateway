@@ -103,6 +103,11 @@ public class WeightRpcLoadBalance implements RpcLoadBalance {
         return weightIndex;
     }
 
+    @Override
+    public void group(String group) {
+        this.group = group;
+    }
+
     /**
      * 刷新权重映射
      */

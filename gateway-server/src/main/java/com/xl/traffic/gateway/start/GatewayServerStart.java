@@ -51,12 +51,14 @@ public class GatewayServerStart {
         tcpServer.start();
         httpServer.start();
         gatewayRpcServer.start();
-        /**启动数据上报*/
-        MonitorReport.statisticsReportMonitorData();
-        /**添加降级监听器*/
-        addDowngrateEventListener();
         /**注册gateway信息*/
         registerServer();
+        /**添加降级监听器*/
+        addDowngrateEventListener();
+        /**连接monitor集群*/
+        NodePoolManager.getInstance().initNodePool(GatewayConstants.MONITOR_ZK_ROOT_PATH);
+        /**监听monitor集群*/
+        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.MONITOR_ZK_ROOT_PATH);
         /**连接router集群*/
         NodePoolManager.getInstance().initNodePool(GatewayConstants.ROUTER_ZK_ROOT_PATH);
         /**监听router集群*/
@@ -69,6 +71,10 @@ public class GatewayServerStart {
         NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
         /**监听大业务集群*/
         ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+
+        /**启动数据上报*/
+        MonitorReport.statisticsReportMonitorData();
+
     }
 
 
