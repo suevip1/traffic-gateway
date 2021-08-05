@@ -20,6 +20,12 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Arrays;
 
+/**
+ * 默认ssl实现类
+ *
+ * @author: xl
+ * @date: 2021/8/5
+ **/
 public class DefaultSslEngineFactory extends SslEngineFactoryBase {
     private volatile SslContext sslContext;
 
