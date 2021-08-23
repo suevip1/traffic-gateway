@@ -49,8 +49,10 @@ public class MonitorReport {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             /**构建监控上报数据*/
             MonitorDTO monitorDTO = MonitorDTO.builder()
-                    .bytes(MetricsMonitor.getBytes().get())
-                    .qps(MetricsMonitor.getQps().get())
+                    .requestQps(MetricsMonitor.getRequestQps().get())
+                    .responseQps(MetricsMonitor.getResponseQps().get())
+                    .requestBytes(MetricsMonitor.getRequestBytes().get())
+                    .responseBytes(MetricsMonitor.getResponseBytes().get())
                     .serverName(GatewayConstants.GATEWAY + GatewayConstants.SEQ + AddressUtils.getInnetIp())
                     .systemInfoModel(getSystemInfo())
                     .build();

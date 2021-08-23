@@ -11,7 +11,6 @@ import com.xl.traffic.gateway.core.enums.NettyType;
 public class NettyContext {
 
 
-
     public static NettyType nettyType;
 
 

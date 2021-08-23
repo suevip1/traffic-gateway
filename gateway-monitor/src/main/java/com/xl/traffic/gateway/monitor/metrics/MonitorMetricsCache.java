@@ -5,12 +5,14 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
-import com.xl.traffic.gateway.hystrix.service.CycleDataService;
 import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 监控服务健康缓存

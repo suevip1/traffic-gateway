@@ -29,7 +29,7 @@ public class MonitorMetricsService {
 
         /**连接数是否超出阈值*/
         if (monitorDTO.getConnectNum() >= monitorMetricsConfig.getConnectNum()
-                || monitorDTO.getQps() >= monitorMetricsConfig.getQpsThreshold()
+                || monitorDTO.getRequestQps() >= monitorMetricsConfig.getQpsThreshold()
                 || monitorDTO.getSystemInfoModel().getProcessCpuLoad() >= monitorMetricsConfig.getCpuThreshold()
                 || monitorDTO.getSystemInfoModel().getVmUse() >= monitorMetricsConfig.getMemoryThreshold()) {
             /**非健康指数+1*/

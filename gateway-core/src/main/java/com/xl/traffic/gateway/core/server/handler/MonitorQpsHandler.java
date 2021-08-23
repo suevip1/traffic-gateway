@@ -1,18 +1,4 @@
-/*
- * Copyright 2019 ukuz90
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.xl.traffic.gateway.core.server.handler;
 
 import com.xl.traffic.gateway.core.metrics.MetricsMonitor;
@@ -29,16 +15,34 @@ import io.netty.channel.ChannelPromise;
 public class MonitorQpsHandler extends ChannelDuplexHandler {
 
 
+    /**
+     * 进口流量统计
+     *
+     * @param ctx
+     * @param msg
+     * @return: void
+     * @author: xl
+     * @date: 2021/8/13
+     **/
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        MetricsMonitor.getQps().incrementAndGet();
+        MetricsMonitor.getRequestQps().incrementAndGet();
         super.channelRead(ctx, msg);
     }
 
-    //todo 需要下行qps时在考虑写
-//    @Override
-//    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-////        MetricsMonitor.getResponseCount(serverName).increment();
-////        super.write(ctx, msg, promise);
-//    }
+    /**
+     * 出口流量统计
+     *
+     * @param ctx
+     * @param msg
+     * @param promise
+     * @return: void
+     * @author: xl
+     * @date: 2021/8/13
+     **/
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        MetricsMonitor.getResponseQps().incrementAndGet();
+        super.channelRead(ctx, msg);
+    }
 }

@@ -27,9 +27,13 @@ public class MonitorDTO implements Serializable {
     private String serverName;
 
     /**
-     * 服务qps
+     * 服务入口流量qps
      */
-    private int qps;
+    private int requestQps;
+    /**
+     * 服务出口流量qps
+     */
+    private int responseQps;
 
     /**
      * 服务连接数
@@ -47,9 +51,13 @@ public class MonitorDTO implements Serializable {
     private SystemInfoModel systemInfoModel;
 
     /**
-     * 流量大小
+     * 入口流量大小
      */
-    private double bytes;
+    private double requestBytes;
+    /**
+     * 出口流量大小
+     */
+    private double responseBytes;
 
 
 }
