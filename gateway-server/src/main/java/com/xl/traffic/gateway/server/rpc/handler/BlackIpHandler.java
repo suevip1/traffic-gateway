@@ -23,7 +23,7 @@ public class BlackIpHandler implements GatewayRpcServerHandlerService {
     ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 
     @Override
-    public void execute(RpcMsg rpcMsg, java.nio.channels.Channel channel) {
+    public void execute(RpcMsg rpcMsg, Channel channel) {
         String blackIp = new String(rpcMsg.getBody());
         CaffineCacheUtil.getBlackIpCacheMap().put(blackIp, blackIp);
     }

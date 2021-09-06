@@ -25,9 +25,19 @@ public class MonitorMetrics {
     @Getter
     private AbstractCycleData healthMetricsCycleData;
 
-    public MonitorMetrics(int CYCLE_BUCKET_NUM, int BUCKET_TIME) {
+    @Getter
+    private final String serverName;
+
+    @Getter
+    private final String group;
+
+
+
+    public MonitorMetrics(int CYCLE_BUCKET_NUM, int BUCKET_TIME, String serverName,String group) {
         healthMetricsCycleData = new SlidingWindowData(DowngradeConstant.CYCLE_NUM,
                 CYCLE_BUCKET_NUM, BUCKET_TIME);
+        this.serverName = serverName;
+        this.group = group;
     }
 
 

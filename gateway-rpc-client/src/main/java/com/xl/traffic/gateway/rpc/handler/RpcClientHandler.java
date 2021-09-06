@@ -3,6 +3,8 @@ package com.xl.traffic.gateway.rpc.handler;
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
+import com.xl.traffic.gateway.rpc.callback.Callback;
+import com.xl.traffic.gateway.rpc.callback.CallbackPool;
 import com.xl.traffic.gateway.rpc.manager.RpcChannelManager;
 import com.xl.traffic.gateway.rpc.process.RpcMsgProcess;
 import io.netty.channel.ChannelHandler;
@@ -36,10 +38,13 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcMsg> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcMsg rpcMsg) throws Exception {
         executors.execute(() -> {
-            /**处理业务*/
-            RpcMsg result = RpcMsgProcess.getInstance().onMessageProcess(rpcMsg);
-            /**返回消息*/
-            channelHandlerContext.writeAndFlush(result);
+            Callback<RpcMsg> cb = (Callback<RpcMsg>)CallbackPool.remove(rpcMsg.getReqId());
+            if (cb == null) {
+                //找不到回调//可能超时被清理了
+                logger.warn("Receive msg from server but no context found, requestId=" + rpcMsg.getReqId() + "," + channelHandlerContext);
+                return;
+            }
+            cb.handleResult(rpcMsg);
         });
     }
 

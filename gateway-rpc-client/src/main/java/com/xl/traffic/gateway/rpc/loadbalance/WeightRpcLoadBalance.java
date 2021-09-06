@@ -139,6 +139,15 @@ public class WeightRpcLoadBalance implements RpcLoadBalance {
     }
 
     @Override
+    public String loadBalance(String ip) {
+        ServerNodeInfo node = nodeInfos.stream().filter(nodeInfo -> ip.equals(nodeInfo.getIp())).findAny().get();
+        if (node != null) {
+            return getChannelKey(node.getIp());
+        }
+        return null;
+    }
+
+    @Override
     public void addNode(ServerNodeInfo nodeInfo) {
         if (!nodeInfos.contains(nodeInfo)) {
             nodeInfos.add(nodeInfo);

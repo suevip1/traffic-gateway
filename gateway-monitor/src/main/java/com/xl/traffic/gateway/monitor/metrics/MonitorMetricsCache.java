@@ -53,7 +53,7 @@ public class MonitorMetricsCache {
     /**
      * 本地缓存，数据结构:ip-MonitorMetrics
      */
-    static Cache<String, MonitorMetrics> ipMonitorMetricsCache =
+   public static Cache<String, MonitorMetrics> ipMonitorMetricsCache =
             Caffeine.newBuilder()
                     .maximumSize(GatewayConstants.CONNECT_CACHE_MAX_SIZE)
                     .build();
@@ -76,8 +76,24 @@ public class MonitorMetricsCache {
      * @date: 2021/7/9
      **/
     public static MonitorMetrics getMonitorMetrics(String ip) {
+        MonitorMetrics monitorMetrics = ipMonitorMetricsCache.getIfPresent(ip);
+        return monitorMetrics;
+    }
+
+
+
+    /**
+     * 获取监控健康指标统计
+     * 不存则新建
+     *
+     * @param ip 服务ip
+     * @return: com.xl.traffic.gateway.monitor.metrics.MonitorMetrics
+     * @author: xl
+     * @date: 2021/7/9
+     **/
+    public static MonitorMetrics registerMonitorMetrics(String ip,String serverName,String group) {
         MonitorMetrics monitorMetrics = ipMonitorMetricsCache.get(ip, key -> {
-            return new MonitorMetrics(CYCLE_BUCKET_NUM, BUCKET_TIME);
+            return new MonitorMetrics(CYCLE_BUCKET_NUM, BUCKET_TIME,serverName,group);
         });
         return monitorMetrics;
     }

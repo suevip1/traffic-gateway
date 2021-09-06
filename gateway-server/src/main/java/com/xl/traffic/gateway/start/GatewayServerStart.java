@@ -1,15 +1,21 @@
 package com.xl.traffic.gateway.start;
 
 
+import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
+import com.xl.traffic.gateway.core.enums.MsgAppNameType;
+import com.xl.traffic.gateway.core.enums.MsgCMDType;
+import com.xl.traffic.gateway.core.enums.MsgGroupType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.server.Server;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.GatewayPortConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
+import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
 import com.xl.traffic.gateway.monitor.MonitorReport;
 import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
+import com.xl.traffic.gateway.rpc.client.RpcClient;
 import com.xl.traffic.gateway.rpc.cluster.ClusterCenter;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import com.xl.traffic.gateway.server.http.HttpServer;
@@ -72,9 +78,23 @@ public class GatewayServerStart {
         /**监听大业务集群*/
         ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
 
-        /**启动数据上报*/
-        MonitorReport.statisticsReportMonitorData();
+        /**初始化任务*/
+        initTask();
 
+
+    }
+
+    /**
+     * 初始化任务
+     *
+     * @param
+     * @return: void
+     * @author: xl
+     * @date: 2021/9/6
+     **/
+    public void initTask() {
+        //注册申报gateway服务指标信息
+        MonitorReport.registerReportMonitorData();
     }
 
 

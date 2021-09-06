@@ -22,7 +22,6 @@ public class MonitorMetricsConfig {
      */
     private double memoryThreshold;
 
-
     /**
      * 服务qps阈值
      */

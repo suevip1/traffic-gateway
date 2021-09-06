@@ -38,7 +38,7 @@ public class MonitorStart {
      **/
     public void start() {
         monitorServer.start();
-        /**注册router集群*/
+        /**注册monitor集群*/
         registerServer();
         /**连接 gateway server集群*/
         NodePoolManager.getInstance().initNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);

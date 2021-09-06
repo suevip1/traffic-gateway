@@ -137,8 +137,36 @@ public class NodePoolManager {
     public RpcClient chooseRpcClient(String group) {
         try {
             lock.readLock().lock();
-            RpcLoadBalance rpcLoadBalance =WeightNodelCache.loadBalance(group);
+            RpcLoadBalance rpcLoadBalance = WeightNodelCache.loadBalance(group);
             String channelKey = rpcLoadBalance.loadBalance();
+            if (StringUtils.isEmpty(channelKey)) {
+                logger.info(">>>>>>> channel 不存在，请检查服务是否发生异常！！！");
+                throw new RPCException(" channel 不存在，请检查调用服务是否发生异常！！！");
+            }
+            logger.info(">>>>>>> current choose server node key :{} ", channelKey);
+            return ConnectionCache.get(channelKey);
+
+        } finally {
+            lock.readLock().unlock();
+        }
+
+    }
+
+
+    /**
+     * 根据选择服务器,支持权重
+     *
+     * @param group 应用组
+     * @param ip    应用ip
+     * @return: com.xl.traffic.gateway.rpc.client.RpcClient
+     * @author: xl
+     * @date: 2021/9/6
+     **/
+    public RpcClient chooseRpcClient(String group, String ip) {
+        try {
+            lock.readLock().lock();
+            RpcLoadBalance rpcLoadBalance = WeightNodelCache.loadBalance(group);
+            String channelKey = rpcLoadBalance.loadBalance(ip);
             if (StringUtils.isEmpty(channelKey)) {
                 logger.info(">>>>>>> channel 不存在，请检查服务是否发生异常！！！");
                 throw new RPCException(" channel 不存在，请检查调用服务是否发生异常！！！");

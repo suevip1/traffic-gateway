@@ -49,6 +49,11 @@ public class GatewayConstants {
      * gateway配置
      */
     public static String CONFIG = "/config";
+    /**
+     * metrics 配置
+     */
+    public static String METRICS_CONFIG = "/config/metrics";
+
 
     /**
      * 消息协议最大长度

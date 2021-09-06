@@ -8,7 +8,6 @@ import com.xl.traffic.gateway.core.utils.AttributeKeys;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.rpc.connect.NodePoolCache;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

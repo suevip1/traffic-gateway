@@ -5,11 +5,12 @@ public enum MsgCMDType {
 
     HEAT_CMD((byte) 1, "心跳检测"),
     UPLOAD_DOWNGRATE_DATA_CMD((byte) 2, "上传降级统计信息"),
-    UPLOAD_MONITOR_DATA_CMD((byte) 3, "上报monitor指标统计信息"),
+    PULL_MONITOR_DATA_CMD((byte) 3, "拉取monitor指标统计信息"),
     LOGIN_CMD((byte) 4, "登录"),
     LOGIN_OUT_CMD((byte) 5, "退出登录"),
     DISCONNECT((byte) 6, "断开连接"),
     BLACK_IP_CMD((byte) 7, "黑名单"),
+    REGISTER_MONITOR_TASK((byte) 8, "注册monitor任务"),
 
     ;
 

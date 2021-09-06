@@ -51,6 +51,15 @@ public interface RpcLoadBalance {
     String loadBalance();
 
     /**
+     * @Description: 根据ip获取服务节点
+     * @Param: []
+     * @return: java.lang.String
+     * @Author: xl
+     * @Date: 2021/6/23
+     **/
+    String loadBalance(String p);
+
+    /**
      * @Description: 初始化服务节点
      * @Param:
      * @return:
@@ -70,5 +79,9 @@ public interface RpcLoadBalance {
     default boolean groupExistNodel(String nodel) {
         return false;
     }
+
+
+
+
 
 }

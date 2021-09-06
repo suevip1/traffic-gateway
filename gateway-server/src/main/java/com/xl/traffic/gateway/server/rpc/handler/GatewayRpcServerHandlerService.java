@@ -1,8 +1,8 @@
 package com.xl.traffic.gateway.server.rpc.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import io.netty.channel.Channel;
 
-import java.nio.channels.Channel;
 
 /**
  * handler接口

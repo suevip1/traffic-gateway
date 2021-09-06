@@ -22,6 +22,11 @@ import java.io.Serializable;
 public class MonitorDTO implements Serializable {
 
     /**
+     * 应用组
+     */
+    private String group;
+
+    /**
      * 服务名称
      */
     private String serverName;
