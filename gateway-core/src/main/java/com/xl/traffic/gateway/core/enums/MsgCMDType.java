@@ -11,6 +11,7 @@ public enum MsgCMDType {
     DISCONNECT((byte) 6, "断开连接"),
     BLACK_IP_CMD((byte) 7, "黑名单"),
     REGISTER_MONITOR_TASK((byte) 8, "注册monitor任务"),
+    HYSTRIX_NOTIFY((byte) 9, "降级通知"),
 
     ;
 

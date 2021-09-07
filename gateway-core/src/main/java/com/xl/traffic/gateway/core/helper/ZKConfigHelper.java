@@ -19,7 +19,6 @@ import java.util.List;
 public class ZKConfigHelper {
 
 
-
     private static class InstanceHolder {
         public static final ZKConfigHelper instance = new ZKConfigHelper();
     }
@@ -51,6 +50,7 @@ public class ZKConfigHelper {
 
     public ZKConfigHelper() {
 
+        /**gateway服务基础配置文件*/
         listenerGlobal = new IZkDataListener() {
 
             @Override
@@ -73,6 +73,7 @@ public class ZKConfigHelper {
             }
         };
 
+        /**服务监控指标阈值配置文件*/
         metricsListenerGlobal = new IZkDataListener() {
 
             @Override

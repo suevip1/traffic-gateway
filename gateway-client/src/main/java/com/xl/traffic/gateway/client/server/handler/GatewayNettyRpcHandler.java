@@ -1,6 +1,9 @@
 package com.xl.traffic.gateway.client.server.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import com.xl.traffic.gateway.core.enums.SerializeType;
+import com.xl.traffic.gateway.core.serialize.ISerialize;
+import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -14,8 +17,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class GatewayNettyRpcHandler extends SimpleChannelInboundHandler<RpcMsg> {
 
 
+
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcMsg rpcMsg) throws Exception {
+
+
+        
+
 
     }
 }

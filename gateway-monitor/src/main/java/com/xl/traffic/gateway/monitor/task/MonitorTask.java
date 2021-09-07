@@ -63,7 +63,7 @@ public class MonitorTask {
             String group = stringMonitorMetricsEntry.getValue().getGroup();
             RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(serverName, ip);
             if (rpcClient == null) {
-                log.info("serverName:{},ip:{} no have rpcClient!!!", serverName, ip);
+                log.info("group:{},serverName:{},ip:{} no active rpcClient!!!", group, serverName, ip);
                 continue;
             }
             RpcMsg rpcMsg = new RpcMsg(MsgCMDType.PULL_MONITOR_DATA_CMD.getType(), MsgGroupType.valueOf(group).getType(),
@@ -73,6 +73,7 @@ public class MonitorTask {
                 if (rsMsg.getBody() != null) {
                     MonitorDTO monitorDTO = iSerialize.deserialize(rpcMsg.getBody(), MonitorDTO.class);
                     exeuteHealthMetricsData(monitorDTO);
+                    log.info("group:{},serverName:{},ip:{} get health report data success!!!", group, serverName, ip);
                 }
             } catch (Exception exception) {
                 log.error("rpc request error! errMsg:{}", exception);
@@ -89,7 +90,12 @@ public class MonitorTask {
      * @date: 2021/7/9
      **/
     public static void exeuteHealthMetricsData(MonitorDTO monitorDTO) {
-        /**连接数是否超出阈值*/
+        /**指标是否超出阈值
+         * 1，连接数
+         * 2，请求qps
+         * 3，cpu使用率
+         * 4，内存使用率
+         * */
         if (monitorDTO.getConnectNum() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getConnectNum()
                 || monitorDTO.getRequestQps() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getQpsThreshold()
                 || monitorDTO.getSystemInfoModel().getProcessCpuLoad() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getCpuThreshold()

@@ -48,7 +48,7 @@ public interface DowngradeClient {
 
 
     /**
-     * 每5秒从admin服务端拉取最新的降级点配置信息
+     * 长时间未做更新需要从admin服务端拉取最新的降级点配置信息
      *
      * @param
      * @return: void

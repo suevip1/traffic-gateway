@@ -57,7 +57,9 @@ public interface RpcLoadBalance {
      * @Author: xl
      * @Date: 2021/6/23
      **/
-    String loadBalance(String p);
+    default String loadBalance(String p) {
+        return "";
+    }
 
     /**
      * @Description: 初始化服务节点

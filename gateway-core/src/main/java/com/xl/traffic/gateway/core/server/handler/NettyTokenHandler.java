@@ -22,6 +22,8 @@ public class NettyTokenHandler extends SimpleChannelInboundHandler<RpcMsg> {
 
         /**排除登录指令*/
         if (cmd.getCmd() == MsgCMDType.LOGIN_CMD.getType()) {
+            // 通知执行下一个InboundHandler
+            ctx.fireChannelRead(cmd);
             return;
         }
         /**token校验*/

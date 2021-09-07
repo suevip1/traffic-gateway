@@ -71,14 +71,11 @@ public class CycleDataService {
         //todo 注意，这里不使用scheduleAtFixedRate，因为从长期角度来讲，scheduleAtFixedRate没有每次任务执完去计算下次执行时间准
         cleanAndUploadExecutor.schedule(new CycleClearAndUploadTask(), calDistanceNextExecuteTime(), TimeUnit.MILLISECONDS);
 
-        /**每5秒拉取一次配置*/
-        pullPointStrategyExecutor.scheduleAtFixedRate(new CyclePullPointStrategyTask(), 0, 5, TimeUnit.SECONDS);
+        /**每1h拉取一次配置*/
+        /**因为有一种极端可能，假设在admin server端 新增/修改/删除 啦一个降级点，但是当点击提交的时候，
+         * 此时admin server 突然挂啦，这时就会造成这个降级点永远都同步不过来，除非gateway server发生变更, 所以需要加一个保障。*/
+        pullPointStrategyExecutor.scheduleAtFixedRate(new CyclePullPointStrategyTask(), 0, 1, TimeUnit.HOURS);
     }
-
-
-    public CycleDataService() {
-    }
-
 
     /**
      * 新建一个周期数据对象
@@ -145,22 +142,17 @@ public class CycleDataService {
                     if (allCycleTimeDatum == null) {
                         continue;
                     }
-
                     /**
                      * 清理下一周期的所有数据
                      */
                     allCycleTimeDatum.clearNextCycleValue(now);
-
                 }
-
                 if (uploadDataSwitch) {
                     /**
                      * 执行上传周期统计数据 2 adminServer
                      */
                     DowngrateDispatcher.getInstance().dispatcherGroupPushDowngrateData();
                 }
-
-
                 /**
                  * 这里在计算下一个任务的执行时间点
                  * 因为对时间的精度要求比较高，所以不能用固定的周期方法
@@ -177,17 +169,16 @@ public class CycleDataService {
 
 
     /**
-     * 周期性（每5秒）去服务端pull最新的降级点策略
+     * 周期性（每1h）检查一次，长时间未做更新需要 去服务端pull最新的降级点策略
      */
     private static class CyclePullPointStrategyTask implements Runnable {
-
         @Override
         public void run() {
             if (!pullPointStrategySwitch) {
                 return;
             }
-            /**执行拉取降级点策略的任务*/
-            DowngrateDispatcher.getInstance().dispatcherGroupUpdatePointStrategy();
+            /**执行拉取所有降级点策略的任务*/
+            PullAndPushService.getInstance().initAllHystrixPointStrategyFromAdminServer();
         }
     }
 

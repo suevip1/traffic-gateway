@@ -32,6 +32,9 @@ public class ServerRpcHandlerInitializer {
     @Autowired
     BlackIpHandler blackIpHandler;
 
+    @Autowired
+    HystrixNotifyHandler hystrixNotifyHandler;
+
 
     /**
      * 获取Handler
@@ -48,6 +51,7 @@ public class ServerRpcHandlerInitializer {
     private void init() {
 
         handlerMap.put((int) MsgCMDType.BLACK_IP_CMD.getType(), blackIpHandler);
+        handlerMap.put((int) MsgCMDType.HYSTRIX_NOTIFY.getType(), hystrixNotifyHandler);
 
     }
 

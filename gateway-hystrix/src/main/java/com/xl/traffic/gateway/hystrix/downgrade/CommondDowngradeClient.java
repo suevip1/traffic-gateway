@@ -47,8 +47,6 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
         super(appGroupName, appName);
         /**初始化策略链*/
         initStrategyChain();
-        /**初始化配置策略信息*/
-        PullAndPushService.getInstance().updatePointStrategyFromAdminServer(appGroupName, appName);
     }
 
 
@@ -311,7 +309,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
 
     @Override
     public void updatePointStrategyFromAdminServer() {
-        super.abstractUpdatePointStrategyFromAdminServer();
+//        super.abstractUpdatePointStrategyFromAdminServer();
     }
 
     @Override

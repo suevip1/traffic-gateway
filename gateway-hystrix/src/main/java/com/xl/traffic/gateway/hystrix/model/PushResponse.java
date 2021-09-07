@@ -28,6 +28,16 @@ public class PushResponse {
     private String sdsSchemeName;
 
     /**
+     * 应用组
+     */
+    private String appGroupName;
+
+    /**
+     * 应用名称
+     */
+    private String appName;
+
+    /**
      *
      */
     private Boolean changed;

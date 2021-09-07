@@ -30,7 +30,7 @@ public class DowngrateDispatcher {
 
 
     /**
-     * 添加应用组下的应用app,这个方法是 admin server 传过来的
+     * 添加应用组下的应用app, 创建appGroupName appName的降级客户端
      * <p>
      * //todo admin server 会通知
      *
@@ -40,7 +40,7 @@ public class DowngrateDispatcher {
      * @author: xl
      * @date: 2021/7/2
      **/
-    public void updateAppGroupPullAndPushMap(String groupName, String appName) {
+    public void createAppNameDowngradeClient(String groupName, String appName) {
         CopyOnWriteArrayList<AbstractDowngradeClient> pullAndPushServiceList = appGroupsClientMap.get(groupName);
         if (CollectionUtils.isEmpty(pullAndPushServiceList)) {
             pullAndPushServiceList = new CopyOnWriteArrayList<>();

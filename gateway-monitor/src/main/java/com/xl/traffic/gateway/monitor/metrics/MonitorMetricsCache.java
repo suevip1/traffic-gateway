@@ -53,12 +53,12 @@ public class MonitorMetricsCache {
     /**
      * 本地缓存，数据结构:ip-MonitorMetrics
      */
-   public static Cache<String, MonitorMetrics> ipMonitorMetricsCache =
+    public static Cache<String, MonitorMetrics> ipMonitorMetricsCache =
             Caffeine.newBuilder()
                     .maximumSize(GatewayConstants.CONNECT_CACHE_MAX_SIZE)
                     .build();
     /**
-     * 本地缓存，数据结构:ip-weight
+     * 本地缓存，数据结构:ip ----> weight
      * 存储每个节点的原始权重值
      */
     static Cache<String, Integer> ipWeightCache =
@@ -81,19 +81,19 @@ public class MonitorMetricsCache {
     }
 
 
-
     /**
-     * 获取监控健康指标统计
-     * 不存则新建
+     * 注册服务监控指标任务
      *
-     * @param ip 服务ip
+     * @param ip         服务ip
+     * @param serverName 服务名称
+     * @param group      应用组
      * @return: com.xl.traffic.gateway.monitor.metrics.MonitorMetrics
      * @author: xl
-     * @date: 2021/7/9
+     * @date: 2021/9/7
      **/
-    public static MonitorMetrics registerMonitorMetrics(String ip,String serverName,String group) {
+    public static MonitorMetrics registerMonitorMetrics(String ip, String serverName, String group) {
         MonitorMetrics monitorMetrics = ipMonitorMetricsCache.get(ip, key -> {
-            return new MonitorMetrics(CYCLE_BUCKET_NUM, BUCKET_TIME,serverName,group);
+            return new MonitorMetrics(CYCLE_BUCKET_NUM, BUCKET_TIME, serverName, group);
         });
         return monitorMetrics;
     }
@@ -108,7 +108,7 @@ public class MonitorMetricsCache {
                 for (Map.Entry<String, MonitorMetrics> entry : ipMonitorMetricsCache.asMap().entrySet()) {
 
                     MonitorMetrics monitorMetrics = entry.getValue();
-                    String ip = entry.getKey();
+                    String ip = entry.getKey();//服务ip
                     /**
                      * 在每10分钟的第5分钟，即第15分钟会开始清理所有滑动周期内CycleTimeData下一周期的数据
                      */

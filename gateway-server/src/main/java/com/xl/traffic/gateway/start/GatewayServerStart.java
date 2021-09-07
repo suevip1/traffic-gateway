@@ -13,6 +13,7 @@ import com.xl.traffic.gateway.core.utils.GatewayPortConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
+import com.xl.traffic.gateway.hystrix.service.PullAndPushService;
 import com.xl.traffic.gateway.monitor.MonitorReport;
 import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 import com.xl.traffic.gateway.rpc.client.RpcClient;
@@ -95,6 +96,8 @@ public class GatewayServerStart {
     public void initTask() {
         //注册申报gateway服务指标信息
         MonitorReport.registerReportMonitorData();
+        //初始化降级
+        PullAndPushService.getInstance().initAllHystrixPointStrategyFromAdminServer();
     }
 
 

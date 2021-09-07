@@ -13,6 +13,7 @@ import com.xl.traffic.gateway.core.utils.DateUtils;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.hystrix.counter.PowerfulCycleTimeCounter;
+import com.xl.traffic.gateway.hystrix.dispatch.DowngrateDispatcher;
 import com.xl.traffic.gateway.hystrix.model.PushCycleData;
 import com.xl.traffic.gateway.hystrix.model.PushRequest;
 import com.xl.traffic.gateway.hystrix.model.PushResponse;
@@ -92,19 +93,18 @@ public class PullAndPushService {
     }
 
     /**
-     * 每5秒从admin服务端拉取最新的降级点配置信息
+     * 根据appGroupName，appName从admin服务端拉取最新的降级点配置信息
      *
      * @param
      * @return: void
      * @author: xl
-     * @date: 2021/6/28
+     * @date: 2021/7/5
      **/
     public void updatePointStrategyFromAdminServer(String appGroupName, String appName) {
         BaseValidator.baseParamValidator(appGroupName, appName);
         try {
             /**获取所有的降级点*/
             List<String> points = PowerfulCounterService.getInstance().getPointCounterMap().keySet().stream().collect(Collectors.toList());
-
             PushRequest pushRequest = PushRequest.builder()
                     .appName(appName)
                     .appGroupName(appGroupName)
@@ -112,7 +112,51 @@ public class PullAndPushService {
                     .hostname(AddressUtils.getHostName())
                     .pointList(points)
                     .build();
+            /**此处使用同步rpc，拉取最新配置*/
+            byte[] res = RemoteRpcClientManager.getInstance().sendSync(GatewayConstants.GATEWAY_GROUP, iSerialize.serialize(pushRequest));
+            if (res == null) {
+                log.info("PullAndPushService#updatePointStrategyFromWebServer 服务端应答转JSON为null，请求参数："
+                        + GSONUtil.toJson(pushRequest));
+                return;
+            }
+            PushResponse response = iSerialize.deserialize(res, PushResponse.class);
+            if (StringUtils.isNotBlank(response.getErrorMsg())) {
+                log.info("PullAndPushService#updatePointStrategyFromWebServer 服务端有错误信息：" + response.getErrorMsg());
+                return;
+            }
+            // 如果没有更新，直接返回
+            if (response.getChanged() == null || !response.getChanged()) {
+                log.info("PullAndPushService#updatePointStrategyFromWebServer 版本号没变，无需更新");
+                return;
+            }
+            ConcurrentHashMap<String, Strategy> strategies = new ConcurrentHashMap<>();
+            if (!CollectionUtils.isEmpty(response.getStrategies())) {
+                for (Strategy strategy : response.getStrategies()) {
+                    strategies.put(strategy.getPoint(), strategy);
+                }
+            }
+            /**更新降级点信息*/
+            updatePointInfo(appGroupName, appName, strategies);
 
+        } catch (Exception exception) {
+            log.error("PullAndPushService updatePointStrategyFromAdminServer is error:{}", exception);
+        }
+    }
+
+    /**
+     * 从admin服务端拉取最新的降级点配置信息【初始化所有】
+     *
+     * @param
+     * @return: void
+     * @author: xl
+     * @date: 2021/6/28
+     **/
+    public void initAllHystrixPointStrategyFromAdminServer() {
+        try {
+            PushRequest pushRequest = PushRequest.builder()
+                    .ip(AddressUtils.getInnetIp())
+                    .hostname(AddressUtils.getHostName())
+                    .build();
 
             /**此处使用同步rpc，拉取最新配置*/
             byte[] res = RemoteRpcClientManager.getInstance().sendSync(GatewayConstants.GATEWAY_GROUP, iSerialize.serialize(pushRequest));
@@ -121,50 +165,48 @@ public class PullAndPushService {
                         + GSONUtil.toJson(pushRequest));
                 return;
             }
-
-            PushResponse response = iSerialize.deserialize(res, PushResponse.class);
-
-
-            if (StringUtils.isNotBlank(response.getErrorMsg())) {
-                log.info("PullAndPushService#updatePointStrategyFromWebServer 服务端有错误信息：" + response.getErrorMsg());
-                return;
+            List<PushResponse> responses = iSerialize.deserialize(res, List.class);
+            for (PushResponse response : responses) {
+                updateHystrix(response);
             }
-
-
-            // 如果没有更新，直接返回
-            if (response.getChanged() == null || !response.getChanged()) {
-                log.info("PullAndPushService#updatePointStrategyFromWebServer 版本号没变，无需更新");
-                return;
-            }
-
-            ConcurrentHashMap<String, Strategy> strategies = new ConcurrentHashMap<>();
-            if (!CollectionUtils.isEmpty(response.getStrategies())) {
-                for (Strategy strategy : response.getStrategies()) {
-                    strategies.put(strategy.getPoint(), strategy);
-                }
-            }
-
-            /**更新降级点信息*/
-            updatePointInfo(appGroupName,appName,strategies);
-
         } catch (Exception exception) {
             log.error("PullAndPushService updatePointStrategyFromAdminServer is error:{}", exception);
         }
     }
 
-    private void updatePointInfo(String appGroupName, String appName, ConcurrentHashMap<String, Strategy> strategyMap) {
+    public void updateHystrix(PushResponse response) {
+        if (StringUtils.isNotBlank(response.getErrorMsg())) {
+            log.info("PullAndPushService 服务端有错误信息：" + response.getErrorMsg());
+            return;
+        }
+        // 如果没有更新，直接返回
+        if (response.getChanged() == null || !response.getChanged()) {
+            log.info("PullAndPushService 版本号没变，无需更新");
+            return;
+        }
+        ConcurrentHashMap<String, Strategy> strategies = new ConcurrentHashMap<>();
+        if (!CollectionUtils.isEmpty(response.getStrategies())) {
+            for (Strategy strategy : response.getStrategies()) {
+                strategies.put(strategy.getPoint(), strategy);
+            }
+        }
 
+        /**创建降级客户端*/
+        DowngrateDispatcher.getInstance().createAppNameDowngradeClient(response.getAppGroupName(), response.getAppName());
 
+        /**更新降级点信息*/
+        updatePointInfo(response.getAppGroupName(), response.getAppName(), strategies);
+    }
+
+    public void updatePointInfo(String appGroupName, String appName, ConcurrentHashMap<String, Strategy> strategyMap) {
         /**重设降级点策略*/
         StrategyService.getInstance().updateAllStrategy(appGroupName, appName, strategyMap);
 
         /**
          * 重设降级点返回值
          */
-        //todo
-
+        //todo 降级返回值是json格式
     }
-
 
     /**
      * 根据当前时间获取所有降级点上一完整周期的统计信息

@@ -30,7 +30,7 @@ public abstract class AbstractDowngradeClient implements DowngradeClient {
 
 
     /**
-     * 每5秒从admin服务端拉取最新的降级点配置信息
+     * 长时间未做更新 需要从admin服务端拉取最新的降级点配置信息
      *
      * @param
      * @return: void
@@ -38,8 +38,9 @@ public abstract class AbstractDowngradeClient implements DowngradeClient {
      * @date: 2021/7/5
      **/
     protected void abstractUpdatePointStrategyFromAdminServer() {
-        PullAndPushService.getInstance().updatePointStrategyFromAdminServer(appGroupName, appName);
+//        PullAndPushService.getInstance().updatePointStrategyFromAdminServer(appGroupName, appName);
     }
+
 
     /**
      * 汇报本地的降级数据给admin
