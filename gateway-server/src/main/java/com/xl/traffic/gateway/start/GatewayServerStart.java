@@ -1,22 +1,16 @@
 package com.xl.traffic.gateway.start;
 
 
-import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
-import com.xl.traffic.gateway.core.enums.MsgAppNameType;
-import com.xl.traffic.gateway.core.enums.MsgCMDType;
-import com.xl.traffic.gateway.core.enums.MsgGroupType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.server.Server;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.GatewayPortConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
-import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.hystrix.notify.DowngrateActionNotify;
 import com.xl.traffic.gateway.hystrix.service.PullAndPushService;
 import com.xl.traffic.gateway.monitor.MonitorReport;
 import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
-import com.xl.traffic.gateway.rpc.client.RpcClient;
 import com.xl.traffic.gateway.rpc.cluster.ClusterCenter;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import com.xl.traffic.gateway.server.http.HttpServer;
@@ -55,34 +49,37 @@ public class GatewayServerStart {
      * @date: 2021/6/24
      **/
     public void start() {
-        tcpServer.start();
-        httpServer.start();
-        gatewayRpcServer.start();
-        /**注册gateway信息*/
-        registerServer();
-        /**添加降级监听器*/
-        addDowngrateEventListener();
-        /**连接monitor集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.MONITOR_ZK_ROOT_PATH);
-        /**监听monitor集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.MONITOR_ZK_ROOT_PATH);
-        /**连接router集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.ROUTER_ZK_ROOT_PATH);
-        /**监听router集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROUTER_ZK_ROOT_PATH);
-        /**连接admin集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.ADMIN_ZK_ROOT_PATH);
-        /**监听admin集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ADMIN_ZK_ROOT_PATH);
-        /**连接大业务集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
-        /**监听大业务集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
-
-        /**初始化任务*/
-        initTask();
-
-
+        Thread start = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                tcpServer.start();
+                httpServer.start();
+                gatewayRpcServer.start();
+                /**注册gateway信息*/
+                registerServer();
+                /**连接monitor集群*/
+                NodePoolManager.getInstance().initNodePool(GatewayConstants.MONITOR_ZK_ROOT_PATH);
+                /**监听monitor集群*/
+                ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.MONITOR_ZK_ROOT_PATH);
+                /**连接router集群*/
+                NodePoolManager.getInstance().initNodePool(GatewayConstants.ROUTER_ZK_ROOT_PATH);
+                /**监听router集群*/
+                ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROUTER_ZK_ROOT_PATH);
+                /**连接admin集群*/
+                NodePoolManager.getInstance().initNodePool(GatewayConstants.ADMIN_ZK_ROOT_PATH);
+                /**监听admin集群*/
+                ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ADMIN_ZK_ROOT_PATH);
+                /**连接大业务集群*/
+                NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+                /**监听大业务集群*/
+                ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+                /**初始化任务*/
+                initTask();
+            }
+        });
+        start.setName("gateway-server-start-thread");
+        start.setDaemon(true);
+        start.start();
     }
 
     /**
@@ -98,6 +95,8 @@ public class GatewayServerStart {
         MonitorReport.registerReportMonitorData();
         //初始化降级
         PullAndPushService.getInstance().initAllHystrixPointStrategyFromAdminServer();
+        /**添加降级监听器*/
+        addDowngrateEventListener();
     }
 
 

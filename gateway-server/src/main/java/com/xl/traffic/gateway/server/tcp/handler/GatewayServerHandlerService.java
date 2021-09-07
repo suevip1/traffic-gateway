@@ -2,7 +2,6 @@ package com.xl.traffic.gateway.server.tcp.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.server.connection.Connection;
-import io.netty.channel.Channel;
 
 
 /**

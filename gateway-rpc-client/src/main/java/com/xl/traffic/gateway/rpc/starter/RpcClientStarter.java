@@ -5,9 +5,9 @@ import com.xl.traffic.gateway.core.context.NettyContext;
 import com.xl.traffic.gateway.core.enums.NettyType;
 import com.xl.traffic.gateway.core.protocol.MessageDecoder;
 import com.xl.traffic.gateway.core.protocol.MessageEncoder;
-import com.xl.traffic.gateway.core.server.handler.NettyOnIdleHandler;
 import com.xl.traffic.gateway.core.server.handler.NettyReciveHandler;
 import com.xl.traffic.gateway.core.zip.Zip;
+import com.xl.traffic.gateway.rpc.handler.KeepaliveHandler;
 import com.xl.traffic.gateway.rpc.handler.RpcClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -89,7 +89,7 @@ public class RpcClientStarter {
                     pipeline.addLast(new MessageEncoder());// tcp消息编码
                     pipeline.addLast(new MessageDecoder());// tcp消息解码
                     pipeline.addLast(new IdleStateHandler(60, 0, 0, TimeUnit.SECONDS));
-                    pipeline.addLast(new NettyOnIdleHandler());//心跳
+                    pipeline.addLast(new KeepaliveHandler());//心跳
                     pipeline.addLast(new NettyReciveHandler());
                     pipeline.addLast(new RpcClientHandler());
 

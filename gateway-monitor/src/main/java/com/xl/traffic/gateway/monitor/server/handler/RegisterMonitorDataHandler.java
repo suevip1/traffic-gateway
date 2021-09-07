@@ -6,6 +6,7 @@ import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
+import com.xl.traffic.gateway.core.server.connection.Connection;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import com.xl.traffic.gateway.monitor.service.MonitorMetricsService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class RegisterMonitorDataHandler implements MonitorServerHandlerService {
     MonitorMetricsService monitorMetricsService;
 
     @Override
-    public void execute(RpcMsg rpcMsg, Channel channel) {
+    public void execute(RpcMsg rpcMsg, Connection connection) {
         MonitorDTO monitorDTO = iSerialize.deserialize(rpcMsg.getBody(), MonitorDTO.class);
         ThreadPoolExecutorUtil.getCommonIOPool().submit(() -> {
             monitorMetricsService.registerMonitorTask(monitorDTO);

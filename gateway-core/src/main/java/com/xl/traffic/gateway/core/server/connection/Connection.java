@@ -24,7 +24,7 @@ public class Connection {
     private String channelId;
 
     /**
-     * 通道
+     * channel通道
      */
     private final Channel channel;
 
