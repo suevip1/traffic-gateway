@@ -115,7 +115,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             boolean concurrentAcquire = powerfulCounterService.concurrentAcquire(appGroupName, appName, point, now);
             /**当前滑动周期的异常次数*/
             long exceptionCount = powerfulCounterService.getExceptionValue(appGroupName, appName, point, now);
-            /**当前周期的异常调用次数*/
+            /**当前周期的超时调用次数*/
             long timeoutCount = powerfulCounterService.getTimeoutValue(appGroupName, appName, point, now);
             /**尝试消耗一个当前秒的令牌，并获取当前桶已消耗的令牌数*/
             long takeTokenBucketNum = powerfulCounterService.tokenBucketAddAndGet(appGroupName, appName, point, now);
@@ -275,7 +275,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             /**step4:如果访问量超过阈值时，需重置降级延迟时间，降级延迟开始*/
             DowngrateDelayService.getInstance().resetExpireTime(appGroupName, appName, point, time);
         } else {
-            /**step3: 如果需要降级延迟，判断 此次请求是否时降级延迟的重试请求，是的话 返回，否的话 继续执行*/
+            /**step3: 如果需要降级延迟，判断 此次请求是否是降级延迟的重试请求，是的话 返回，否的话 继续执行*/
             if (DowngrateDelayService.getInstance().retryChoice(appGroupName, appName, point, time)) {
                 log.info("CommondDowngradeClient 本次请求是降级延迟的重试请求:" + point);
                 return false;

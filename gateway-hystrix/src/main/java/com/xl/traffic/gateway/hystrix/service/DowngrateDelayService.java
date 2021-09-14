@@ -112,7 +112,7 @@ public class DowngrateDelayService {
                 DelayTimer delayTimer = new DelayTimer(strategy.getDelayTime(), strategy.getRetryInterval());
                 pointDelayMap.put(key, delayTimer);
             } else {
-                //如果之前有延迟策略配置，那么久直接做更新
+                //如果之前有延迟策略配置，那么就直接做更新
                 oldDelayTimer.update(strategy.getDelayTime(), strategy.getRetryInterval());
                 pointDelayMap.put(key, oldDelayTimer);
             }

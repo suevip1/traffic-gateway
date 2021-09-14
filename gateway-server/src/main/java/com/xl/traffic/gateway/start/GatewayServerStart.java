@@ -91,9 +91,9 @@ public class GatewayServerStart {
      * @date: 2021/9/6
      **/
     public void initTask() {
-        //注册申报gateway服务指标信息
+        /**注册申报gateway服务指标信息*/
         MonitorReport.registerReportMonitorData();
-        //初始化降级
+        /**初始化降级*/
         PullAndPushService.getInstance().initAllHystrixPointStrategyFromAdminServer();
         /**添加降级监听器*/
         addDowngrateEventListener();

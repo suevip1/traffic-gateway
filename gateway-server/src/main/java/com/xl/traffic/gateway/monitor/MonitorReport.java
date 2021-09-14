@@ -54,13 +54,14 @@ public class MonitorReport {
         rpcClient.sendAsync(rpcMsg);
     }
 
-   /**
-   * 获取指标信息
-    * @param
-   * @return: com.xl.traffic.gateway.core.dto.MonitorDTO
-   * @author: xl
-   * @date: 2021/9/6
-   **/
+    /**
+     * 获取指标信息
+     *
+     * @param
+     * @return: com.xl.traffic.gateway.core.dto.MonitorDTO
+     * @author: xl
+     * @date: 2021/9/6
+     **/
     public static MonitorDTO buildMonitorDTO() {
         OperatingSystemMXBean mem = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         double processCpuLoad = mem.getProcessCpuLoad();
