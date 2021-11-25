@@ -4,12 +4,10 @@ import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
-import com.xl.traffic.gateway.core.server.connection.Connection;
 import com.xl.traffic.gateway.hystrix.model.PushResponse;
 import com.xl.traffic.gateway.hystrix.service.PullAndPushService;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +24,7 @@ public class HystrixNotifyHandler implements GatewayRpcServerHandlerService {
 
 
     @Override
-    public void execute(RpcMsg rpcMsg, Connection connection) {
+    public void execute(RpcMsg rpcMsg, Channel channel) {
         PushResponse response = iSerialize.deserialize(rpcMsg.getBody(), PushResponse.class);
         PullAndPushService.getInstance().updateHystrix(response);
 

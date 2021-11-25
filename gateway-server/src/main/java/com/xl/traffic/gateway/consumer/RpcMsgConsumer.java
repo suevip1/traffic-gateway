@@ -23,15 +23,13 @@ public class RpcMsgConsumer {
         return InstanceHolder.instance;
     }
 
-
     public void start() {
-
         ExecutorService detectThreadPool = Executors.newFixedThreadPool(MQProvider.threadCnt);
         for (int i = 0; i < MQProvider.threadCnt; i++) {
             detectThreadPool.execute(new RpcMsgSender(
                     i % MQProvider.threadCnt));
         }
-        logger.info("AsyncLoadCacheConsumer Detect Async Page Queue Start！！Thread Count:{}", MQProvider.threadCnt);
+        logger.info("RpcMsgConsumer Async Queue Start！！Thread Count:{}", MQProvider.threadCnt);
     }
 
 

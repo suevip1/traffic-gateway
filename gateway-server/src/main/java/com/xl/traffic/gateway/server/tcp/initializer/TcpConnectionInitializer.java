@@ -1,5 +1,7 @@
 package com.xl.traffic.gateway.server.tcp.initializer;
 
+import com.xl.traffic.gateway.cache.GatewayServerCache;
+import com.xl.traffic.gateway.core.cache.LocalCacheService;
 import com.xl.traffic.gateway.core.helper.GatewayConfigHelper;
 import com.xl.traffic.gateway.core.protocol.MessageDecoder;
 import com.xl.traffic.gateway.core.protocol.MessageEncoder;
@@ -18,7 +20,9 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
     private final NettyTcpServerHandler serverHandler;
 
 
-    /**心跳检测*/
+    /**
+     * 心跳检测
+     */
     private final NettyOnIdleHandler nettyOnIdleHandler;
 
     private final SslEngineFactory sslEngineFactory;
@@ -44,10 +48,14 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
      */
     private final NettyTokenHandler nettyTokenHandler;
 
+    /**
+     * 本地缓存
+     */
+    LocalCacheService localCacheService = new GatewayServerCache();
 
     public TcpConnectionInitializer(SslEngineFactory sslEngineFactory) {
         this.serverHandler = new NettyTcpServerHandler();
-        this.nettyOnIdleHandler = new NettyOnIdleHandler();
+        this.nettyOnIdleHandler = new NettyOnIdleHandler(localCacheService);
         this.sslEngineFactory = sslEngineFactory;
         this.reciveHandler = new NettyReciveHandler();
         this.monitorQpsHandler = new MonitorQpsHandler();

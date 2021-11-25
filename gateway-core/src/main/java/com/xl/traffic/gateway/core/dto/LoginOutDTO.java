@@ -20,9 +20,13 @@ public class LoginOutDTO implements Serializable {
     private String uid;
 
     /**
-     * 用户登录设备 id
+     * 用户登录设备 id+channelId
      */
     private String deviceId;
+    /**
+     * 用户源设备id
+     */
+    private String sourceDeviceId;
 
 
 }

@@ -16,16 +16,16 @@ import java.util.concurrent.*;
 public class ThreadPoolExecutorUtil {
 
     /**
-     * IO线程池 公共
+     * GATEWAY_LOGIN IO线程池
      */
     @Getter
-    private final static ExecutorService commonIOPool = new ThreadPoolExecutor(500, 1000,
+    private final static ExecutorService Gateway_Login_Pool = new ThreadPoolExecutor(500, 1000,
             1L,
             TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(1000000),
             new ThreadFactory() {
                 @Override
                 public Thread newThread(Runnable r) {
-                    Thread thread = new Thread(r, "common-io-executor");
+                    Thread thread = new Thread(r, "gateway-login-io-executor");
                     thread.setDaemon(true);
                     return thread;
                 }
@@ -33,10 +33,33 @@ public class ThreadPoolExecutorUtil {
             new RejectedExecutionHandler() {
                 @Override
                 public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                    log.warn("common-io-executor 丢弃。");
+                    log.warn("gateway-login-io-executor 丢弃。");
                 }
             }
     );
+    /**
+     * GATEWAY_LOGIN_Out IO线程池
+     */
+    @Getter
+    private final static ExecutorService Gateway_Login_Out_Pool = new ThreadPoolExecutor(500, 1000,
+            1L,
+            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(1000000),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r, "gateway-login-out-io-executor");
+                    thread.setDaemon(true);
+                    return thread;
+                }
+            },
+            new RejectedExecutionHandler() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                    log.warn("gateway-login-out-io-executor 丢弃。");
+                }
+            }
+    );
+
 
 
     /**

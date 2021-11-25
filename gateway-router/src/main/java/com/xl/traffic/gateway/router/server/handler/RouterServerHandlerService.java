@@ -1,9 +1,6 @@
 package com.xl.traffic.gateway.router.server.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
-import com.xl.traffic.gateway.core.server.connection.Connection;
-
-import java.nio.channels.Channel;
 
 /**
  * handler接口

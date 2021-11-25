@@ -1,7 +1,7 @@
-package com.xl.traffic.gateway.core.server.manager;
+package com.xl.traffic.gateway.cache;
 
 import com.xl.traffic.gateway.core.cache.CaffineCacheUtil;
-import com.xl.traffic.gateway.core.server.connection.Connection;
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,38 +34,37 @@ public class ConnectionManager {
     /**
      * 保存连接
      *
-     * @param channelId  channelId
-     * @param connection 连接
+     * @param deviceChannelId deviceChannelId
+     * @param channel         连接
      * @return: void
      * @author: xl
      * @date: 2021/7/13
      **/
-    public void addConnection(String channelId, Connection connection) {
-        CaffineCacheUtil.getConnectionCache().put(channelId, connection);
+    public void addConnection(String deviceChannelId, Channel channel) {
+        CaffineCacheUtil.getConnectionCache().put(deviceChannelId, channel);
     }
 
     /**
-     * 根据设备id获取Connection
+     * 根据channelId获取Connection(客户端要求带过来用户的设备channelId)
      *
-     * @param channelId
+     * @param deviceChannelId
      * @return: io.netty.channel.Channel
      * @author: xl
      * @date: 2021/7/13
      **/
-    public Connection getConnection(String channelId) {
-        return CaffineCacheUtil.getConnectionCache().getIfPresent(channelId);
+    public Channel getConnection(String deviceChannelId) {
+        return CaffineCacheUtil.getConnectionCache().getIfPresent(deviceChannelId);
     }
 
-
     /**
-     * 根据channelId删除 Connection
+     * 根据deviceId删除 Connection
      *
-     * @param channelId
+     * @param deviceChannelId
      * @return: void
      * @author: xl
      * @date: 2021/7/13
      **/
-    public void delConnection(String channelId) {
-        CaffineCacheUtil.getConnectionCache().invalidate(channelId);
+    public void delConnection(String deviceChannelId) {
+        CaffineCacheUtil.getConnectionCache().invalidate(deviceChannelId);
     }
 }

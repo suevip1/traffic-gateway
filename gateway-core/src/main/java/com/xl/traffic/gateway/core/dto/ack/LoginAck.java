@@ -21,9 +21,13 @@ public class LoginAck implements Serializable {
     private String uid;
 
     /**
-     * 用户登录设备 id
+     * 用户登录设备 id+channelId
      */
     private String deviceId;
+    /**
+     * 用户源登录设备 id
+     */
+    private String sourceDeviceId;
 
     /**
      * 用户token

@@ -1,5 +1,6 @@
 package com.xl.traffic.gateway.server.tcp.handler;
 
+import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +45,8 @@ public class ServerHandlerInitializer {
 
     @PostConstruct
     private void init() {
-
+        handlerMap.put((int) MsgCMDType.LOGIN_CMD.getType(), loginHandler);
+        handlerMap.put((int) MsgCMDType.LOGIN_OUT_CMD.getType(), loginOutHandler);
     }
 
 

@@ -1,8 +1,8 @@
 package com.xl.traffic.gateway.core.server.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
+import com.xl.traffic.gateway.core.cache.LocalCacheService;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
-import com.xl.traffic.gateway.core.server.connection.Connection;
 import com.xl.traffic.gateway.core.server.manager.ConnectionManager;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import io.netty.channel.ChannelDuplexHandler;
@@ -15,6 +15,8 @@ public class NettyOnIdleHandler extends ChannelDuplexHandler {
 
     private RpcMsg heartCmd;
 
+    private LocalCacheService localCacheService;
+
 
     /**
      * 构造心跳消息
@@ -25,13 +27,16 @@ public class NettyOnIdleHandler extends ChannelDuplexHandler {
         heartCmd.setCmd((byte) MsgCMDType.HEAT_CMD.getType());
     }
 
-
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        String channelId = ctx.channel().id().asLongText();
-        Connection connection = new Connection(ctx.channel());
-        ConnectionManager.getInstance().addConnection(channelId, connection);
+    /**
+     * 构造心跳消息
+     */
+    public NettyOnIdleHandler(LocalCacheService localCacheService) {
+        heartCmd = new RpcMsg();
+        heartCmd.setReqId(SnowflakeIdWorker.getInstance().nextId().intValue());
+        heartCmd.setCmd((byte) MsgCMDType.HEAT_CMD.getType());
+        this.localCacheService = localCacheService;
     }
+
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
@@ -78,8 +83,9 @@ public class NettyOnIdleHandler extends ChannelDuplexHandler {
      * @date: 2021/7/29
      **/
     public void closeChannel(ChannelHandlerContext ctx) throws InterruptedException {
-        String channelId = ctx.channel().id().asLongText();
-        ConnectionManager.getInstance().delConnection(channelId);
+        if (localCacheService != null) {
+            localCacheService.removeLocalCache(ctx);
+        }
         ctx.close().sync();
     }
 

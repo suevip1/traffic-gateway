@@ -2,6 +2,7 @@ package com.xl.traffic.gateway.start;
 
 
 import com.xl.traffic.gateway.common.utils.AddressUtils;
+import com.xl.traffic.gateway.consumer.RpcMsgConsumer;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.server.Server;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
@@ -73,6 +74,8 @@ public class GatewayServerStart {
                 NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
                 /**监听大业务集群*/
                 ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+                /**启动消费者*/
+                RpcMsgConsumer.getInstance().start();
                 /**初始化任务*/
                 initTask();
             }

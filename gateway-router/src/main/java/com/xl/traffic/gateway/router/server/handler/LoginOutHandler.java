@@ -5,13 +5,10 @@ import com.xl.traffic.gateway.core.dto.RouterDTO;
 import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
-import com.xl.traffic.gateway.core.server.connection.Connection;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import com.xl.traffic.gateway.router.service.RouterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.nio.channels.Channel;
 
 /**
  * gateway退出登录

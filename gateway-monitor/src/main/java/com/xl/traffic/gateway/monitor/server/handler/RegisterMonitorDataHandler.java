@@ -3,17 +3,13 @@ package com.xl.traffic.gateway.monitor.server.handler;
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.dto.MonitorDTO;
 import com.xl.traffic.gateway.core.enums.SerializeType;
-import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
-import com.xl.traffic.gateway.core.server.connection.Connection;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import com.xl.traffic.gateway.monitor.service.MonitorMetricsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.nio.channels.Channel;
 
 /**
  * 注册 健康数据上报处理

@@ -55,7 +55,7 @@ public interface AttributeKeys {
     AttributeKey<String> SOURCE_DEVICE_ID = AttributeKey.valueOf("sourceDeviceId");
 
     /**
-     * 用户名称
+     * 用户id
      */
     AttributeKey<String> USER_ID = AttributeKey.valueOf("userId");
 
