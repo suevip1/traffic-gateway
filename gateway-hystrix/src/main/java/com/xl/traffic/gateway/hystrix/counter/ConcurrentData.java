@@ -80,7 +80,7 @@ public class ConcurrentData {
         boolean acquireResult = concurrentLimit.tryAcquire();
         /**设置当前线程的信号量*/
         concurrentLimitThreadLocal.get().setVisitResult(concurrentLimit, acquireResult);
-        /**获取当前并发量*/
+        /**获取当前并发量=并发量阈值-可用令牌数*/
         int curConcurrentValue = cocurrentThreshold - concurrentLimit.availablePermits();
         /**统计历史最大并发量的值*/
         if (curConcurrentValue > cycleMaxConcurrentData.getCurSlidingCycleValue(time)) {

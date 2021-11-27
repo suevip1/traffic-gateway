@@ -246,7 +246,7 @@ public class DowngrateDelayService {
     @Data
     static class DelayTimer {
         /**
-         * 降级延迟时间
+         * 降级延迟时间（页面配置的，相当于长度单位,例如10s）
          */
         private AtomicLong delayTime;
         /**

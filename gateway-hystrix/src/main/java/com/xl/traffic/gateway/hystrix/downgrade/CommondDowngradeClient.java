@@ -272,7 +272,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
                 return true;
             }
 
-            /**step4:如果访问量超过阈值时，需重置降级延迟时间，降级延迟开始*/
+            /**step4:降级，需重置降级延迟时间，降级延迟开始*/
             DowngrateDelayService.getInstance().resetExpireTime(appGroupName, appName, point, time);
         } else {
             /**step3: 如果需要降级延迟，判断 此次请求是否是降级延迟的重试请求，是的话 返回，否的话 继续执行*/

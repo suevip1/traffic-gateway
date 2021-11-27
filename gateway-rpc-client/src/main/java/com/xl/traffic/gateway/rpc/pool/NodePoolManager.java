@@ -60,6 +60,11 @@ public class NodePoolManager {
      **/
     public void initNodePool(String zkPath) {
         /**获取节点列表*/
+        /**
+         * 节点的格式
+         * zkPath=/liveme/prod [nodelData:127.0.0.1,nodelValue:[ServerNodeInfo{....}]]
+         *
+         * */
         List<String> nodeDatas = zkHelp.getChildren(zkPath);
         List<ServerNodeInfo> nodeInfos = new ArrayList<>();
         for (String nodeIp : nodeDatas) {
@@ -85,8 +90,7 @@ public class NodePoolManager {
             }
         }
         /**初始化连接池及权重值变化*/
-        initPoolAndWeight(zkPath
-                , nodeInfos);
+        initPoolAndWeight(zkPath, nodeInfos);
     }
 
     /**
@@ -104,7 +108,7 @@ public class NodePoolManager {
     }
 
     /**
-     * 初始化连接并赋予权重值
+     * 初始化连接并赋予权重值[针对节点zkPath 变化的通知]
      */
     public void initPoolAndWeight(String zkPath, List<ServerNodeInfo> nodeDatas) {
         for (ServerNodeInfo nodeInfo : nodeDatas) {
@@ -114,26 +118,37 @@ public class NodePoolManager {
             WeightNodelCache.addGroupRpcLoadBalance(nodeInfo.getGroup(), RpcLoadBalanceStrategy.getInstance().getRpcLoadBalance(LoadBalanceType.WEIGHT));
             /**step3: 添加服务负载节点信息*/
             WeightNodelCache.addGroupNodel(nodeInfo.getGroup(), nodeInfo);
+            /**step4: 初始化服务节点权重*/
+            WeightNodelCache.loadBalance(nodeInfo.getGroup()).initWeight();
         }
-        /**step4: 初始化服务节点权重*/
-        RpcLoadBalanceStrategy.getInstance().getRpcLoadBalance(LoadBalanceType.WEIGHT).initWeight();
     }
 
 
     /**
-     * 初始化连接并赋予权重值
+     * 初始化连接[针对 zkpath/ip 节点信息变化的通知]
      */
     public void initRpcPoolSize(String zkPath, List<ServerNodeInfo> nodeDatas) {
         for (ServerNodeInfo nodeInfo : nodeDatas) {
             /**step1: 建立连接*/
             ConnectionPoolFactory.getInstance().zkSyncRpcServer(zkPath, nodeInfo);
+            /**step2: 添加服务负载均衡*/
+            WeightNodelCache.addGroupRpcLoadBalance(nodeInfo.getGroup(), RpcLoadBalanceStrategy.getInstance().getRpcLoadBalance(LoadBalanceType.WEIGHT));
+            /**step3: 修改服务负载节点信息*/
+            WeightNodelCache.updateGroupNodel(nodeInfo.getGroup(), nodeInfo);
+            /**step4: 初始化服务节点权重*/
+            WeightNodelCache.loadBalance(nodeInfo.getGroup()).initWeight();
         }
     }
 
 
     /**
-     * 根据选择服务器,支持权重
-     */
+     * 根据应用组选择对应的服务器，负载均衡
+     *
+     * @param group
+     * @return: com.xl.traffic.gateway.rpc.client.RpcClient
+     * @author: xl
+     * @date: 2021/11/26
+     **/
     public RpcClient chooseRpcClient(String group) {
         try {
             lock.readLock().lock();

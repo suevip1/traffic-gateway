@@ -46,6 +46,29 @@ public class WeightNodelCache {
 
 
     /**
+     * 修改应用组的服务信息
+     *
+     * @param group          应用组
+     * @param serverNodeInfo 应用服务信息
+     * @return: void
+     * @author: xl
+     * @date: 2021/6/24
+     **/
+    public static void updateGroupNodel(String group, ServerNodeInfo serverNodeInfo) {
+        RpcLoadBalance rpcLoadBalance = loadBalance(group);
+        if (null != rpcLoadBalance) {
+            //校验是否存在服务节点
+            if (!rpcLoadBalance.groupExistNodel(serverNodeInfo.getIp())) {
+                return;
+            }
+            rpcLoadBalance.removeNode(serverNodeInfo.getIp());
+            rpcLoadBalance.addNode(serverNodeInfo);
+            rpcLoadBalance.group(group);
+        }
+    }
+
+
+    /**
      * 添加应用组的负载均衡
      *
      * @param group          应用组

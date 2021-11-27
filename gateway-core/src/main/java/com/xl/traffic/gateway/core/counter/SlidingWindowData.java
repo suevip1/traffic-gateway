@@ -77,11 +77,11 @@ public class SlidingWindowData extends AbstractCycleData {
         /**假设index：0
          * 存储该滑动时间的数据应该在第11个格子中，往前推9个格子
          * */
-        //需要将该周期的所有秒数据统计出来再返回
+        //需要将当前周期[10个桶]的所有秒数据统计出来再返回
         long curSecondValue = bucketArray.incrementAndGet(bucketIndex);
         long slidingCycleValue = curSecondValue;
         for (int i = bucketIndex - cycleBucketNum + 1; i < bucketIndex; i++) {
-            //往前推9个桶，组成该滑动周期内的周期数据
+            //往前推9个桶，组成当前滑动周期内的周期数据[10个桶]
             slidingCycleValue += bucketArray.get(switchIndex(i));
         }
         return new VisitValue(curSecondValue, slidingCycleValue);

@@ -31,7 +31,7 @@ public class TokenBucketStrategyExecutor extends AbstractStrategyExecutor {
         if (checkData.getTakeTokenBucketNum() <= strategy.getTokenBucketGeneratedTokenInSecond()) {
             return true;
         }
-        /**如果当前桶的令牌已经用完，但又没额外设置痛的容量（即默认桶容量和桶每秒生成的令牌数相同），那就直接拒绝*/
+        /**如果当前桶的令牌已经用完，但又没额外设置桶的容量（即默认桶容量和桶每秒生成的令牌数相同），那就直接拒绝*/
         if (strategy.getTokenBucketSize() <= strategy.getTokenBucketGeneratedTokenInSecond()) {
             return false;
         }

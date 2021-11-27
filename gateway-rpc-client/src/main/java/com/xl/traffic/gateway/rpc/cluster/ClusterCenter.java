@@ -94,7 +94,7 @@ public class ClusterCenter {
 
 
     /**
-     * @Description: 监听具体rpc 节点下的具体服务配置信息的变化
+     * @Description: 监听具体rpc 节点下的具体服务ip配置信息的变化
      * @Param: [zkPath, ip]
      * @return: void
      * @Author: xl
