@@ -7,6 +7,7 @@ import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import com.xl.traffic.gateway.monitor.service.MonitorMetricsService;
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,9 +27,9 @@ public class RegisterMonitorDataHandler implements MonitorServerHandlerService {
     MonitorMetricsService monitorMetricsService;
 
     @Override
-    public void execute(RpcMsg rpcMsg, Connection connection) {
+    public void execute(RpcMsg rpcMsg, Channel channel) {
         MonitorDTO monitorDTO = iSerialize.deserialize(rpcMsg.getBody(), MonitorDTO.class);
-        ThreadPoolExecutorUtil.getCommonIOPool().submit(() -> {
+        ThreadPoolExecutorUtil.getGateway_Register_Pool().submit(() -> {
             monitorMetricsService.registerMonitorTask(monitorDTO);
             log.info("reciver register monitor serverName :{},ip:{}", monitorDTO.getServerName(),monitorDTO.getGatewayIp());
         });

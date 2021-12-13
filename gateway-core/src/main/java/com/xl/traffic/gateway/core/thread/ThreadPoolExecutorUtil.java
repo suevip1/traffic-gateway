@@ -63,6 +63,31 @@ public class ThreadPoolExecutorUtil {
 
 
     /**
+     * GATEWAY_REGISTER IO线程池
+     */
+    @Getter
+    private final static ExecutorService Gateway_Register_Pool = new ThreadPoolExecutor(500, 1000,
+            1L,
+            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(1000000),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r, "gateway-register-io-executor");
+                    thread.setDaemon(true);
+                    return thread;
+                }
+            },
+            new RejectedExecutionHandler() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                    log.warn("gateway-register-io-executor 丢弃。");
+                }
+            }
+    );
+
+
+
+    /**
      * 密集型计算线程池
      */
     @Getter
