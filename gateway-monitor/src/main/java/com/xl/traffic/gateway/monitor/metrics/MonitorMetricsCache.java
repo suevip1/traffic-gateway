@@ -114,6 +114,8 @@ public class MonitorMetricsCache {
                      */
                     monitorMetrics.cleanNextHealthMetricsRecord(now);
 
+                    //todo 是否考虑获取当前周期的数据，这样做会不会准确点，获取上一周期的数据，感觉不准确
+
                     /**获取上一周期的数据，是否大于阈值，大于的话 进行 降级处理*/
                     long lastHealthCycleReportDataCount = monitorMetrics.getLastCycleHealthValue(now);
                     String dataStr = ZkHelp.getInstance().getValue(GatewayConstants.GATEWAY_ZK_ROOT_PATH + "/" + ip);

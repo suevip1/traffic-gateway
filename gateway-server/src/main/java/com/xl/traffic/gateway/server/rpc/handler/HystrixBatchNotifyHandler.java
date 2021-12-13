@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 降级数据通知,批量通知,当gateway 服务发生扩容/更新/下线，需要重新分配，就会批量更新
+ * 降级数据通知:当gateway 服务发生扩容/更新/下线，需要重新分配，就会批量更新
  *
  * @author: xl
  * @date: 2021/9/7

@@ -35,6 +35,8 @@ public class ServerRpcHandlerInitializer {
     @Autowired
     HystrixNotifyHandler hystrixNotifyHandler;
 
+    @Autowired
+    PullGatewayHealthDataHandler pullGatewayHealthDataHandler;
 
     /**
      * 获取Handler
@@ -52,6 +54,7 @@ public class ServerRpcHandlerInitializer {
 
         handlerMap.put((int) MsgCMDType.BLACK_IP_CMD.getType(), blackIpHandler);
         handlerMap.put((int) MsgCMDType.HYSTRIX_NOTIFY.getType(), hystrixNotifyHandler);
+        handlerMap.put((int) MsgCMDType.PULL_GATEWAY_HEALTH_DATA_CMD.getType(), pullGatewayHealthDataHandler);
 
     }
 

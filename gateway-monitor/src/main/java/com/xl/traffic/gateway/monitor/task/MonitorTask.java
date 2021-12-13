@@ -66,7 +66,7 @@ public class MonitorTask {
                 log.info("group:{},serverName:{},ip:{} no active rpcClient!!!", group, serverName, ip);
                 continue;
             }
-            RpcMsg rpcMsg = new RpcMsg(MsgCMDType.PULL_MONITOR_DATA_CMD.getType(), MsgGroupType.valueOf(group).getType(),
+            RpcMsg rpcMsg = new RpcMsg(MsgCMDType.PULL_GATEWAY_HEALTH_DATA_CMD.getType(), MsgGroupType.valueOf(group).getType(),
                     MsgAppNameType.valueOf(serverName).getType(), SnowflakeIdWorker.getInstance().nextId(), null);
             try {
                 RpcMsg rsMsg = rpcClient.sendSync(rpcMsg, 500);

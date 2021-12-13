@@ -29,8 +29,11 @@ public class LoginHandler implements RouterServerHandlerService {
         String gatewayIp = routerDTO.getGatewayIp();
         String deviceId = routerDTO.getDeviceId();
         ThreadPoolExecutorUtil.getCommonIOPool().submit(() -> {
+            //todo 后期需实现缓存一致性协议
+            //todo 现在的流程是 存储在caffine本地+redis，当key不存在时，通过caffine的load机制从redis刷新出来，这样做性能没有利用最大化
+            //todo 后期需要改成缓存一致性协议，基于redis pub/sub机制 来同步到其它router集群中最新的用户登录的缓存信息
             RouterService.getInstance().userLogin(uid, deviceId, gatewayIp);
-            log.info("uid:{}->deviceId:{}-> login gatewayIp:{} success!!", uid, deviceId, gatewayIp);
+            log.info("save to router,uid:{}->deviceId:{}-> login gatewayIp:{} success!!", uid, deviceId, gatewayIp);
         });
     }
 }

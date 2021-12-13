@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * 拉取本地指标健康数据
+ * monitor拉取gatewayServer本地指标健康数据
  *
  * @author: xl
  * @date: 2021/7/5
  **/
 @Slf4j
 @Component
-public class PullMonitorDataHandler implements GatewayRpcServerHandlerService {
+public class PullGatewayHealthDataHandler implements GatewayRpcServerHandlerService {
 
     ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 

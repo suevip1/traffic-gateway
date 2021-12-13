@@ -48,6 +48,7 @@ public class MonitorReport {
                 .build();
         /**注册monitor任务*/
         Long reqId = SnowflakeIdWorker.getInstance().nextId();
+        //todo monitor的话就不用集群啦，就一台服务器就可以啦，降低维护成本，就是一个监控，没啥压力
         RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(GatewayConstants.MONITOR_GROUP);
         RpcMsg rpcMsg = new RpcMsg(MsgCMDType.REGISTER_MONITOR_TASK.getType(), MsgGroupType.MONITOR.getType(),
                 MsgAppNameType.MONITOR.getType(), reqId, iSerialize.serialize(monitorDTO));

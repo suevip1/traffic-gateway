@@ -65,6 +65,7 @@ public class LoginHandler implements GatewayServerHandlerService {
         LoginAck loginAck = LoginAck.builder()
                 .sourceDeviceId(loginDTO.getDeviceId())
                 .deviceId(channel.attr(AttributeKeys.DEVICE_ID).get())
+                //todo 这个秘钥在正式协议字段中，需要隐藏式声明，并且保证只在登录中ack传输一次
                 .sessionKey(channel.attr(AttributeKeys.SESSION_KEY).get())
                 .serverTime(System.currentTimeMillis())
                 .uid(loginDTO.getUid())
