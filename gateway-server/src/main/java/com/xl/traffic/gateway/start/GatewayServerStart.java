@@ -70,9 +70,9 @@ public class GatewayServerStart {
                 NodePoolManager.getInstance().initNodePool(GatewayConstants.ADMIN_ZK_ROOT_PATH);
                 /**监听admin集群*/
                 ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ADMIN_ZK_ROOT_PATH);
-                /**连接大业务集群*/
+                /**连接大业务集群{eg:chat,room,groupchat,task,api}*/
                 NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
-                /**监听大业务集群*/
+                /**监听大业务集群{eg:chat,room,groupchat,task,api}*/
                 ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
                 /**启动消费者*/
                 RpcMsgConsumer.getInstance().start();
@@ -94,11 +94,11 @@ public class GatewayServerStart {
      * @date: 2021/9/6
      **/
     public void initTask() {
-        /**注册申报gateway服务指标信息*/
+        /**step1:注册申报gateway服务指标健康信息*/
         MonitorReport.registerReportMonitorData();
-        /**初始化降级*/
-        PullAndPushService.getInstance().initAllHystrixPointStrategyFromAdminServer();
-        /**添加降级监听器*/
+        /**step2:初始化降级,同步降级策略*/
+        PullAndPushService.getInstance().syncAllHystrixPointStrategyFromAdminServer();
+        /**step3:添加降级监听器*/
         addDowngrateEventListener();
     }
 

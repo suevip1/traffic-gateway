@@ -53,7 +53,7 @@ public class RpcClientManager {
             nodeInfo.setId(key);//设置本次连接唯一标识
             i++;
             if (i > rpcRetryTimes) {
-                log.info("###### 连接失败，key:{}  到达重试次数上线 retryCount:{}  添加服务监控队列中...", key, i, rpcRetryTimes);
+                log.info("###### 连接失败，appName={},key:{}  到达重试次数上线 retryCount:{}  添加服务监控队列中...",nodeInfo.getAppName(), key, i, rpcRetryTimes);
                 /**添加监控队列*/
                 MQProvider.getRetryConnectQueue().push(nodeInfo, Duration.ofMillis(1000));
                 break;
@@ -61,7 +61,7 @@ public class RpcClientManager {
             log.info("###### 开始对 {} 进行第 {}/{} 次连接...", key, i, rpcRetryTimes);
             try {
                 RpcClient client0 = ConnectionCache.get(key);
-                log.info("###### 开始重新连接IM...    key={},    imServerIp={},	 localIp={},    client0={},    clientMap.get(key))={},   clientMap.size()={}", key, rpcServer, localIp, client0, ConnectionCache.get(key), ConnectionCache.rpcPoolSize());
+                log.info("###### 开始重新连接IM...   appName={}, key={},    imServerIp={},	 localIp={},    client0={},    clientMap.get(key))={},   clientMap.size()={}", nodeInfo.getAppName(),key, rpcServer, localIp, client0, ConnectionCache.get(key), ConnectionCache.rpcPoolSize());
                 if (client0 == null) {
                     synchronized (key.intern()) {
                         RpcClient client = new RpcClient(nodeInfo, index, key);   //服务端IP， 端口， 连接池索引
@@ -70,7 +70,7 @@ public class RpcClientManager {
                             GroupNodePoolCache.addGroupNode(nodeInfo.getGroup(), nodeInfo.getIp());
                             NodePoolCache.addActionRpcSrv(nodeInfo.getIp(), key, client);
                             isConnected = true;
-                            log.info("@@@@RPC Server 连接成功！key={},     imServerIp={},	 localIp={},    clientMap.get(key)={},   clientMap.size()={}", key, rpcServer, localIp, ConnectionCache.get(key), ConnectionCache.rpcPoolSize());
+                            log.info("@@@@RPC Server 连接成功！ appName={},key={},     imServerIp={},	 localIp={},    clientMap.get(key)={},   clientMap.size()={}",nodeInfo.getAppName(), key, rpcServer, localIp, ConnectionCache.get(key), ConnectionCache.rpcPoolSize());
                         }
                     }
                 } else {
@@ -80,7 +80,7 @@ public class RpcClientManager {
             } catch (Exception e) {
                 NodePoolCache.removeActionRpcSrv(nodeInfo
                         .getGroup(), nodeInfo.getIp(), key);
-                log.error("重连失败! 继续尝试...  key={}, e.toString()={}", key, e.toString());
+                log.error("重连失败! 继续尝试... appName={}, key={}, e.toString()={}",nodeInfo.getAppName(), key, e.toString());
             }
             try {
                 Thread.sleep(2000);

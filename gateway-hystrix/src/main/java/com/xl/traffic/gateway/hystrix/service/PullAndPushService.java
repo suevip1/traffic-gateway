@@ -144,14 +144,14 @@ public class PullAndPushService {
     }
 
     /**
-     * 从admin服务端拉取最新的降级点配置信息【初始化所有】
+     * 从admin服务端拉取最新的降级点配置信息【同步所有降级策略配置】
      *
      * @param
      * @return: void
      * @author: xl
      * @date: 2021/6/28
      **/
-    public void initAllHystrixPointStrategyFromAdminServer() {
+    public void syncAllHystrixPointStrategyFromAdminServer() {
         try {
             PushRequest pushRequest = PushRequest.builder()
                     .ip(AddressUtils.getInnetIp())
