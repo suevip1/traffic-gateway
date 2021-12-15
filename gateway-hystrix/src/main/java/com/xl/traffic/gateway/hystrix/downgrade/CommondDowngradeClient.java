@@ -249,7 +249,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
         }
 
         DowngradeStrategyType downgradeStrategyType = null;
-        /**step2: 校验当前降级点在当前时间内 是否需要降级延迟*/
+        /**step2: 当前请求是否是降级延迟的重试请求*/
         if (!DowngrateDelayService.getInstance().isDowngrateDelay(appGroupName, appName, point, time)) {
             /**构建执行策略检查的参数*/
             CheckData checkData = CheckData.builder()

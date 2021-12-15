@@ -59,15 +59,15 @@ public class RpcMsgRouter {
             rpcMsg.setBody(iSerialize.serialize(errorMsg));
             return rpcMsg;
         }, () -> {
-            RpcMsg callBussinessRpcMsg = null;
+            RpcMsg callResult=null;
             try {
                 /**执行call bussiness业务*/
-                callBussinessRpcMsg = NodePoolManager.getInstance()
+                callResult = NodePoolManager.getInstance()
                         .chooseRpcClient(appGroupValue).sendSync(rpcMsg, 100);
             } catch (Exception ex) {
                 log.error("call bussiness is error:{}", ex);
             }
-            return callBussinessRpcMsg;
+            return callResult;
         });
         return result;
     }

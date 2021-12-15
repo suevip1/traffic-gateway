@@ -2,6 +2,7 @@ package com.xl.traffic.gateway.rpc.pool;
 
 
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
+import com.xl.traffic.gateway.common.utils.AddressUtils;
 import com.xl.traffic.gateway.core.enums.LoadBalanceType;
 import com.xl.traffic.gateway.core.exception.RPCException;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import sun.net.util.IPAddressUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,12 +76,21 @@ public class NodePoolManager {
                 if (!CollectionUtils.isEmpty(nodeChildDatas)) {
                     //存在子节点
                     for (String nodeChildIp : nodeChildDatas) {
+                        /**校验zk的服务是否是当前服务，是的话，不进行连接*/
+                        if (nodeChildIp.equals(AddressUtils.getInnetIp())) {
+                            continue;
+                        }
                         /**获取当前节点数据*/
                         nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(zkPath + nodeIp, nodeChildIp));
                         /**监控当前服务节点的变化*/
                         ClusterCenter.getInstance().listenerServerRpcConfig(zkPath + nodeIp, nodeChildIp);
                     }
                 } else {
+                    /**校验zk的服务是否是当前服务，是的话，不进行连接*/
+                    if (nodeIp.equals(AddressUtils.getInnetIp())) {
+                        continue;
+                    }
+
                     /**获取当前节点数据*/
                     nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(zkPath, nodeIp));
                     /**监控当前服务节点的变化*/
@@ -112,6 +123,10 @@ public class NodePoolManager {
      */
     public void initPoolAndWeight(String zkPath, List<ServerNodeInfo> nodeDatas) {
         for (ServerNodeInfo nodeInfo : nodeDatas) {
+            /**校验zk的服务是否是当前服务，是的话，不进行连接*/
+            if (nodeInfo.getIp().equals(AddressUtils.getInnetIp())) {
+                continue;
+            }
             /**step1: 建立连接*/
             ConnectionPoolFactory.getInstance().zkSyncRpcServer(zkPath, nodeInfo);
             /**step2: 添加服务负载均衡*/
@@ -129,6 +144,10 @@ public class NodePoolManager {
      */
     public void initRpcPoolSize(String zkPath, List<ServerNodeInfo> nodeDatas) {
         for (ServerNodeInfo nodeInfo : nodeDatas) {
+            /**校验zk的服务是否是当前服务，是的话，不进行连接*/
+            if (nodeInfo.getIp().equals(AddressUtils.getInnetIp())) {
+                continue;
+            }
             /**step1: 建立连接*/
             ConnectionPoolFactory.getInstance().zkSyncRpcServer(zkPath, nodeInfo);
             /**step2: 添加服务负载均衡*/

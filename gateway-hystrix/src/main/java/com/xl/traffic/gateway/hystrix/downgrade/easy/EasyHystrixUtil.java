@@ -206,9 +206,12 @@ public class EasyHystrixUtil {
             return;
         }
 
+        /**根据应用组，应用名称获取降级客户端*/
         DowngradeClient downgradeClient = DowngrateDispatcher.getInstance().getCommondDowngradeClientInstance(appGroupName, appName);
 
         if (downgradeClient == null) {
+
+            /**没有配置降级信息，执行降级后的函数*/
             bizFunction.invokeBizMethod();
             return;
         }

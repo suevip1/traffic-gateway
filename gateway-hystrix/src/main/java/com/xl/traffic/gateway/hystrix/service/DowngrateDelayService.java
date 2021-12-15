@@ -346,7 +346,7 @@ public class DowngrateDelayService {
             }
 
             /**step2：只有当前时间在降级延迟时间内，并且当前时间超过重试时间，并且在重试次数还有的情况下，才进行重试*/
-            if (curDate <= delayTime.get() && curDate >= retryExpireTime.get()) {
+            if (curDate <= expireTime.get() && curDate >= retryExpireTime.get()) {
 
                 long retryCount = currRetryTimes.get();
                 if (retryCount > 0) {

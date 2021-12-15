@@ -94,6 +94,7 @@ public class DowngrateDispatcher {
 
     /**
      * 根据appGroupName+appName获取降级客户端
+     * 获取应用组下的某个应用的降级客户端
      *
      * @param appGroupName app应用组
      * @param appName      app应用名称

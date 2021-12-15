@@ -27,7 +27,7 @@ public class ConcurrentStrategyExecutor extends AbstractStrategyExecutor {
             return true;
         }
 
-        /**由于并发策略使用啦信号量，所以在统计的同时已经起到啦策略判断的工鞥，所以这里直接返回判断结果*/
+        /**由于并发策略使用啦信号量，所以在统计的同时已经起到啦策略判断的功能，所以这里直接返回判断结果*/
         return checkData.getConcurrentAcquire();
     }
 

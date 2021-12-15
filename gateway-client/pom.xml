@@ -25,6 +25,14 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!--降级-->
+        <dependency>
+            <groupId>com.xl.traffic.gateway</groupId>
+            <artifactId>gateway-hystrix</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>

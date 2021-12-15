@@ -58,6 +58,10 @@ public class GatewayServerStart {
                 gatewayRpcServer.start();
                 /**注册gateway信息*/
                 registerServer();
+                /**连接其它gateway服务集群*/
+                NodePoolManager.getInstance().initNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
+                /**监听其它gateway集群*/
+                ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
                 /**连接monitor集群*/
                 NodePoolManager.getInstance().initNodePool(GatewayConstants.MONITOR_ZK_ROOT_PATH);
                 /**监听monitor集群*/
