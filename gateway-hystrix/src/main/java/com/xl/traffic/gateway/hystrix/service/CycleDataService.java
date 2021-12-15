@@ -178,7 +178,7 @@ public class CycleDataService {
                 return;
             }
             /**执行拉取所有降级点策略的任务*/
-            PullAndPushService.getInstance().initAllHystrixPointStrategyFromAdminServer();
+            PullAndPushService.getInstance().syncAllHystrixPointStrategyFromAdminServer();
         }
     }
 
