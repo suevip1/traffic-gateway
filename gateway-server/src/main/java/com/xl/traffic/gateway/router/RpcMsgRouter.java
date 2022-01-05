@@ -38,7 +38,7 @@ public class RpcMsgRouter {
         EasyHystrixUtil.invokeDowngrateMethodWithoutReturn(appGroupValue, appNameValue, cmdValue, () -> {
             log.info(cmdValue + "被降级！！！");
         }, () -> {
-            /**执行业务*/
+            /**执行业务，异步发送，带回调的*/
             NodePoolManager.getInstance().chooseRpcClient(appGroupValue).sendAsync(rpcMsg, new BussinessCallback(), 100);
         });
     }

@@ -18,6 +18,12 @@ public class NettyDDOSHandler extends ChannelDuplexHandler {
         ddosDong(ctx, msg);
     }
 
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+    }
+
     /**
      * DDOS逻辑
      * 思路 ：

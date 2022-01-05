@@ -4,6 +4,7 @@ package com.xl.traffic.gateway.rpc.cluster;
 import com.github.zkclient.IZkChildListener;
 import com.github.zkclient.IZkDataListener;
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
+import com.xl.traffic.gateway.common.utils.AddressUtils;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
 import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
@@ -88,8 +89,7 @@ public class ClusterCenter {
             }
         };
         // 监控节点变更
-        zkHelp.subscribeChildChanges(zkPath
-                , listener);
+        zkHelp.subscribeChildChanges(zkPath, listener);
     }
 
 

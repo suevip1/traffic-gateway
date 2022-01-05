@@ -82,8 +82,8 @@ public class NodePoolManager {
                         }
                         /**获取当前节点数据*/
                         nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(zkPath + nodeIp, nodeChildIp));
-                        /**监控当前服务节点的变化*/
-                        ClusterCenter.getInstance().listenerServerRpcConfig(zkPath + nodeIp, nodeChildIp);
+//                        /**监控当前服务节点的变化*/
+//                        ClusterCenter.getInstance().listenerServerRpcConfig(zkPath + nodeIp, nodeChildIp);
                     }
                 } else {
                     /**校验zk的服务是否是当前服务，是的话，不进行连接*/
@@ -93,8 +93,8 @@ public class NodePoolManager {
 
                     /**获取当前节点数据*/
                     nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(zkPath, nodeIp));
-                    /**监控当前服务节点的变化*/
-                    ClusterCenter.getInstance().listenerServerRpcConfig(zkPath, nodeIp);
+//                    /**监控当前服务节点的变化*/
+//                    ClusterCenter.getInstance().listenerServerRpcConfig(zkPath, nodeIp);
                 }
             } catch (Exception e) {
                 logger.error("onNodeDataChange.parseObject", e);
