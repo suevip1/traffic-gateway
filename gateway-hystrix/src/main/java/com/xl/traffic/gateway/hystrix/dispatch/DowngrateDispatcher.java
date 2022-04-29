@@ -45,6 +45,7 @@ public class DowngrateDispatcher {
         if (CollectionUtils.isEmpty(pullAndPushServiceList)) {
             pullAndPushServiceList = new CopyOnWriteArrayList<>();
         }
+        /**娇艳是否存在降级的客户端*/
         boolean exist = pullAndPushServiceList.stream().filter(pullAndPushService -> pullAndPushService.getAppName().equals(appName)).findAny().isPresent();
         if (!exist) {
             pullAndPushServiceList.add(XLDowngrateClientFactory.getOrCreateSdsClient(groupName, appName));

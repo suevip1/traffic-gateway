@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  **/
 @Slf4j
 @Component
-public class PullGatewayHealthDataHandler implements GatewayRpcServerHandlerService {
+public class PullHealthDataHandler implements GatewayRpcServerHandlerService {
 
     ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 

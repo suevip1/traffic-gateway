@@ -30,7 +30,7 @@ public class ExceptionRateStrategyExecutor extends AbstractStrategyExecutor {
             /**表示未配置此降级策略，故 不走该策略*/
             return true;
         }
-        /**在计算异常率时，分母不能直接用访问量，需要把降级数量异移除，由于降级时实际没有真正访问业务方法*/
+        /**在计算异常率时，分母不能直接用访问量，需要把降级数量移除，由于降级时实际没有真正访问业务方法*/
         long inputTotal = checkData.getVisitCount() - checkData.getDowngradeCount();
 
         /**异常率=当前周期内异常数量/访问量*/

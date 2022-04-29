@@ -34,7 +34,7 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
     /**
      * qps 监控
      */
-    private final MonitorQpsHandler monitorQpsHandler;
+    private final MonitorConnectHandler monitorQpsHandler;
     /**
      * 流量 监控
      */
@@ -58,7 +58,7 @@ public class TcpConnectionInitializer extends AbstractConnectionInitializer {
         this.nettyOnIdleHandler = new NettyOnIdleHandler(localCacheService);
         this.sslEngineFactory = sslEngineFactory;
         this.reciveHandler = new NettyReciveHandler();
-        this.monitorQpsHandler = new MonitorQpsHandler();
+        this.monitorQpsHandler = new MonitorConnectHandler();
         this.monitorBytesHandler = new MonitorBytesHandler();
         this.nettyDDOSHandler = new NettyDDOSHandler();
         this.nettyTokenHandler = new NettyTokenHandler();

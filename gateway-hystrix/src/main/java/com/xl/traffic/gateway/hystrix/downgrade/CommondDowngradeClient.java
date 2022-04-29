@@ -263,16 +263,16 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
                     .timeoutCount(timeoutCount)
                     .takeTokenBucketNum(takeTokenBucketNum)
                     .downgradeCount(downgrateCount).build();
-            /**step3:执行策略链，如果通过啦策略链中的所有规则，则不需要降级*/
+            /**step3 执行策略链，如果通过啦策略链中的所有规则，则不需要降级*/
             if ((downgradeStrategyType = strategyExecutor.execute(checkData, strategy)) == null) {
                 return false;
             }
-            /**校验是否开启啦熔断，开启熔断，则拒绝请求，进行熔断*/
+            /**step4 校验是否开启啦熔断，开启熔断，则拒绝请求，进行熔断*/
             if (downgradeStrategyType == DowngradeStrategyType.FUSE) {
                 return true;
             }
 
-            /**step4:降级，需重置降级延迟时间，降级延迟开始*/
+            /**step5 降级，需重置降级延迟时间，降级延迟开始*/
             DowngrateDelayService.getInstance().resetExpireTime(appGroupName, appName, point, time);
         } else {
             /**step3: 如果需要降级延迟，判断 此次请求是否是降级延迟的重试请求，是的话 返回，否的话 继续执行*/
@@ -282,7 +282,7 @@ public class CommondDowngradeClient extends AbstractDowngradeClient {
             }
         }
 
-        /**step 5: 走到这里 表示需要进行降级，则进行降级判断*/
+        /**step 6: 走到这里 表示需要进行降级，则进行降级判断*/
         boolean needDowngrate;
         /**校验降级比例 大于等于100 表示百分之百降级*/
         if (strategy.getDowngradeRate() >= 100) {

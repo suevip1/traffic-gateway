@@ -15,10 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  **/
 public class MetricsMonitor {
 
+    /**连接数*/
     @Getter
-    private static AtomicInteger requestQps = new AtomicInteger(0);
-    @Getter
-    private static AtomicInteger responseQps = new AtomicInteger(0);
+    private static AtomicInteger connectNum = new AtomicInteger(0);
     @Getter
     private static AtomicDouble requestBytes = new AtomicDouble(0d);
     @Getter

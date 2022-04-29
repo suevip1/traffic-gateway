@@ -73,14 +73,14 @@ public class ZkHelp {
     /**
      * thrift server 启动服务时候调增加临时节点
      */
-    public boolean regInCluster(String path, String serverName) {
+    public boolean regInCluster(String path, String data) {
         String newPath = path + "/" + AddressUtils.getInnetIp();
         logger.info(">>>>> start register " + newPath + " in cluster <<<<<");
         setPathData(path, null);
-        boolean b = createEphemeral(newPath, serverName);
+        boolean b = createEphemeral(newPath, data);
         if (b) {
             logger.info("Servers:" + getChildren(path));
-            logger.info(">>>>> register server " + serverName + " ok <<<<<");
+            logger.info(">>>>> register server " + data + " ok <<<<<");
         }
         return b;
     }

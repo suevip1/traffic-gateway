@@ -38,6 +38,28 @@ public class ThreadPoolExecutorUtil {
             }
     );
     /**
+     * ROUTER_LOGIN IO线程池
+     */
+    @Getter
+    private final static ExecutorService Router_Login_Pool = new ThreadPoolExecutor(500, 1000,
+            1L,
+            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(1000000),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r, "router-login-io-executor");
+                    thread.setDaemon(true);
+                    return thread;
+                }
+            },
+            new RejectedExecutionHandler() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                    log.warn("router-login-io-executor 丢弃。");
+                }
+            }
+    );
+    /**
      * GATEWAY_LOGIN_Out IO线程池
      */
     @Getter
@@ -60,6 +82,28 @@ public class ThreadPoolExecutorUtil {
             }
     );
 
+    /**
+     * ROUTER_LOGIN_OUT IO线程池
+     */
+    @Getter
+    private final static ExecutorService Router_Login_Out_Pool = new ThreadPoolExecutor(200, 500,
+            1L,
+            TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(1000000),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r, "router-loginOut-io-executor");
+                    thread.setDaemon(true);
+                    return thread;
+                }
+            },
+            new RejectedExecutionHandler() {
+                @Override
+                public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+                    log.warn("router-loginOut-io-executor 丢弃。");
+                }
+            }
+    );
 
 
     /**

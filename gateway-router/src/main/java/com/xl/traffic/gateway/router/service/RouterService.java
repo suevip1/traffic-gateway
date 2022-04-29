@@ -62,7 +62,7 @@ public class RouterService {
 
 
     /**
-     * 获取用户登录设备ip
+     * 根据用户登录设备id 获取用户登录所在的gateway serverIp
      *
      * @param userId   用户id
      * @param deviceId 设备id

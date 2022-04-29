@@ -7,6 +7,7 @@ import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
 import com.xl.traffic.gateway.core.thread.ThreadPoolExecutorUtil;
 import com.xl.traffic.gateway.router.service.RouterService;
+import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +24,12 @@ public class LoginOutHandler implements RouterServerHandlerService {
     ISerialize iSerialize = SerializeFactory.getInstance().getISerialize(SerializeType.protobuf);
 
     @Override
-    public void execute(RpcMsg rpcMsg, Connection connection) {
+    public void execute(RpcMsg rpcMsg, Channel channel) {
         RouterDTO routerDTO = iSerialize.deserialize(rpcMsg.getBody(), RouterDTO.class);
         String uid = routerDTO.getUid();
         String gatewayIp = routerDTO.getGatewayIp();
         String deviceId = routerDTO.getDeviceId();
-        ThreadPoolExecutorUtil.getCommonIOPool().submit(() -> {
+        ThreadPoolExecutorUtil.getRouter_Login_Out_Pool().submit(() -> {
             RouterService.getInstance().exitLogin(uid, deviceId);
             log.info("uid:{}->deviceId:{}-> loginout gatewayIp:{} success!!", uid, deviceId, gatewayIp);
         });

@@ -61,7 +61,7 @@ public class MonitorTask {
             String ip = stringMonitorMetricsEntry.getKey();
             String serverName = stringMonitorMetricsEntry.getValue().getServerName();
             String group = stringMonitorMetricsEntry.getValue().getGroup();
-            RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(serverName, ip);
+            RpcClient rpcClient = NodePoolManager.getInstance().chooseRpcClient(group, ip);
             if (rpcClient == null) {
                 log.info("group:{},serverName:{},ip:{} no active rpcClient!!!", group, serverName, ip);
                 continue;
@@ -92,12 +92,10 @@ public class MonitorTask {
     public static void exeuteHealthMetricsData(MonitorDTO monitorDTO) {
         /**指标是否超出阈值
          * 1，连接数
-         * 2，请求qps
-         * 3，cpu使用率
-         * 4，内存使用率
+         * 2，cpu使用率
+         * 3，内存使用率
          * */
         if (monitorDTO.getConnectNum() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getConnectNum()
-                || monitorDTO.getRequestQps() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getQpsThreshold()
                 || monitorDTO.getSystemInfoModel().getProcessCpuLoad() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getCpuThreshold()
                 || monitorDTO.getSystemInfoModel().getVmUse() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getMemoryThreshold()) {
             /**非健康指数+1*/

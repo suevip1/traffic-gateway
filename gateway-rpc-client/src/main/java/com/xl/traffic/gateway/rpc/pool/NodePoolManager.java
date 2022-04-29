@@ -54,7 +54,7 @@ public class NodePoolManager {
 
 
     /**
-     * @Description: 初始化连接池
+     * @Description: 初始化连接池，根据zkPath 连接集群服务
      * @Param: [zkPath]
      * @return: void
      * @Author: xl

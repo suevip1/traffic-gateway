@@ -24,7 +24,9 @@ import java.util.concurrent.TimeUnit;
 public class MonitorMetricsCache {
 
 
+
     private static int CYCLE_BUCKET_NUM = 3;
+    /**统计的10分钟以内的服务健康信息状况*/
     private static int BUCKET_TIME = 10 * 60;
 
     /**
@@ -46,7 +48,7 @@ public class MonitorMetricsCache {
 
 
     static {
-        //todo 注意，这里不使用scheduleAtFixedRate，因为从长期角度来讲，scheduleAtFixedRate没有每次任务执完去计算下次执行时间准
+        //todo 注意，这里不使用scheduleAtFixedRate，scheduleAtFixedRate这是一个基于定时器倒计时实现的，从长期角度来讲，scheduleAtFixedRate没有每次任务执完去计算下次执行时间准
         cleanAndUploadExecutor.schedule(new CleanNextHealthMetricsData(), calDistanceNextExecuteTime(), TimeUnit.MILLISECONDS);
     }
 

@@ -22,7 +22,7 @@ public class ConcurrentData {
 
 
     /**
-     * 并发量现值，将并发严格限制在阈值之内
+     * 并发量阈值限制，基于信号量实现，将并发严格限制在阈值之内
      */
     private volatile Semaphore concurrentLimit;
 

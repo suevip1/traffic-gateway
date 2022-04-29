@@ -28,7 +28,7 @@ public class VisitStrategyExecutor extends AbstractStrategyExecutor {
         }
 
         /**注意，这里一定要将降级量减去，降级时产生的访问量要去掉*/
-        //todo 为什么要减去降级量 ，答：降级时产生的访问量要去掉
+        //todo 为什么要减去降级量 ，答：降级时产生的访问量要去掉，比较的是真正访问过业务的请求
         return (checkData.getVisitCount() - checkData.getDowngradeCount()) <= strategy.getVisitThreshold();
     }
 

@@ -88,8 +88,7 @@ public class MonitorReport {
                 .vmUse(vmUse)
                 .build();
         MonitorDTO monitorDTO = MonitorDTO.builder()
-                .requestQps(MetricsMonitor.getRequestQps().get())
-                .responseQps(MetricsMonitor.getResponseQps().get())
+                .connectNum(MetricsMonitor.getConnectNum().get())
                 .requestBytes(MetricsMonitor.getRequestBytes().get())
                 .responseBytes(MetricsMonitor.getResponseBytes().get())
                 .serverName(GatewayConstants.GATEWAY + GatewayConstants.SEQ + AddressUtils.getInnetIp())
