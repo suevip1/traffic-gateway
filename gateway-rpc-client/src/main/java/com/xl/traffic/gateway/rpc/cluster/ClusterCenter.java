@@ -68,6 +68,7 @@ public class ClusterCenter {
                         /**校验是否有子节点*/
                         List<String> nodeChildDatas = zkHelp.getChildren(zkPath + "/" + node);
                         if (!CollectionUtils.isEmpty(nodeChildDatas)) {
+                            /**监听的是大业务集群节点的变化*/
                             //存在子节点
                             for (String nodeChildIp : nodeChildDatas) {
                                 /**获取当前节点数据*/
@@ -76,6 +77,7 @@ public class ClusterCenter {
                                 listenerServerRpcConfig(zkPath + "/" + node, nodeChildIp);
                             }
                         } else {
+                            /**监听的是gateway、router、monitor、admin节点的变化*/
                             /**获取当前节点数据*/
                             nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(zkPath, node));
                             /**监控当前服务节点的变化*/

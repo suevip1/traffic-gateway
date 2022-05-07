@@ -1,6 +1,7 @@
 package com.xl.traffic.gateway.start;
 
 
+import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.common.utils.AddressUtils;
 import com.xl.traffic.gateway.consumer.RpcMsgConsumer;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
@@ -131,13 +132,21 @@ public class GatewayServerStart {
      * @date: 2021/6/24
      **/
     public void registerServer() {
+        /**构建服务信息*/
+        ServerNodeInfo nodeInfo = NodelUtil.getInstance().buildServerNodeInfo(
+                GatewayConstants.GATEWAY,
+                GatewayConstants.GATEWAY_GROUP,
+                AddressUtils.getInnetIp(),
+                GatewayPortConstants.TCP_PORT_INNER,
+                GatewayConstants.WEIGHT,
+                -1,
+                -1,
+                GatewayConstants.RPC_POOL_SIZE,
+                GatewayConstants.TCP,
+                "");
         /**注册服务信息*/
         ZkHelp.getInstance().regInCluster(GatewayConstants.GATEWAY_ZK_ROOT_PATH,
-                GSONUtil.toJson(
-                        NodelUtil.getInstance().buildServerNodeInfo(
-                                GatewayConstants.GATEWAY, GatewayConstants.GATEWAY_GROUP, AddressUtils.getInnetIp(),
-                                GatewayPortConstants.TCP_PORT_INNER, GatewayConstants.WEIGHT, -1, -1, GatewayConstants.RPC_POOL_SIZE, GatewayConstants.TCP, "")
-                ));
+                GSONUtil.toJson(nodeInfo));
     }
 
 

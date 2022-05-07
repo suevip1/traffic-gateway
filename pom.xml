@@ -22,6 +22,7 @@
         <module>gateway-service-demo</module>
         <module>gateway-demo-client1</module>
         <module>gateway-register</module>
+        <module>gateway-test</module>
     </modules>
 
 

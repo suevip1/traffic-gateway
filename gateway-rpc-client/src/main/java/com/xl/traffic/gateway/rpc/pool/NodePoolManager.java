@@ -69,11 +69,15 @@ public class NodePoolManager {
          * */
         List<String> nodeDatas = zkHelp.getChildren(zkPath);
         List<ServerNodeInfo> nodeInfos = new ArrayList<>();
+        String serverPath=null;
         for (String nodeIp : nodeDatas) {
             try {
-                /**校验是否有子节点*/
+                /**校验当前nodeIp 是否是大业务集群注册的服务*/
                 List<String> nodeChildDatas = zkHelp.getChildren(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX + nodeIp);
                 if (!CollectionUtils.isEmpty(nodeChildDatas)) {
+                    /**大业务集群服务路径：/server/api */
+                    serverPath = GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX + nodeIp;
+                    /**大业务集群流程*/
                     //存在子节点
                     for (String nodeChildIp : nodeChildDatas) {
                         /**校验zk的服务是否是当前服务，是的话，不进行连接*/
@@ -81,27 +85,24 @@ public class NodePoolManager {
                             continue;
                         }
                         /**获取当前节点数据*/
-                        nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(zkPath + nodeIp, nodeChildIp));
-//                        /**监控当前服务节点的变化*/
-//                        ClusterCenter.getInstance().listenerServerRpcConfig(zkPath + nodeIp, nodeChildIp);
+                        nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(serverPath, nodeChildIp));
                     }
                 } else {
+                    serverPath=zkPath;
+                    /**下面流程是 gateway、router、admin、monitor 服务的流程*/
                     /**校验zk的服务是否是当前服务，是的话，不进行连接*/
                     if (nodeIp.equals(AddressUtils.getInnetIp())) {
                         continue;
                     }
-
                     /**获取当前节点数据*/
-                    nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(zkPath, nodeIp));
-//                    /**监控当前服务节点的变化*/
-//                    ClusterCenter.getInstance().listenerServerRpcConfig(zkPath, nodeIp);
+                    nodeInfos.add(NodelUtil.getInstance().getServerNodeInfo(serverPath, nodeIp));
                 }
             } catch (Exception e) {
                 logger.error("onNodeDataChange.parseObject", e);
             }
         }
         /**初始化连接池及权重值变化*/
-        initPoolAndWeight(zkPath, nodeInfos);
+        initPoolAndWeight(serverPath, nodeInfos);
     }
 
     /**

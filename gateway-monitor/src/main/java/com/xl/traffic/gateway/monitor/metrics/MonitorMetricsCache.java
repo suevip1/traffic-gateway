@@ -142,6 +142,9 @@ public class MonitorMetricsCache {
                         Integer oldWeight = ipWeightCache.getIfPresent(ip);
                         if (oldWeight != null) {
                             nodeInfo.setWeight(oldWeight);
+                        }else {
+                            /**如果流量为空，有可能是monitor服务重启，导致内存数据丢失，需要流量恢复,100/6 假设机器数量为6台*/
+                            nodeInfo.setWeight(100/6);
                         }
                     }
                     ZkHelp.getInstance().setPathData(GatewayConstants.GATEWAY_ZK_ROOT_PATH + ip, GSONUtil.toJson(nodeInfo));

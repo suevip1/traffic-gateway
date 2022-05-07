@@ -95,7 +95,8 @@ public class MonitorTask {
          * 2，cpu使用率
          * 3，内存使用率
          * */
-        if (monitorDTO.getConnectNum() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getConnectNum()
+        if (
+                monitorDTO.getConnectNum() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getConnectNum()
                 || monitorDTO.getSystemInfoModel().getProcessCpuLoad() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getCpuThreshold()
                 || monitorDTO.getSystemInfoModel().getVmUse() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getMemoryThreshold()) {
             /**非健康指数+1*/
