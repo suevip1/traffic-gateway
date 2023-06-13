@@ -52,13 +52,13 @@ public class GatewayClientStart {
         /**设置服务的qps*/
         RpcMsgProcess.getInstance().qps(gatewayClientConfig.getQps());
         /**连接router集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.ROUTER_ZK_ROOT_PATH);
+        NodePoolManager.getInstance().connectNodePool(GatewayConstants.ROUTER_ZK_ROOT_PATH);
         /**监听router集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROUTER_ZK_ROOT_PATH);
+        ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.ROUTER_ZK_ROOT_PATH);
         /**连接gateway集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
+        NodePoolManager.getInstance().connectNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
         /**监听gateway集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
+        ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
     }
 
     /**

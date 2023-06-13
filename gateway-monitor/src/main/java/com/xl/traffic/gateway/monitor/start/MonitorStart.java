@@ -41,9 +41,9 @@ public class MonitorStart {
         /**注册monitor集群*/
         registerServer();
         /**连接 gateway server集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
+        NodePoolManager.getInstance().connectNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
         /**监听 gateway server集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
+        ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
 
 
     }

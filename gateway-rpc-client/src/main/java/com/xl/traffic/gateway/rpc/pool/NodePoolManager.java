@@ -60,7 +60,7 @@ public class NodePoolManager {
      * @Author: xl
      * @Date: 2021/6/23
      **/
-    public void initNodePool(String zkPath) {
+    public void connectNodePool(String zkPath) {
         /**获取节点列表*/
         /**
          * 节点的格式

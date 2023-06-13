@@ -45,13 +45,13 @@ public class RouterStart {
         /**注册router集群*/
         registerServer();
         /**连接 gateway server集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
+        NodePoolManager.getInstance().connectNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
         /**监听 gateway server集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
+        ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
         /**连接大业务集群*/
-        NodePoolManager.getInstance().initNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+        NodePoolManager.getInstance().connectNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
         /**监听大业务集群*/
-        ClusterCenter.getInstance().listenerServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+        ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
 
     }
 

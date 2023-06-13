@@ -54,7 +54,7 @@ public class ClusterCenter {
      * @Author: xl
      * @Date: 2021/6/23
      **/
-    public void listenerServerRpc(String zkPath) {
+    public void listenerMonitorServerRpc(String zkPath) {
         serverRpcList = zkHelp.getChildren(zkPath);
         log.info("serverRpcList:{}", serverRpcList);
         IZkChildListener listener = new IZkChildListener() {
