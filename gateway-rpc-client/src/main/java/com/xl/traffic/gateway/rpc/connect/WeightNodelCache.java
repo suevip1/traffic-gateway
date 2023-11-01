@@ -127,4 +127,20 @@ public class WeightNodelCache {
     }
 
 
+    /**
+     * 根据取模key获取负载均衡服务
+     *
+     * @param group 应用组
+     * @return: com.xl.traffic.gateway.core.loadbalance.RpcLoadBalance
+     * @author: xl
+     * @date: 2021/6/24
+     **/
+    public static RpcLoadBalance loadBalance(String group,String modelKey) {
+        RpcLoadBalance rpcLoadBalance = groupNodeServers.getIfPresent(group);
+
+
+        return rpcLoadBalance;
+    }
+
+
 }

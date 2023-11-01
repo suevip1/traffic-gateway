@@ -184,8 +184,53 @@ public class NodePoolManager {
         } finally {
             lock.readLock().unlock();
         }
-
     }
+
+    /**
+     * 根据应用组、取模key选择对应的服务器，负载均衡
+     *
+     * @param group
+     * @return: com.xl.traffic.gateway.rpc.client.RpcClient
+     * @author: xl
+     * @date: 2021/11/26
+     **/
+    public RpcClient chooseModelRpcClient(String group,String modelKey) {
+        try {
+            lock.readLock().lock();
+            RpcLoadBalance rpcLoadBalance = WeightNodelCache.loadBalance(group);
+            String channelKey = rpcLoadBalance.modelLoadBalance(modelKey);
+            if (StringUtils.isEmpty(channelKey)) {
+                logger.info(">>>>>>> channel 不存在，请检查服务是否发生异常！！！");
+                throw new RPCException(" channel 不存在，请检查调用服务是否发生异常！！！");
+            }
+            logger.info(">>>>>>> current choose server node key :{} ", channelKey);
+            return ConnectionCache.get(channelKey);
+
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+
+    /**
+     * 根据应用组选择对应的服务器，负载均衡
+     *
+     * @param group
+     * @param modelKey
+     * @return: com.xl.traffic.gateway.rpc.client.RpcClient
+     * @author: xl
+     * @date: 2021/11/26
+     **/
+    public ServerNodeInfo chooseRpcNode(String group,String modelKey) {
+        try {
+            lock.readLock().lock();
+            RpcLoadBalance rpcLoadBalance = WeightNodelCache.loadBalance(group);
+            return rpcLoadBalance.getServerNodeInfoByModelKey(modelKey);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
 
 
     /**

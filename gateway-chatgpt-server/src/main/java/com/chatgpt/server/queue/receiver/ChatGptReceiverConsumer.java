@@ -28,7 +28,7 @@ public class ChatGptReceiverConsumer implements WorkHandler<MessageEvent<ImMessa
                     imMessage.setContent(answer);
                     QueueManager.pushOutMessage(imMessage);
                 } else {
-                    throw new RuntimeException("消息速率限流，进行重试!");
+                    throw new RuntimeException("ChatGpt消息速率限流，进行重试!");
                 }
             } catch (Exception exception) {
                 throw new RuntimeException(exception);

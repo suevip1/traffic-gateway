@@ -4,6 +4,7 @@ package com.xl.traffic.gateway.rpc.loadbalance;
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
 import com.xl.traffic.gateway.core.enums.LoadBalanceType;
 import com.xl.traffic.gateway.core.exception.RPCException;
+import com.xl.traffic.gateway.core.hash.HashCodeUtils;
 import com.xl.traffic.gateway.core.loadbalance.RpcLoadBalance;
 import com.xl.traffic.gateway.rpc.connect.NodePoolCache;
 import org.slf4j.Logger;
@@ -52,9 +53,15 @@ public class WeightRpcLoadBalance implements RpcLoadBalance {
         return getChannelKey(nodeInfos.get(indexMap[nextIndex()]).getIp());
     }
 
+    @Override
+    public ServerNodeInfo getServerNodeInfoByModelKey(String modelKey) {
+        int hashCode = HashCodeUtils.getHashCode(modelKey);
+        int index=hashCode%nodeInfos.size();
+        return nodeInfos.get(index);
+    }
 
     /**
-     * 根据节点获取随机节点channelKey
+     * 从当前节点的连接池中当中随机取出一个链接
      */
     public String getChannelKey(String node) {
         List<String> channelKeys = NodePoolCache.getAllNodeRpcSrvListByNode(node);
@@ -136,6 +143,13 @@ public class WeightRpcLoadBalance implements RpcLoadBalance {
     @Override
     public String loadBalance() {
         return chooseNodeChannel();
+    }
+
+
+    @Override
+    public String modelLoadBalance(String modelkey) {
+        ServerNodeInfo serverNodeInfoByModelKey = getServerNodeInfoByModelKey(modelkey);
+        return getChannelKey(serverNodeInfoByModelKey.getIp());
     }
 
     @Override

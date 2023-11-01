@@ -17,6 +17,22 @@ public interface RpcLoadBalance {
     }
 
 
+
+
+    /**
+     * @Description: 取模获取服务节点
+     * @Param: [nodeInfo]
+     * @return: void
+     * @Author: xl
+     * @Date: 2021/6/23
+     **/
+    default ServerNodeInfo getServerNodeInfoByModelKey(String modelKey) {
+        return null;
+    }
+
+    ;
+
+
     /**
      * @Description: 添加服务节点
      * @Param: [nodeInfo]
@@ -49,6 +65,16 @@ public interface RpcLoadBalance {
      * @Date: 2021/6/23
      **/
     String loadBalance();
+
+
+    /**
+     * @Description: 取模获取服务节点
+     * @Param: []
+     * @return: java.lang.String
+     * @Author: xl
+     * @Date: 2021/6/23
+     **/
+    String modelLoadBalance(String modelkey);
 
     /**
      * @Description: 根据ip获取服务节点
