@@ -24,6 +24,12 @@
         <module>gateway-register</module>
         <module>gateway-test</module>
         <module>gateway-chatgpt-server</module>
+        <module>IM-Chat-Server</module>
+        <module>IM-GroupChat-Server</module>
+        <module>IM-Room-Server</module>
+        <module>IM-Api-Server</module>
+        <module>IM-Task-Server</module>
+        <module>IM-Push-Server</module>
     </modules>
 
 

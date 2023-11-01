@@ -22,7 +22,8 @@ public class BussinessCallback implements Callback<RpcMsg> {
      **/
     @Override
     public void handleResult(RpcMsg result) {
-        /**获取路由信息，将数据传给客户端*/
+        /**获取路由信息，根据type做事件派发器将数据传给客户端*/
+
 
     }
 

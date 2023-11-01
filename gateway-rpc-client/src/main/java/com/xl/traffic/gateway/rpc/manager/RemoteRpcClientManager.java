@@ -119,7 +119,7 @@ public class RemoteRpcClientManager {
                 RpcMsg request = new RpcMsg();
                 request.setReqId(SnowflakeIdWorker.getInstance().nextId());
                 request.setBody(content);
-                rpcClient.sendAsync(request, new AsyncCallback(callback, rpcClient.getIpPort(), request, group), rpcTimeOut);
+                rpcClient.sendAsync(request, new AsyncRpcCallback(callback, rpcClient.getIpPort(), request, group), rpcTimeOut);
                 return true;
             } else {
                 logger.error("can no choose pool:" + group);
@@ -135,9 +135,9 @@ public class RemoteRpcClientManager {
 
 
     /**
-     * 包装异步回调,统计服务端调用信息，做中介者模式
+     * 包装异步Rpc回调,统计服务端调用信息，做中介者模式
      */
-    public static class AsyncCallback implements Callback<RpcMsg> {
+    public static class AsyncRpcCallback implements Callback<RpcMsg> {
         /**
          * 客户端自己的结果回调类
          */
@@ -148,7 +148,7 @@ public class RemoteRpcClientManager {
          */
         private String action;
 
-        public AsyncCallback(Callback<byte[]> resultCallBack, String ipport, RpcMsg message, String action) {
+        public AsyncRpcCallback(Callback<byte[]> resultCallBack, String ipport, RpcMsg message, String action) {
             this.resultCallBack = resultCallBack;
             this.ipport = ipport;
             this.action = action;

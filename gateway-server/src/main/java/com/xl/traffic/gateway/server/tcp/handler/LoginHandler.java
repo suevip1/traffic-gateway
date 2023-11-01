@@ -43,8 +43,10 @@ public class LoginHandler implements GatewayServerHandlerService {
             NodePoolManager.getInstance().chooseRpcClient(GatewayConstants.ROUTER_GROUP).sendAsync(rpcMsg);
             /**绑定用户*/
             bindUser(channel, loginDTO);
+            /**生成token*/
+            String token = Token.createToken(loginDTO);
             /**回执ack*/
-            ackLogin(loginDTO, rpcMsg, channel);
+            ackLogin(loginDTO, rpcMsg, channel, token);
         });
     }
 
@@ -52,16 +54,15 @@ public class LoginHandler implements GatewayServerHandlerService {
     /**
      * ACK回执
      *
-     * @param loginDTO   登录实体
-     * @param rpcMsg     消息
-     * @param channel 连接
+     * @param loginDTO 登录实体
+     * @param rpcMsg   消息
+     * @param channel  连接
+     * @param token    token
      * @return: void
      * @author: xl
      * @date: 2021/7/13
      **/
-    public void ackLogin(LoginDTO loginDTO, RpcMsg rpcMsg, Channel channel) {
-        /**生成token*/
-        String token = Token.createToken(loginDTO);
+    public void ackLogin(LoginDTO loginDTO, RpcMsg rpcMsg, Channel channel, String token) {
         LoginAck loginAck = LoginAck.builder()
                 .sourceDeviceId(loginDTO.getDeviceId())
                 .deviceId(channel.attr(AttributeKeys.DEVICE_ID).get())
@@ -73,7 +74,7 @@ public class LoginHandler implements GatewayServerHandlerService {
                 .build();
         rpcMsg.setBody(serialize.serialize(loginAck));
         rpcMsg.setToken(serialize.serialize(token));
-        sendMsg(rpcMsg,channel);
+        sendMsg(rpcMsg, channel);
     }
 
     /**
@@ -96,7 +97,7 @@ public class LoginHandler implements GatewayServerHandlerService {
         channel.attr(AttributeKeys.SESSION_KEY).set(sessionKey);
         log.info("Gateway Bind data userId={}, sourceDeviceId={}, deviceChannelId={}, channelId={}", loginDTO.getUid(), loginDTO.getDeviceId(), deviceChannelId, channelId);
         //存储用户连接信息
-        ConnectionManager.getInstance().addConnection(deviceChannelId,channel);
+        ConnectionManager.getInstance().addConnection(deviceChannelId, channel);
 
     }
 
@@ -109,7 +110,7 @@ public class LoginHandler implements GatewayServerHandlerService {
      * @author: xl
      * @date: 2021/7/29
      **/
-    public void sendMsg(RpcMsg rpcMsg,Channel channel) {
+    public void sendMsg(RpcMsg rpcMsg, Channel channel) {
         if (channel.isWritable()) {
             channel.writeAndFlush(rpcMsg);
         } else {
