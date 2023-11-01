@@ -1,8 +1,8 @@
 package com.xl.traffic.gateway.core.exception;
 
-import com.xl.traffic.gateway.core.enums.ExceptionCode;
+import com.xl.traffic.gateway.core.enums.ErrorCode;
 
-import static com.xl.traffic.gateway.core.enums.ExceptionCode.DOWNGRADE;
+import static com.xl.traffic.gateway.core.enums.ErrorCode.DOWNGRADE;
 
 /**
  * 降级后抛的异常
@@ -42,14 +42,14 @@ public class DowngrateException extends RuntimeException {
         this.point = point;
     }
 
-    public DowngrateException(ExceptionCode downgrade) {
+    public DowngrateException(ErrorCode downgrade) {
         super(downgrade.getMsg());
 
         this.code = downgrade.getCode();
         this.msg = downgrade.getMsg();
     }
 
-    public DowngrateException(String point, ExceptionCode downgrade) {
+    public DowngrateException(String point, ErrorCode downgrade) {
         super(downgrade.getMsg());
 
         this.point = point;

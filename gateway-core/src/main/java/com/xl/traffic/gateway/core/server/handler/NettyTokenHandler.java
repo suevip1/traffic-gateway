@@ -2,6 +2,7 @@ package com.xl.traffic.gateway.core.server.handler;
 
 import com.xl.traffic.gateway.common.msg.RpcMsg;
 import com.xl.traffic.gateway.core.context.NettyContext;
+import com.xl.traffic.gateway.core.enums.ErrorCode;
 import com.xl.traffic.gateway.core.enums.MsgCMDType;
 import com.xl.traffic.gateway.core.enums.NettyType;
 import com.xl.traffic.gateway.core.enums.SerializeType;
@@ -32,7 +33,7 @@ public class NettyTokenHandler extends SimpleChannelInboundHandler<RpcMsg> {
             log.info("token 已过期！reqId:{}", cmd.getReqId());
             //发送消息，token失效，断开连接 cmd
             cmd.setCmd(MsgCMDType.DISCONNECT.getType());
-            cmd.setBody(serialize.serialize("token过期断开连接！"));
+            cmd.setBody(serialize.serialize(ErrorCode.TOKEN_ERROR.getMsg()));
             ctx.channel().writeAndFlush(cmd).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
