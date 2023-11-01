@@ -23,6 +23,7 @@
         <module>gateway-demo-client1</module>
         <module>gateway-register</module>
         <module>gateway-test</module>
+        <module>gateway-chatgpt-server</module>
     </modules>
 
 

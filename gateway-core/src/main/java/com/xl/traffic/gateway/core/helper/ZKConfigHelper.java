@@ -3,7 +3,7 @@ package com.xl.traffic.gateway.core.helper;
 import com.alibaba.fastjson.JSONObject;
 import com.github.zkclient.IZkDataListener;
 import com.xl.traffic.gateway.common.node.ServerNodeInfo;
-import com.xl.traffic.gateway.core.config.GateWayConfig;
+import com.xl.traffic.gateway.core.config.ChatGptConfig;
 import com.xl.traffic.gateway.core.config.GatewayCommonConfig;
 import com.xl.traffic.gateway.core.config.MonitorMetricsConfig;
 import com.xl.traffic.gateway.core.gson.GSONUtil;
@@ -47,6 +47,10 @@ public class ZKConfigHelper {
     @Getter
     @Setter
     private MonitorMetricsConfig monitorMetricsConfig = null;
+
+    @Getter
+    @Setter
+    private ChatGptConfig chatGptConfig = null;
 
     public ZKConfigHelper() {
 

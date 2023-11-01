@@ -75,9 +75,9 @@ public class GatewayServerStart {
                 NodePoolManager.getInstance().connectNodePool(GatewayConstants.ADMIN_ZK_ROOT_PATH);
                 /**监听admin集群*/
                 ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.ADMIN_ZK_ROOT_PATH);
-                /**连接大业务集群{eg:chat,room,groupchat,task,api}*/
+                /**连接大业务集群{eg:chat,room,groupchat,task,api,chatgpt}*/
                 NodePoolManager.getInstance().connectNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
-                /**监听大业务集群{eg:chat,room,groupchat,task,api}*/
+                /**监听大业务集群{eg:chat,room,groupchat,task,api,chatgpt}*/
                 ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
                 /**启动消费者*/
                 RpcMsgConsumer.getInstance().start();

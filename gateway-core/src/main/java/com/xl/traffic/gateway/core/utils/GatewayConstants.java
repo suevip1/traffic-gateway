@@ -14,7 +14,9 @@ public class GatewayConstants {
     public static String GATEWAY = "gateway";
     public static String GATEWAY_GROUP = "gateway_group";
     public static String ROUTER = "router";
+    public static String CHAT_GPT = "chatgpt";
     public static String ROUTER_GROUP = "router_group";
+    public static String CHAT_GPT_GROUP = "chatgpt_group";
     public static String ADMIN = "admin";
     public static String ADMIN_GROUP = "admin_group";
     public static String MONITOR = "monitor";
@@ -33,6 +35,11 @@ public class GatewayConstants {
      * router 服务 zk 路径
      */
     public static String ROUTER_ZK_ROOT_PATH = ROOT_RPC_SERVER_PATH_PREFIX + ROUTER;
+
+    /**
+     * chatgpt server 服务 zk 路径
+     */
+    public static String CHAT_GPT_ZK_ROOT_PATH = ROOT_RPC_SERVER_PATH_PREFIX + CHAT_GPT;
 
     /**
      * admin 服务 zk 路径

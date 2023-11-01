@@ -12,6 +12,8 @@ public enum MsgCMDType {
     BLACK_IP_CMD((byte) 7, "黑名单"),
     REGISTER_MONITOR_TASK((byte) 8, "注册monitor任务"),
     HYSTRIX_NOTIFY((byte) 9, "降级通知"),
+    CHAT_GPT_RECEIVE_ASK_CMD((byte) 10, "chatgpt接受问题"),
+    PULL_CHAT_GPT_HISTORY_MSG_CMD((byte) 11, "拉取chatgpt历史消息"),
 
     ;
 

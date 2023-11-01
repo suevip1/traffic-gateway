@@ -5,7 +5,9 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
+import io.lettuce.core.ScriptOutputType;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.support.ConnectionPoolSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -159,6 +161,8 @@ public class LettcueRedisApi {
         }
         return value;
     }
+
+
 
 
     public static void expire(String key, int seconds) {

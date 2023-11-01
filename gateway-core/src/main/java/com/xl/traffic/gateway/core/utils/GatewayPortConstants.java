@@ -32,6 +32,10 @@ public class GatewayPortConstants {
      */
     public static int TCP_MONITOR_PORT = 20004;
 
+    /**
+     * CHAT GPT 服务 tcp 端口号
+     */
+    public static int TCP_CHATGPT_PORT = 20005;
 
 
 }
