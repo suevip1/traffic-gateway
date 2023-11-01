@@ -35,7 +35,7 @@ public class ConnectionPoolFactory {
      *
      * @param
      */
-    public void zkSyncRpcServer(String zkPath, ServerNodeInfo nodeInfo) {
+    public void zkSyncRpcServer(ServerNodeInfo nodeInfo) {
 
         /**配置的连接池队列 一定要比缓存的连接池队列数量要大，只支持高峰时期的扩容，不支持缩容*/
         int rpcPoolSize = nodeInfo.getRpcPoolSize();
@@ -48,7 +48,7 @@ public class ConnectionPoolFactory {
         try {
             log.info("###### 开始连接 rpc长连接服务...	localIp={},  nodeInfo={},  zkPath={}", localIp,
                     GSONUtil.toJson(nodeInfo)
-                    , zkPath);
+                    , nodeInfo.getZkPath());
             //创建连接池
             for (int index = initIndex; index < rpcPoolSize; index++) {
                 int finalIndex = index;

@@ -34,6 +34,7 @@ public class NodelUtil {
         String nodeData = zkHelp.getValue(zkPath +
                 "/" + nodeIp);
         ServerNodeInfo nodeInfo = GSONUtil.fromJson(nodeData, ServerNodeInfo.class);
+        nodeInfo.setZkPath(zkPath);
         return nodeInfo;
     }
 

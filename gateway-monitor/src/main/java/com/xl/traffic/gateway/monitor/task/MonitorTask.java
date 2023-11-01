@@ -10,9 +10,11 @@ import com.xl.traffic.gateway.core.enums.SerializeType;
 import com.xl.traffic.gateway.core.helper.ZKConfigHelper;
 import com.xl.traffic.gateway.core.serialize.ISerialize;
 import com.xl.traffic.gateway.core.serialize.SerializeFactory;
+import com.xl.traffic.gateway.core.utils.RetryHelper;
 import com.xl.traffic.gateway.core.utils.SnowflakeIdWorker;
 import com.xl.traffic.gateway.monitor.metrics.MonitorMetrics;
 import com.xl.traffic.gateway.monitor.metrics.MonitorMetricsCache;
+import com.xl.traffic.gateway.monitor.start.MonitorStart;
 import com.xl.traffic.gateway.rpc.client.RpcClient;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,14 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings(value = {"unchecked"})
 public class MonitorTask {
 
+
+    private static class InstanceHolder {
+        public static final MonitorTask instance = new MonitorTask();
+    }
+
+    public static MonitorTask getInstance() {
+        return MonitorTask.InstanceHolder.instance;
+    }
 
     /**
      * 不适合在server上开定时器传送，会影响server 性能，本来monitor服务是离线监控服务，可以有能力做定时监控，减轻服务端的压力,提升性能
@@ -43,7 +53,8 @@ public class MonitorTask {
                 }
             });
 
-    static {
+
+    public void schedulePullServerHealthMetricsTask() {
         /**每10分钟获取一次*/
         pullHealthDataExecutor.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -52,6 +63,7 @@ public class MonitorTask {
             }
         }, 0, 10, TimeUnit.MINUTES);
     }
+
 
     /**
      * 获取服务的健康数据
@@ -69,11 +81,25 @@ public class MonitorTask {
             RpcMsg rpcMsg = new RpcMsg(MsgCMDType.PULL_GATEWAY_HEALTH_DATA_CMD.getType(), MsgGroupType.valueOf(group).getType(),
                     MsgAppNameType.valueOf(serverName).getType(), SnowflakeIdWorker.getInstance().nextId(), null);
             try {
-                RpcMsg rsMsg = rpcClient.sendSync(rpcMsg, 500);
-                if (rsMsg.getBody() != null) {
-                    MonitorDTO monitorDTO = iSerialize.deserialize(rpcMsg.getBody(), MonitorDTO.class);
-                    exeuteHealthMetricsData(monitorDTO);
-                    log.info("group:{},serverName:{},ip:{} get health report data success!!!", group, serverName, ip);
+                // TODO: 2023/11/1 重试次数改成从配置中拿去
+                RpcMsg result=RetryHelper.retryWithReturn(3l, 1000l, () -> {
+                    try {
+                        RpcMsg rsMsg = rpcClient.sendSync(rpcMsg, 500);
+                        if (rsMsg.getBody() != null) {
+                            MonitorDTO monitorDTO = iSerialize.deserialize(rpcMsg.getBody(), MonitorDTO.class);
+                            exeuteHealthMetricsData(monitorDTO);
+                            log.info("group:{},serverName:{},ip:{} get health report data success!!!", group, serverName, ip);
+                            return rsMsg;
+                        }
+                        return null;
+                    } catch (Exception exception) {
+                        throw new RuntimeException(exception);
+                    }
+                });
+                if (result==null) {
+                    /**表示该服务已经出现了问题,直接对该服务直接将weight权重置为0,阻挡新流量*/
+                    // TODO: 2023/11/1
+
                 }
             } catch (Exception exception) {
                 log.error("rpc request error! errMsg:{}", exception);
@@ -97,8 +123,8 @@ public class MonitorTask {
          * */
         if (
                 monitorDTO.getConnectNum() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getConnectNum()
-                || monitorDTO.getSystemInfoModel().getProcessCpuLoad() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getCpuThreshold()
-                || monitorDTO.getSystemInfoModel().getVmUse() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getMemoryThreshold()) {
+                        || monitorDTO.getSystemInfoModel().getProcessCpuLoad() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getCpuThreshold()
+                        || monitorDTO.getSystemInfoModel().getVmUse() >= ZKConfigHelper.getInstance().getMonitorMetricsConfig().getMemoryThreshold()) {
             /**非健康指数+1*/
             MonitorMetricsCache.getMonitorMetrics(monitorDTO.getGatewayIp()).incrementAndGet(System.currentTimeMillis());
         }

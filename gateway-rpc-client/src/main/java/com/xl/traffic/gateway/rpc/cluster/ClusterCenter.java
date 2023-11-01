@@ -87,7 +87,7 @@ public class ClusterCenter {
                         log.error("onNodeDataChange.parseObject", e);
                     }
                 }
-                NodePoolManager.getInstance().onNodeChange(zkPath, nodeInfos);
+                NodePoolManager.getInstance().onNodeChange(nodeInfos);
             }
         };
         // 监控节点变更
@@ -113,11 +113,12 @@ public class ClusterCenter {
                 List<ServerNodeInfo> nodeInfos = new ArrayList<>();
                 try {
                     ServerNodeInfo nodeInfo = GSONUtil.fromJson(dataStr, ServerNodeInfo.class);
+                    nodeInfo.setZkPath(zkPath);
                     if (nodeInfo != null) nodeInfos.add(nodeInfo);
                 } catch (Exception e) {
                     log.error("onNodeDataChange.parseObject", e);
                 }
-                NodePoolManager.getInstance().initRpcPoolSize(zkPath, nodeInfos);
+                NodePoolManager.getInstance().initRpcPoolSize( nodeInfos);
             }
 
             @Override

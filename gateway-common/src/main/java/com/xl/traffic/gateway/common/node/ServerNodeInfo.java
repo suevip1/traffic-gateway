@@ -81,5 +81,7 @@ public class ServerNodeInfo implements Serializable {
      */
     private Map<String, Integer> cmdQpsMap = new HashMap<>();
 
+    /**当前服务的zkPath*/
+    private String zkPath;
 
 }

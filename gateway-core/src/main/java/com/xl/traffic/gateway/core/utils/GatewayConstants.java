@@ -27,6 +27,11 @@ public class GatewayConstants {
      * 默认路径
      */
     public static String ROOT_RPC_SERVER_PATH_PREFIX = "/server/";
+
+    /**
+     * IM业务服务默认路径
+     */
+    public static String ROOT_IM_RPC_SERVER_PATH_PREFIX = "/imserver/";
     /**
      * gateway 服务 zk 路径
      */

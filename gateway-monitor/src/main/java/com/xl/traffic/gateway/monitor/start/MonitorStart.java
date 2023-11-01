@@ -7,6 +7,7 @@ import com.xl.traffic.gateway.core.utils.GatewayConstants;
 import com.xl.traffic.gateway.core.utils.GatewayPortConstants;
 import com.xl.traffic.gateway.core.utils.NodelUtil;
 import com.xl.traffic.gateway.monitor.server.MonitorServer;
+import com.xl.traffic.gateway.monitor.task.MonitorTask;
 import com.xl.traffic.gateway.register.zookeeper.ZkHelp;
 import com.xl.traffic.gateway.rpc.cluster.ClusterCenter;
 import com.xl.traffic.gateway.rpc.pool.NodePoolManager;
@@ -44,8 +45,8 @@ public class MonitorStart {
         NodePoolManager.getInstance().connectNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
         /**监听 gateway server集群*/
         ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
-
-
+        /**启动定时拉取gateway服务健康指标数据*/
+        MonitorTask.getInstance().schedulePullServerHealthMetricsTask();
     }
 
 

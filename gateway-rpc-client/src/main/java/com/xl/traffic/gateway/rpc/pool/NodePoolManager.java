@@ -65,6 +65,9 @@ public class NodePoolManager {
         /**
          * 节点的格式
          * zkPath=/liveme/prod [nodelData:127.0.0.1,nodelValue:[ServerNodeInfo{....}]]
+         * zkPath解释：由于传参不同，获取的节点列表是不一样的：
+         *  当传参形式：/imserver/ : 这里的path是指此路径下所有的业务节点列表...例如:/imserver/chat,/imserver/groupchat
+         *  当传参形式:/server/gateway，这里已经指定了具体要连接哪个路径下的集群,所以指的就是链接该节点下的集群李彪
          *
          * */
         List<String> nodeDatas = zkHelp.getChildren(zkPath);
@@ -102,18 +105,18 @@ public class NodePoolManager {
             }
         }
         /**初始化连接池及权重值变化*/
-        initPoolAndWeight(serverPath, nodeInfos);
+        initPoolAndWeight(nodeInfos);
     }
 
     /**
      * 节点变更通知
      */
-    public void onNodeChange(String zkPath, List<ServerNodeInfo> nodeDatas) {
+    public void onNodeChange(List<ServerNodeInfo> nodeDatas) {
         try {
             lock.writeLock().lock();
             logger.info("onNodeDataChange->" + nodeDatas.size() + "=" + GSONUtil.toJson(nodeDatas));
             /**初始化连接并赋予权重值*/
-            initPoolAndWeight(zkPath, nodeDatas);
+            initPoolAndWeight(nodeDatas);
         } finally {
             lock.writeLock().unlock();
         }
@@ -122,14 +125,14 @@ public class NodePoolManager {
     /**
      * 初始化连接并赋予权重值[针对节点zkPath 变化的通知]
      */
-    public void initPoolAndWeight(String zkPath, List<ServerNodeInfo> nodeDatas) {
+    public void initPoolAndWeight(List<ServerNodeInfo> nodeDatas) {
         for (ServerNodeInfo nodeInfo : nodeDatas) {
             /**校验zk的服务是否是当前服务，是的话，不进行连接*/
             if (nodeInfo.getIp().equals(AddressUtils.getInnetIp())) {
                 continue;
             }
             /**step1: 建立连接*/
-            ConnectionPoolFactory.getInstance().zkSyncRpcServer(zkPath, nodeInfo);
+            ConnectionPoolFactory.getInstance().zkSyncRpcServer(nodeInfo);
             /**step2: 添加服务负载均衡*/
             WeightNodelCache.addGroupRpcLoadBalance(nodeInfo.getGroup(), RpcLoadBalanceStrategy.getInstance().getRpcLoadBalance(LoadBalanceType.WEIGHT));
             /**step3: 添加服务负载节点信息*/
@@ -143,14 +146,14 @@ public class NodePoolManager {
     /**
      * 初始化连接[针对 zkpath/ip 节点信息变化的通知]
      */
-    public void initRpcPoolSize(String zkPath, List<ServerNodeInfo> nodeDatas) {
+    public void initRpcPoolSize(List<ServerNodeInfo> nodeDatas) {
         for (ServerNodeInfo nodeInfo : nodeDatas) {
             /**校验zk的服务是否是当前服务，是的话，不进行连接*/
             if (nodeInfo.getIp().equals(AddressUtils.getInnetIp())) {
                 continue;
             }
             /**step1: 建立连接*/
-            ConnectionPoolFactory.getInstance().zkSyncRpcServer(zkPath, nodeInfo);
+            ConnectionPoolFactory.getInstance().zkSyncRpcServer(nodeInfo);
             /**step2: 添加服务负载均衡*/
             WeightNodelCache.addGroupRpcLoadBalance(nodeInfo.getGroup(), RpcLoadBalanceStrategy.getInstance().getRpcLoadBalance(LoadBalanceType.WEIGHT));
             /**step3: 修改服务负载节点信息*/

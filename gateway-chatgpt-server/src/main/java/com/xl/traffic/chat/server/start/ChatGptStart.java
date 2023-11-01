@@ -52,10 +52,10 @@ public class ChatGptStart {
         NodePoolManager.getInstance().connectNodePool(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
         /**监听 gateway server集群*/
         ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.GATEWAY_ZK_ROOT_PATH);
-        /**连接大业务集群*/
-        NodePoolManager.getInstance().connectNodePool(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
-        /**监听大业务集群*/
-        ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.ROOT_RPC_SERVER_PATH_PREFIX);
+        /**连接IM大业务集群*/
+        NodePoolManager.getInstance().connectNodePool(GatewayConstants.ROOT_IM_RPC_SERVER_PATH_PREFIX);
+        /**监听IM大业务集群*/
+        ClusterCenter.getInstance().listenerMonitorServerRpc(GatewayConstants.ROOT_IM_RPC_SERVER_PATH_PREFIX);
 
     }
 
